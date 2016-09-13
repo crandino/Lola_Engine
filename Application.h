@@ -11,25 +11,23 @@
 #include "ModuleRenderer3D.h"
 #include "ModuleCamera3D.h"
 #include "ModulePhysics3D.h"
-#include "ModulePlayer.h"
 
 class Application
 {
 public:
-	ModuleWindow* window;
-	ModuleInput* input;
-	ModuleAudio* audio;
-	ModuleSceneIntro* scene_intro;
-	ModuleRenderer3D* renderer3D;
-	ModuleCamera3D* camera;
-	ModulePhysics3D* physics;
-	ModulePlayer* player;
+	ModuleWindow*		window;
+	ModuleInput*		input;
+	ModuleAudio*		audio;
+	ModuleSceneIntro*   scene_intro;
+	ModuleRenderer3D*   renderer3D;
+	ModuleCamera3D*		camera;
+	ModulePhysics3D*    physics;
 
 private:
 
-	Timer	ms_timer;
-	float	dt;
-	p2List<Module*> list_modules;
+	Timer				ms_timer;
+	float				dt;
+	p2List<Module*>		list_modules;
 
 public:
 
@@ -37,7 +35,7 @@ public:
 	~Application();
 
 	bool Init();
-	update_status Update();
+	UPDATE_STATUS Update();
 	bool CleanUp();
 
 private:
