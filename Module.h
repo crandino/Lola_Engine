@@ -1,4 +1,6 @@
 #pragma once
+#include "Globals.h"
+#include <string>
 
 class Application;
 struct PhysBody3D;
@@ -6,9 +8,15 @@ struct PhysBody3D;
 class Module
 {
 private :
+
 	bool enabled;
+	
+protected:
+	
+	std::string name;
 
 public:
+
 	Application* App;
 
 	Module(Application* parent, bool start_enabled = true) : App(parent)
