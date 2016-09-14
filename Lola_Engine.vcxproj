@@ -45,8 +45,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>
-      </AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -73,57 +72,57 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Application.cpp" />
-    <ClCompile Include="Color.cpp" />
-    <ClCompile Include="glmath.cpp" />
-    <ClCompile Include="imgui\imgui.cpp" />
-    <ClCompile Include="imgui\imgui_demo.cpp" />
-    <ClCompile Include="imgui\imgui_draw.cpp" />
-    <ClCompile Include="imgui\imgui_impl_sdl_gl3.cpp" />
-    <ClCompile Include="Light.cpp" />
-    <ClCompile Include="log.cpp" />
-    <ClCompile Include="Main.cpp" />
-    <ClCompile Include="ModuleAudio.cpp" />
-    <ClCompile Include="ModuleCamera3D.cpp" />
-    <ClCompile Include="ModuleEditor.cpp" />
-    <ClCompile Include="ModuleInput.cpp" />
-    <ClCompile Include="ModulePhysics3D.cpp" />
-    <ClCompile Include="ModuleRenderer3D.cpp" />
-    <ClCompile Include="ModuleSceneIntro.cpp" />
-    <ClCompile Include="ModuleWindow.cpp" />
-    <ClCompile Include="PhysBody3D.cpp" />
-    <ClCompile Include="Primitive.cpp" />
-    <ClCompile Include="Timer.cpp" />
+    <ClCompile Include="Source_code\Application.cpp" />
+    <ClCompile Include="Source_code\Color.cpp" />
+    <ClCompile Include="Source_code\glmath.cpp" />
+    <ClCompile Include="Source_code\Light.cpp" />
+    <ClCompile Include="Source_code\log.cpp" />
+    <ClCompile Include="Source_code\Main.cpp" />
+    <ClCompile Include="Source_code\ModuleAudio.cpp" />
+    <ClCompile Include="Source_code\ModuleCamera3D.cpp" />
+    <ClCompile Include="Source_code\ModuleEditor.cpp" />
+    <ClCompile Include="Source_code\ModuleInput.cpp" />
+    <ClCompile Include="Source_code\ModulePhysics3D.cpp" />
+    <ClCompile Include="Source_code\ModuleRenderer3D.cpp" />
+    <ClCompile Include="Source_code\ModuleSceneIntro.cpp" />
+    <ClCompile Include="Source_code\ModuleWindow.cpp" />
+    <ClCompile Include="Source_code\PhysBody3D.cpp" />
+    <ClCompile Include="Source_code\Primitive.cpp" />
+    <ClCompile Include="Source_code\Timer.cpp" />
+    <ClCompile Include="Third_party_soft\imgui\imgui.cpp" />
+    <ClCompile Include="Third_party_soft\imgui\imgui_demo.cpp" />
+    <ClCompile Include="Third_party_soft\imgui\imgui_draw.cpp" />
+    <ClCompile Include="Third_party_soft\imgui\imgui_impl_sdl_gl3.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Application.h" />
-    <ClInclude Include="Color.h" />
-    <ClInclude Include="glmath.h" />
-    <ClInclude Include="Globals.h" />
-    <ClInclude Include="imgui\imconfig.h" />
-    <ClInclude Include="imgui\imgui.h" />
-    <ClInclude Include="imgui\imgui_impl_sdl_gl3.h" />
-    <ClInclude Include="imgui\imgui_internal.h" />
-    <ClInclude Include="imgui\stb_rect_pack.h" />
-    <ClInclude Include="imgui\stb_textedit.h" />
-    <ClInclude Include="imgui\stb_truetype.h" />
-    <ClInclude Include="Light.h" />
-    <ClInclude Include="MathGeoLib\MathBuildConfig.h" />
-    <ClInclude Include="MathGeoLib\MathGeoLib.h" />
-    <ClInclude Include="MathGeoLib\MathGeoLibFwd.h" />
-    <ClInclude Include="Module.h" />
-    <ClInclude Include="ModuleAudio.h" />
-    <ClInclude Include="ModuleCamera3D.h" />
-    <ClInclude Include="ModuleEditor.h" />
-    <ClInclude Include="ModuleInput.h" />
-    <ClInclude Include="ModulePhysics3D.h" />
-    <ClInclude Include="ModuleRenderer3D.h" />
-    <ClInclude Include="ModuleSceneIntro.h" />
-    <ClInclude Include="ModuleWindow.h" />
-    <ClInclude Include="Point2D.h" />
-    <ClInclude Include="PhysBody3D.h" />
-    <ClInclude Include="Primitive.h" />
-    <ClInclude Include="Timer.h" />
+    <ClInclude Include="Source_code\Application.h" />
+    <ClInclude Include="Source_code\Color.h" />
+    <ClInclude Include="Source_code\glmath.h" />
+    <ClInclude Include="Source_code\Globals.h" />
+    <ClInclude Include="Source_code\Light.h" />
+    <ClInclude Include="Source_code\Module.h" />
+    <ClInclude Include="Source_code\ModuleAudio.h" />
+    <ClInclude Include="Source_code\ModuleCamera3D.h" />
+    <ClInclude Include="Source_code\ModuleEditor.h" />
+    <ClInclude Include="Source_code\ModuleInput.h" />
+    <ClInclude Include="Source_code\ModulePhysics3D.h" />
+    <ClInclude Include="Source_code\ModuleRenderer3D.h" />
+    <ClInclude Include="Source_code\ModuleSceneIntro.h" />
+    <ClInclude Include="Source_code\ModuleWindow.h" />
+    <ClInclude Include="Source_code\PhysBody3D.h" />
+    <ClInclude Include="Source_code\Point2D.h" />
+    <ClInclude Include="Source_code\Primitive.h" />
+    <ClInclude Include="Source_code\Timer.h" />
+    <ClInclude Include="Third_party_software\MathGeoLib\MathBuildConfig.h" />
+    <ClInclude Include="Third_party_software\MathGeoLib\MathGeoLib.h" />
+    <ClInclude Include="Third_party_software\MathGeoLib\MathGeoLibFwd.h" />
+    <ClInclude Include="Third_party_soft\imgui\imconfig.h" />
+    <ClInclude Include="Third_party_soft\imgui\imgui.h" />
+    <ClInclude Include="Third_party_soft\imgui\imgui_impl_sdl_gl3.h" />
+    <ClInclude Include="Third_party_soft\imgui\imgui_internal.h" />
+    <ClInclude Include="Third_party_soft\imgui\stb_rect_pack.h" />
+    <ClInclude Include="Third_party_soft\imgui\stb_textedit.h" />
+    <ClInclude Include="Third_party_soft\imgui\stb_truetype.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -10,9 +10,9 @@
 #include "imgui_impl_sdl_gl3.h"
 
 // SDL,GL3W
-#include "../SDL/include/SDL.h"
-#include "../SDL/include/SDL_syswm.h"
-#include "../Glew/include/glew.h"
+#include "SDL/include/SDL.h"
+#include "SDL/include/SDL_syswm.h"
+#include "third_party_soft/Glew/include/glew.h"
 //#include <GL/gl3w.h>
 
 // Data

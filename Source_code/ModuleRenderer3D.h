@@ -5,7 +5,7 @@
 #include "Globals.h"
 #include "glmath.h"
 #include "Light.h"
-#include "imgui\imgui.h"
+#include "third_party_soft\imgui\imgui.h"
 
 #define MAX_LIGHTS 8
 

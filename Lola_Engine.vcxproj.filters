@@ -19,162 +19,165 @@
     <Filter Include="Sources\Modules\Game">
       <UniqueIdentifier>{09dfa510-274d-4bd4-895f-d72b0dd54625}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Sources\umgui">
-      <UniqueIdentifier>{b7dfaa2a-f73f-4709-8cc0-2536955e7f96}</UniqueIdentifier>
+    <Filter Include="Third_party_soft">
+      <UniqueIdentifier>{e8cc6d25-877d-408f-935e-ca03fda72625}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Sources\MathGeoLib">
-      <UniqueIdentifier>{e419ded4-7243-428a-8225-bbc6ac5dd732}</UniqueIdentifier>
+    <Filter Include="Third_party_soft\ImGUI">
+      <UniqueIdentifier>{542b4eda-c565-4f0e-8926-a7824a7ca313}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Third_party_soft\MahtGeoLib">
+      <UniqueIdentifier>{e46669cc-cb2a-497c-86eb-922947de56d6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Main.cpp">
+    <ClCompile Include="Source_code\Main.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
-    <ClCompile Include="Color.cpp">
-      <Filter>Sources\Containers</Filter>
+    <ClCompile Include="Source_code\Application.cpp">
+      <Filter>Sources</Filter>
     </ClCompile>
-    <ClCompile Include="glmath.cpp">
-      <Filter>Sources\Containers</Filter>
-    </ClCompile>
-    <ClCompile Include="Light.cpp">
-      <Filter>Sources\Helpers</Filter>
-    </ClCompile>
-    <ClCompile Include="PhysBody3D.cpp">
-      <Filter>Sources\Helpers</Filter>
-    </ClCompile>
-    <ClCompile Include="Primitive.cpp">
-      <Filter>Sources\Helpers</Filter>
-    </ClCompile>
-    <ClCompile Include="Timer.cpp">
+    <ClCompile Include="Source_code\log.cpp">
       <Filter>Sources\Tools</Filter>
     </ClCompile>
-    <ClCompile Include="log.cpp">
+    <ClCompile Include="Source_code\Timer.cpp">
       <Filter>Sources\Tools</Filter>
     </ClCompile>
-    <ClCompile Include="ModuleAudio.cpp">
-      <Filter>Sources\Modules</Filter>
+    <ClCompile Include="Source_code\Color.cpp">
+      <Filter>Sources\Containers</Filter>
     </ClCompile>
-    <ClCompile Include="ModuleCamera3D.cpp">
-      <Filter>Sources\Modules</Filter>
+    <ClCompile Include="Source_code\glmath.cpp">
+      <Filter>Sources\Containers</Filter>
     </ClCompile>
-    <ClCompile Include="ModuleInput.cpp">
-      <Filter>Sources\Modules</Filter>
+    <ClCompile Include="Source_code\Light.cpp">
+      <Filter>Sources\Helpers</Filter>
     </ClCompile>
-    <ClCompile Include="ModulePhysics3D.cpp">
-      <Filter>Sources\Modules</Filter>
+    <ClCompile Include="Source_code\PhysBody3D.cpp">
+      <Filter>Sources\Helpers</Filter>
     </ClCompile>
-    <ClCompile Include="ModuleRenderer3D.cpp">
-      <Filter>Sources\Modules</Filter>
+    <ClCompile Include="Source_code\Primitive.cpp">
+      <Filter>Sources\Helpers</Filter>
     </ClCompile>
-    <ClCompile Include="ModuleWindow.cpp">
-      <Filter>Sources\Modules</Filter>
-    </ClCompile>
-    <ClCompile Include="ModuleSceneIntro.cpp">
+    <ClCompile Include="Source_code\ModuleSceneIntro.cpp">
       <Filter>Sources\Modules\Game</Filter>
     </ClCompile>
-    <ClCompile Include="Application.cpp">
-      <Filter>Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="ModuleEditor.cpp">
+    <ClCompile Include="Source_code\ModuleAudio.cpp">
       <Filter>Sources\Modules</Filter>
     </ClCompile>
-    <ClCompile Include="imgui\imgui.cpp">
-      <Filter>Sources\umgui</Filter>
+    <ClCompile Include="Source_code\ModuleCamera3D.cpp">
+      <Filter>Sources\Modules</Filter>
     </ClCompile>
-    <ClCompile Include="imgui\imgui_demo.cpp">
-      <Filter>Sources\umgui</Filter>
+    <ClCompile Include="Source_code\ModuleEditor.cpp">
+      <Filter>Sources\Modules</Filter>
     </ClCompile>
-    <ClCompile Include="imgui\imgui_draw.cpp">
-      <Filter>Sources\umgui</Filter>
+    <ClCompile Include="Source_code\ModuleInput.cpp">
+      <Filter>Sources\Modules</Filter>
     </ClCompile>
-    <ClCompile Include="imgui\imgui_impl_sdl_gl3.cpp">
-      <Filter>Sources\umgui</Filter>
+    <ClCompile Include="Source_code\ModulePhysics3D.cpp">
+      <Filter>Sources\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Source_code\ModuleRenderer3D.cpp">
+      <Filter>Sources\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Source_code\ModuleWindow.cpp">
+      <Filter>Sources\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Third_party_soft\imgui\imgui.cpp">
+      <Filter>Third_party_soft\ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Third_party_soft\imgui\imgui_demo.cpp">
+      <Filter>Third_party_soft\ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Third_party_soft\imgui\imgui_draw.cpp">
+      <Filter>Third_party_soft\ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Third_party_soft\imgui\imgui_impl_sdl_gl3.cpp">
+      <Filter>Third_party_soft\ImGUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Globals.h">
+    <ClInclude Include="Third_party_software\MathGeoLib\MathBuildConfig.h">
+      <Filter>Third_party_soft\MahtGeoLib</Filter>
+    </ClInclude>
+    <ClInclude Include="Third_party_software\MathGeoLib\MathGeoLib.h">
+      <Filter>Third_party_soft\MahtGeoLib</Filter>
+    </ClInclude>
+    <ClInclude Include="Third_party_software\MathGeoLib\MathGeoLibFwd.h">
+      <Filter>Third_party_soft\MahtGeoLib</Filter>
+    </ClInclude>
+    <ClInclude Include="Source_code\Globals.h">
       <Filter>Sources</Filter>
     </ClInclude>
-    <ClInclude Include="Color.h">
-      <Filter>Sources\Containers</Filter>
+    <ClInclude Include="Source_code\Application.h">
+      <Filter>Sources</Filter>
     </ClInclude>
-    <ClInclude Include="glmath.h">
-      <Filter>Sources\Containers</Filter>
-    </ClInclude>
-    <ClInclude Include="Light.h">
-      <Filter>Sources\Helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="PhysBody3D.h">
-      <Filter>Sources\Helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="Primitive.h">
-      <Filter>Sources\Helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="Timer.h">
+    <ClInclude Include="Source_code\Timer.h">
       <Filter>Sources\Tools</Filter>
     </ClInclude>
-    <ClInclude Include="Module.h">
-      <Filter>Sources\Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="ModuleAudio.h">
-      <Filter>Sources\Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="ModuleCamera3D.h">
-      <Filter>Sources\Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="ModuleInput.h">
-      <Filter>Sources\Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="ModulePhysics3D.h">
-      <Filter>Sources\Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="ModuleRenderer3D.h">
-      <Filter>Sources\Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="ModuleWindow.h">
-      <Filter>Sources\Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="ModuleSceneIntro.h">
-      <Filter>Sources\Modules\Game</Filter>
-    </ClInclude>
-    <ClInclude Include="Application.h">
-      <Filter>Sources</Filter>
-    </ClInclude>
-    <ClInclude Include="Point2D.h">
+    <ClInclude Include="Source_code\Color.h">
       <Filter>Sources\Containers</Filter>
     </ClInclude>
-    <ClInclude Include="ModuleEditor.h">
+    <ClInclude Include="Source_code\glmath.h">
+      <Filter>Sources\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source_code\Point2D.h">
+      <Filter>Sources\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source_code\Light.h">
+      <Filter>Sources\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source_code\PhysBody3D.h">
+      <Filter>Sources\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source_code\Primitive.h">
+      <Filter>Sources\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source_code\ModuleSceneIntro.h">
+      <Filter>Sources\Modules\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Source_code\Module.h">
       <Filter>Sources\Modules</Filter>
     </ClInclude>
-    <ClInclude Include="imgui\imconfig.h">
-      <Filter>Sources\umgui</Filter>
+    <ClInclude Include="Source_code\ModuleAudio.h">
+      <Filter>Sources\Modules</Filter>
     </ClInclude>
-    <ClInclude Include="imgui\imgui.h">
-      <Filter>Sources\umgui</Filter>
+    <ClInclude Include="Source_code\ModuleCamera3D.h">
+      <Filter>Sources\Modules</Filter>
     </ClInclude>
-    <ClInclude Include="imgui\imgui_internal.h">
-      <Filter>Sources\umgui</Filter>
+    <ClInclude Include="Source_code\ModuleEditor.h">
+      <Filter>Sources\Modules</Filter>
     </ClInclude>
-    <ClInclude Include="imgui\stb_rect_pack.h">
-      <Filter>Sources\umgui</Filter>
+    <ClInclude Include="Source_code\ModuleInput.h">
+      <Filter>Sources\Modules</Filter>
     </ClInclude>
-    <ClInclude Include="imgui\stb_textedit.h">
-      <Filter>Sources\umgui</Filter>
+    <ClInclude Include="Source_code\ModulePhysics3D.h">
+      <Filter>Sources\Modules</Filter>
     </ClInclude>
-    <ClInclude Include="imgui\stb_truetype.h">
-      <Filter>Sources\umgui</Filter>
+    <ClInclude Include="Source_code\ModuleRenderer3D.h">
+      <Filter>Sources\Modules</Filter>
     </ClInclude>
-    <ClInclude Include="imgui\imgui_impl_sdl_gl3.h">
-      <Filter>Sources\umgui</Filter>
+    <ClInclude Include="Source_code\ModuleWindow.h">
+      <Filter>Sources\Modules</Filter>
     </ClInclude>
-    <ClInclude Include="MathGeoLib\MathBuildConfig.h">
-      <Filter>Sources\MathGeoLib</Filter>
+    <ClInclude Include="Third_party_soft\imgui\imconfig.h">
+      <Filter>Third_party_soft\ImGUI</Filter>
     </ClInclude>
-    <ClInclude Include="MathGeoLib\MathGeoLib.h">
-      <Filter>Sources\MathGeoLib</Filter>
+    <ClInclude Include="Third_party_soft\imgui\imgui.h">
+      <Filter>Third_party_soft\ImGUI</Filter>
     </ClInclude>
-    <ClInclude Include="MathGeoLib\MathGeoLibFwd.h">
-      <Filter>Sources\MathGeoLib</Filter>
+    <ClInclude Include="Third_party_soft\imgui\imgui_impl_sdl_gl3.h">
+      <Filter>Third_party_soft\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Third_party_soft\imgui\imgui_internal.h">
+      <Filter>Third_party_soft\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Third_party_soft\imgui\stb_rect_pack.h">
+      <Filter>Third_party_soft\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Third_party_soft\imgui\stb_textedit.h">
+      <Filter>Third_party_soft\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Third_party_soft\imgui\stb_truetype.h">
+      <Filter>Third_party_soft\ImGUI</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

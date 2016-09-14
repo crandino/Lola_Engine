@@ -1,8 +1,8 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleWindow.h"
-#include "imgui\imgui.h"
-#include "imgui\imgui_impl_sdl_gl3.h"
+#include "third_party_soft\imgui\imgui.h"
+#include "third_party_soft\imgui\imgui_impl_sdl_gl3.h"
 
 ModuleWindow::ModuleWindow(Application* app, bool start_enabled) : Module(app, start_enabled)
 {

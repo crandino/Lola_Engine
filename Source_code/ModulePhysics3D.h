@@ -5,7 +5,7 @@
 #include "Globals.h"
 #include "Primitive.h"
 
-#include "Bullet\include\btBulletDynamicsCommon.h"
+#include "third_party_soft\Bullet\include\btBulletDynamicsCommon.h"
 
 #include <list>
 

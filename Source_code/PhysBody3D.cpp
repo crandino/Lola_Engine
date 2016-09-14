@@ -1,6 +1,6 @@
 #include "PhysBody3D.h"
 #include "glmath.h"
-#include "Bullet\include\btBulletDynamicsCommon.h"
+#include "third_party_soft\Bullet\include\btBulletDynamicsCommon.h"
 
 // =================================================
 PhysBody3D::PhysBody3D(btRigidBody* body) : body(body)
