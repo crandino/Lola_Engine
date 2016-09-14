@@ -12,9 +12,9 @@
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
 #pragma comment (lib, "Glew/libx86/glew32.lib")  /* link Glew lib   */
 
-
 ModuleRenderer3D::ModuleRenderer3D(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
+	name.assign("Renderer3D");
 }
 
 // Destructor
@@ -74,7 +74,8 @@ bool ModuleRenderer3D::Init()
 		glClearDepth(1.0f);
 		
 		//Initialize clear color
-		glClearColor(0.f, 0.f, 0.f, 1.f);
+		//glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		clear_color = ImColor(114, 144, 154);
 
 		//Check for error
 		error = glGetError();
@@ -116,7 +117,7 @@ bool ModuleRenderer3D::Init()
 UPDATE_STATUS ModuleRenderer3D::PreUpdate(float dt)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	//glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
+	glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
 	glLoadIdentity();
 
 	glMatrixMode(GL_MODELVIEW);

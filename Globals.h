@@ -1,4 +1,6 @@
-#pragma once
+#ifndef __GLOBALS_H__
+#define __GLOBALS_H__
+
 #include <windows.h>
 #include <stdio.h>
 
@@ -31,3 +33,5 @@ enum UPDATE_STATUS
 #define WIN_FULLSCREEN_DESKTOP false
 #define VSYNC false
 #define TITLE "3D Physics Playground"
+
+#endif //!__GLOBALS_H__

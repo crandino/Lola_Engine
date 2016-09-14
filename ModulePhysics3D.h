@@ -1,4 +1,6 @@
-#pragma once
+#ifndef __MODULEPHYSICS_H__
+#define __MODULEPHYSICS_H__
+
 #include "Module.h"
 #include "Globals.h"
 #include "Primitive.h"
@@ -69,3 +71,5 @@ public:
 	Line line;
 	Primitive point;
 };
+
+#endif //!_MODULEPHYSICS_H__

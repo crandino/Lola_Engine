@@ -6,7 +6,7 @@
 #pragma comment( lib, "SDL/libx86/SDL2.lib" )
 #pragma comment( lib, "SDL/libx86/SDL2main.lib" )
 
-enum main_states
+enum MAIN_STATES
 {
 	MAIN_CREATION,
 	MAIN_START,
@@ -20,7 +20,7 @@ int main(int argc, char ** argv)
 	LOG("Starting game '%s'...", TITLE);
 
 	int main_return = EXIT_FAILURE;
-	main_states state = MAIN_CREATION;
+	MAIN_STATES state = MAIN_CREATION;
 	Application* App = NULL;
 
 	while (state != MAIN_EXIT)
