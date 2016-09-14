@@ -22,6 +22,9 @@
     <Filter Include="Sources\umgui">
       <UniqueIdentifier>{b7dfaa2a-f73f-4709-8cc0-2536955e7f96}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\MathGeoLib">
+      <UniqueIdentifier>{e419ded4-7243-428a-8225-bbc6ac5dd732}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -163,6 +166,15 @@
     </ClInclude>
     <ClInclude Include="imgui\imgui_impl_sdl_gl3.h">
       <Filter>Sources\umgui</Filter>
+    </ClInclude>
+    <ClInclude Include="MathGeoLib\MathBuildConfig.h">
+      <Filter>Sources\MathGeoLib</Filter>
+    </ClInclude>
+    <ClInclude Include="MathGeoLib\MathGeoLib.h">
+      <Filter>Sources\MathGeoLib</Filter>
+    </ClInclude>
+    <ClInclude Include="MathGeoLib\MathGeoLibFwd.h">
+      <Filter>Sources\MathGeoLib</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
