@@ -28,6 +28,7 @@ public:
 
 private:
 
+	bool					app_marked_for_closing = false;
 	Timer					ms_timer;
 	float					dt;
 	std::list<Module*>		list_modules;
@@ -40,6 +41,8 @@ public:
 	bool Init();
 	UPDATE_STATUS Update();
 	bool CleanUp();
+
+	void CloseApp();
 
 private:
 

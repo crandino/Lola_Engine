@@ -111,6 +111,10 @@ UPDATE_STATUS Application::Update()
 	}
 
 	FinishUpdate();
+
+	if (app_marked_for_closing)
+		ret = UPDATE_STATUS::UPDATE_STOP;
+
 	return ret;
 }
 
@@ -130,4 +134,9 @@ bool Application::CleanUp()
 void Application::AddModule(Module* mod)
 {
 	list_modules.push_back(mod);
+}
+
+void Application::CloseApp()
+{
+	app_marked_for_closing = true;
 }

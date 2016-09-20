@@ -37,6 +37,9 @@ UPDATE_STATUS ModuleEditor::PreUpdate(float dt)
 
 UPDATE_STATUS ModuleEditor::Update(float dt)
 {
+
+	ShowMenuBar();
+
 	return UPDATE_CONTINUE;
 }
 
@@ -51,4 +54,41 @@ bool ModuleEditor::CleanUp()
 	DEBUG("Closing ImGUI");
 	ImGui_ImplSdlGL3_Shutdown();
 	return true;
+}
+
+void ModuleEditor::ShowMenuBar()
+{
+	ImGui::BeginMainMenuBar();
+
+	if (ImGui::BeginMenu("File"))
+	{
+		ShowMenuFile();
+		ImGui::EndMenu();
+	}
+
+	if (ImGui::BeginMenu("Help"))
+	{
+		ImGui::MenuItem("About", NULL, &about_menu);
+		ImGui::EndMenu();
+	}
+
+	ImGui::EndMainMenuBar();
+
+	if(about_menu)
+		ShowAboutMenu();
+}
+
+void ModuleEditor::ShowMenuFile()
+{
+	if (ImGui::MenuItem("Quit", "ESC")) { App->CloseApp(); }	
+}
+
+void ModuleEditor::ShowAboutMenu()
+{
+	ImGui::Begin("About", &about_menu, ImGuiWindowFlags_AlwaysAutoResize);
+	ImGui::Text("dear imgui, %s", ImGui::GetVersion());
+	ImGui::Separator();
+	ImGui::Text("By Omar Cornut and all github contributors.");
+	ImGui::Text("ImGui is licensed under the MIT License, see LICENSE for more information.");
+	ImGui::End();
 }

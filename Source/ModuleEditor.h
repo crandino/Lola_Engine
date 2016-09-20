@@ -17,7 +17,17 @@ class ModuleEditor : public Module
 		UPDATE_STATUS PreUpdate(float dt);
 		UPDATE_STATUS Update(float dt);
 		UPDATE_STATUS PostUpdate(float dt);
-		bool CleanUp();		
+		bool CleanUp();	
+
+	private:
+		
+		//Windows variables
+		bool about_menu = false;
+
+		// Windows methods
+		void ShowMenuBar();
+		void ShowMenuFile();
+		void ShowAboutMenu();
 };
 
 #endif // !__MODULEIMGUI_H__
