@@ -15,6 +15,9 @@ void Debug(const char file[], int line, const char* format, ...);
 #define HAVE_M_PI
 
 typedef unsigned int uint;
+typedef unsigned __int32 uint32;
+typedef unsigned __int64 uint64;
+typedef unsigned char uchar;
 
 enum UPDATE_STATUS
 {
@@ -31,7 +34,7 @@ enum UPDATE_STATUS
 #define WIN_RESIZABLE true
 #define WIN_BORDERLESS false
 #define WIN_FULLSCREEN_DESKTOP false
-#define VSYNC false
+#define VSYNC true
 #define TITLE "3D Physics Playground"
 
 #endif //!__GLOBALS_H__

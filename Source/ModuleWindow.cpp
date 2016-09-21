@@ -61,7 +61,7 @@ bool ModuleWindow::Init()
 			flags |= SDL_WINDOW_BORDERLESS;
 		}
 
-		if(WIN_FULLSCREEN_DESKTOP == true)
+		if (WIN_FULLSCREEN_DESKTOP == true)
 		{
 			flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
 		}

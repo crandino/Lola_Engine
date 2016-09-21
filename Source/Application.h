@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Globals.h"
-#include "Timer.h"
 #include "Module.h"
 #include "ModuleWindow.h"
 #include "ModuleInput.h"
@@ -12,11 +11,14 @@
 #include "ModulePhysics3D.h"
 #include "ModuleEditor.h"
 
+#include "Performance.h"
+
 #include <list>
 
 class Application
 {
 public:
+
 	ModuleWindow		*window;
 	ModuleInput			*input;
 	ModuleAudio			*audio;
@@ -26,14 +28,7 @@ public:
 	ModulePhysics3D		*physics;
 	ModuleEditor	    *editor;
 
-private:
-
-	bool					app_marked_for_closing = false;
-	Timer					ms_timer;
-	float					dt;
-	std::list<Module*>		list_modules;
-
-public:
+	Performance			perf_info;
 
 	Application();
 	~Application();
@@ -43,10 +38,16 @@ public:
 	bool CleanUp();
 
 	void CloseApp();
+	void RequestBrowser(const char *web_adress);
 
 private:
 
-	void AddModule(Module* mod);
+	bool					app_marked_for_closing = false;
+	std::list<Module*>		list_modules;
+	
 	void PrepareUpdate();
-	void FinishUpdate();
+	void FinishUpdate();	
+
+	void AddModule(Module* mod);
+
 };

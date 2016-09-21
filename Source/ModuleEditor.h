@@ -23,11 +23,13 @@ class ModuleEditor : public Module
 		
 		//Windows variables
 		bool about_menu = false;
+		bool conf_menu = false;
 
 		// Windows methods
 		void ShowMenuBar();
 		void ShowMenuFile();
 		void ShowAboutMenu();
+		void ShowConfMenu();
 };
 
 #endif // !__MODULEIMGUI_H__

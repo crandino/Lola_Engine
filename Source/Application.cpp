@@ -34,7 +34,7 @@ Application::~Application()
 {
 	std::list<Module*>::reverse_iterator item = list_modules.rbegin();
 
-	while(item != list_modules.rend())
+	while (item != list_modules.rend())
 	{
 		delete (*item);
 		++item;
@@ -64,20 +64,19 @@ bool Application::Init()
 		++item;
 	}
 	
-	ms_timer.Start();
 	return ret;
 }
 
 // ---------------------------------------------
 void Application::PrepareUpdate()
 {
-	dt = (float)ms_timer.Read() / 1000.0f;
-	ms_timer.Start();
+	perf_info.PreUpdate();
 }
 
 // ---------------------------------------------
 void Application::FinishUpdate()
 {
+	perf_info.PostUpdate();
 }
 
 // Call PreUpdate, Update and PostUpdate on all modules
@@ -90,7 +89,7 @@ UPDATE_STATUS Application::Update()
 	
 	while(item != list_modules.end() && ret == UPDATE_CONTINUE)
 	{
-		ret = (*item)->PreUpdate(dt);
+		ret = (*item)->PreUpdate(perf_info.getDt());
 		++item;
 	}
 
@@ -98,7 +97,7 @@ UPDATE_STATUS Application::Update()
 
 	while(item != list_modules.end() && ret == UPDATE_CONTINUE)
 	{
-		ret = (*item)->Update(dt);
+		ret = (*item)->Update(perf_info.getDt());
 		++item;
 	}
 
@@ -106,7 +105,7 @@ UPDATE_STATUS Application::Update()
 
 	while(item != list_modules.end() && ret == UPDATE_CONTINUE)
 	{
-		ret = (*item)->PostUpdate(dt);
+		ret = (*item)->PostUpdate(perf_info.getDt());
 		++item;
 	}
 
@@ -139,4 +138,10 @@ void Application::AddModule(Module* mod)
 void Application::CloseApp()
 {
 	app_marked_for_closing = true;
+}
+
+void Application::RequestBrowser(const char *web_adress)
+{
+	ShellExecuteA(NULL, "open", web_adress, NULL, NULL, 0);
+	/*"C:/Program Files (x86)/Google/Chrome/Application"*/
 }

@@ -204,6 +204,9 @@
     <ClCompile Include="Source\MathGeoLib\Time\Clock.cpp">
       <Filter>3rd Party\MahtGeoLib\src</Filter>
     </ClCompile>
+    <ClCompile Include="Source\PerfTimer.cpp">
+      <Filter>Source\Tools</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Color.h">
@@ -469,6 +472,12 @@
     </ClInclude>
     <ClInclude Include="Source\MathGeoLib\Time\Clock.h">
       <Filter>3rd Party\MahtGeoLib\src</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\PerfTimer.h">
+      <Filter>Source\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Performance.h">
+      <Filter>Source\Helpers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

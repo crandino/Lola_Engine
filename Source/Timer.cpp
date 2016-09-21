@@ -26,7 +26,7 @@ void Timer::Stop()
 }
 
 // ---------------------------------------------
-Uint32 Timer::Read()
+Uint32 Timer::Read()  //Miliseconds
 {
 	if(running == true)
 	{
@@ -36,6 +36,11 @@ Uint32 Timer::Read()
 	{
 		return stopped_at - started_at;
 	}
+}
+
+float Timer::ReadSec()
+{
+	return Read() / 1000.0f;
 }
 
 
