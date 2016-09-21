@@ -35,15 +35,20 @@ UPDATE_STATUS ModuleEditor::PreUpdate(float dt)
 	if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
 		conf_menu = !conf_menu;
 
+	if (App->input->GetKey(SDL_SCANCODE_0) == KEY_DOWN)
+		console_menu = !console_menu;
+	
 	return UPDATE_CONTINUE;
 }
 
 UPDATE_STATUS ModuleEditor::Update(float dt)
 {
 	ShowMenuBar();
+	//ImGui::ShowTestWindow();
 
 	if (about_menu) ShowAboutMenu();
 	if (conf_menu) ShowConfMenu();
+	if (console_menu) ShowConsole();
 
 	return UPDATE_CONTINUE;
 }
@@ -61,6 +66,7 @@ bool ModuleEditor::CleanUp()
 	return true;
 }
 
+// Showing Windows
 void ModuleEditor::ShowMenuBar()
 {
 	ImGui::BeginMainMenuBar();
@@ -111,4 +117,9 @@ void ModuleEditor::ShowConfMenu()
 		ImGui::PlotHistogram("##miliseconds", App->perf_info.getMilisecondsHist(), HISTOGRAM_VALUES, 0, title, 0.0f, 40.0f, ImVec2(310, 100));
 	}	
 	ImGui::End();
+}
+
+void ModuleEditor::ShowConsole()
+{
+	console.Draw("Console", &console_menu);
 }

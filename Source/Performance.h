@@ -65,7 +65,7 @@ public:
 		{
 			if ((1000.0f / frame_rate) - (curr_dt) > 0)
 			{
-				Uint32 delay = (1000.0f / frame_rate) - (curr_dt);
+				Uint32 delay = (Uint32)((1000 / frame_rate) - (curr_dt));
 				SDL_Delay(delay);
 				curr_dt = dt_timer.ReadMs(); // Or maybe, add "delay" althought is less precise.
 			}

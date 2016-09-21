@@ -1,14 +1,13 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleInput.h"
+#include "Imgui\imgui_impl_sdl_gl3.h"
 
 #define MAX_KEYS 300
 
 ModuleInput::ModuleInput(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
 	name.assign("Input");
-
-	io = &(ImGui::GetIO());
 
 	keyboard = new KEY_STATE[MAX_KEYS];
 	memset(keyboard, KEY_IDLE, sizeof(KEY_STATE) * MAX_KEYS);
@@ -41,7 +40,6 @@ bool ModuleInput::Init()
 UPDATE_STATUS ModuleInput::PreUpdate(float dt)
 {
 	SDL_PumpEvents();
-	io->ClearInputCharacters();
 
 	const Uint8* keys = SDL_GetKeyboardState(NULL);
 	
@@ -50,11 +48,9 @@ UPDATE_STATUS ModuleInput::PreUpdate(float dt)
 		if(keys[i] == 1)
 		{
 			if (keyboard[i] == KEY_IDLE)
-			{
-				keyboard[i] = KEY_DOWN;
-			}				
+				keyboard[i] = KEY_DOWN;									
 			else
-				keyboard[i] = KEY_REPEAT;
+				keyboard[i] = KEY_REPEAT;			
 		}
 		else
 		{
@@ -88,15 +84,15 @@ UPDATE_STATUS ModuleInput::PreUpdate(float dt)
 				mouse_buttons[i] = KEY_IDLE;
 		}
 	}
-
+	
 	mouse_x_motion = mouse_y_motion = 0;
 	
-	SDL_StartTextInput();
-
 	bool quit = false;
+
 	SDL_Event e;
 	while(SDL_PollEvent(&e))
 	{
+		ImGui_ImplSdlGL3_ProcessEvent(&e);
 		switch(e.type)
 		{
 			case SDL_MOUSEWHEEL:
@@ -120,14 +116,9 @@ UPDATE_STATUS ModuleInput::PreUpdate(float dt)
 				if(e.window.event == SDL_WINDOWEVENT_RESIZED)
 					App->renderer3D->OnResize(e.window.data1, e.window.data2);
 			}
-
-			case SDL_TEXTINPUT:
-				io->AddInputCharactersUTF8(e.text.text);
 			break;
 		}
 	}
-
-	SDL_StopTextInput();
 
 	if(quit == true || keyboard[SDL_SCANCODE_ESCAPE] == KEY_UP)
 		return UPDATE_STOP;
