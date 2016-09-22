@@ -152,5 +152,5 @@ void Application::RequestBrowser(const char *web_adress)
 	/*"C:/Program Files (x86)/Google/Chrome/Application"*/
 }
 
-const char *Application::GetAppName() { return &app_name[0]; }
+const char *Application::GetAppName() { return app_name; }
 const char *Application::GetOrganization() { return organization; }

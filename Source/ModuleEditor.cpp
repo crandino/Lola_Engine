@@ -123,6 +123,13 @@ void ModuleEditor::ShowConfMenu()
 		sprintf_s(title, 25, "Miliseconds %.1f", App->perf_info.getMilisecondsHist()[HISTOGRAM_VALUES - 1]);
 		ImGui::PlotHistogram("##miliseconds", App->perf_info.getMilisecondsHist(), HISTOGRAM_VALUES, 0, title, 0.0f, 40.0f, ImVec2(310, 100));
 	}	
+	if (ImGui::CollapsingHeader("Hardware"))
+	{
+		static SDL_version ver; SDL_GetVersion(&ver);
+		ImGui::LabelText("", "%s", "SDL Version:");
+		ImGui::SameLine();
+		ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.5f, 1.0f), "%u.%u.%u", ver.major, ver.minor, ver.patch);
+	}
 	ImGui::End();
 }
 
