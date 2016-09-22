@@ -109,6 +109,13 @@ void ModuleEditor::ShowConfMenu()
 	ImGui::Begin("Configuration", &conf_menu);//ImGuiWindowFlags_AlwaysAutoResize
 	if(ImGui::CollapsingHeader("Application"))
 	{
+		// App name and organization
+		//const char *name = App->GetAppName();
+		ImGui::InputText("App name", (char*)App->GetAppName(), 128);
+		ImGui::InputText("Organization", (char*)App->GetOrganization(), 128);
+		ImGui::Separator();
+
+		// FPS and dt histograms
 		char title[25];
 		ImGui::SliderInt("Max FPS", &App->perf_info.getFrameRate(), 0, 75);
 		sprintf_s(title, 25, "Framerate %.1f", App->perf_info.getFrameRateHist()[HISTOGRAM_VALUES - 1]);

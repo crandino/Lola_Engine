@@ -28,6 +28,10 @@ Application::Application()
 
 	// Renderer last!
 	AddModule(renderer3D);
+
+	// Strings
+	sprintf_s(app_name, "LOLA Engine");
+	sprintf_s(organization, "CITM");
 }
 
 Application::~Application()
@@ -135,6 +139,8 @@ void Application::AddModule(Module* mod)
 	list_modules.push_back(mod);
 }
 
+// *************** Utilities ********************
+
 void Application::CloseApp()
 {
 	app_marked_for_closing = true;
@@ -145,3 +151,6 @@ void Application::RequestBrowser(const char *web_adress)
 	ShellExecuteA(NULL, "open", web_adress, NULL, NULL, 0);
 	/*"C:/Program Files (x86)/Google/Chrome/Application"*/
 }
+
+const char *Application::GetAppName() { return &app_name[0]; }
+const char *Application::GetOrganization() { return organization; }

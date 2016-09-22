@@ -21,6 +21,7 @@ class Application
 public:
 
 	Console				console;
+	Performance			perf_info;
 
 	ModuleWindow		*window;
 	ModuleInput			*input;
@@ -29,9 +30,7 @@ public:
 	ModuleRenderer3D	*renderer3D;
 	ModuleCamera3D		*camera;
 	ModulePhysics3D		*physics;
-	ModuleEditor	    *editor;
-
-	Performance			perf_info;
+	ModuleEditor	    *editor;	
 
 	Application();
 	~Application();
@@ -43,7 +42,12 @@ public:
 	void CloseApp();
 	void RequestBrowser(const char *web_adress);
 
+	const char *GetAppName();
+	const char *GetOrganization();
+		
 private:
+
+	char app_name[128], organization[128];
 
 	bool					app_marked_for_closing = false;
 	std::list<Module*>		list_modules;

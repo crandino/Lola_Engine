@@ -26,7 +26,7 @@ struct Console
 		Commands.push_back("HISTORY");
 		Commands.push_back("CLEAR");
 		Commands.push_back("CLASSIFY");  // "classify" is here to provide an example of "C"+[tab] completing to "CL" and displaying matches.
-		AddLOG("Welcome to ImGui!");
+		//AddLOG("Welcome to ImGui!");
 	}
 	~Console()
 	{
@@ -69,13 +69,13 @@ struct Console
 			return;
 		}
 
-		ImGui::TextWrapped("This example implements a console with basic coloring, completion and history. A more elaborate implementation may want to store entries along with extra data such as timestamp, emitter, etc.");
-		ImGui::TextWrapped("Enter 'HELP' for help, press TAB to use text completion.");
+		/*ImGui::TextWrapped("This example implements a console with basic coloring, completion and history. A more elaborate implementation may want to store entries along with extra data such as timestamp, emitter, etc.");
+		ImGui::TextWrapped("Enter 'HELP' for help, press TAB to use text completion."); */
 
 		// TODO: display items starting from the bottom
 
-		if (ImGui::SmallButton("Add Dummy Text")) { AddLOG("%d some text", Items.Size); AddLOG("some more text"); AddLOG("display very important message here!"); } ImGui::SameLine();
-		if (ImGui::SmallButton("Add Dummy Error")) AddLOG("[error] something went wrong"); ImGui::SameLine();
+		//if (ImGui::SmallButton("Add Dummy Text")) { AddLOG("%d some text", Items.Size); AddLOG("some more text"); AddLOG("display very important message here!"); } ImGui::SameLine();
+		//if (ImGui::SmallButton("Add Dummy Error")) AddLOG("[error] something went wrong"); ImGui::SameLine();
 		if (ImGui::SmallButton("Clear")) ClearLOG(); ImGui::SameLine();
 		if (ImGui::SmallButton("Scroll to bottom")) ScrollToBottom = true;
 		//static float t = 0.0f; if (ImGui::GetTime() - t > 0.02f) { t = ImGui::GetTime(); AddLOG("Spam %f", t); }
