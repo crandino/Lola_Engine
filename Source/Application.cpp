@@ -30,8 +30,8 @@ Application::Application()
 	AddModule(renderer3D);
 
 	// Strings
-	sprintf_s(app_name, "LOLA Engine");
-	sprintf_s(organization, "CITM");
+	sprintf_s(app_name, SHORT_STRING, "LOLA Engine");
+	sprintf_s(organization, SHORT_STRING, "CITM");
 }
 
 Application::~Application()

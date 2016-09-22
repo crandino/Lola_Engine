@@ -14,6 +14,10 @@ void Debug(const char file[], int line, const char* format, ...);
 #define RADTODEG 57.295779513082320876f
 #define HAVE_M_PI
 
+#define SHORT_STRING 128
+#define MEDIUM_STRING 256
+#define LONG_STRING 512
+
 typedef unsigned int uint;
 typedef unsigned __int32 uint32;
 typedef unsigned __int64 uint64;

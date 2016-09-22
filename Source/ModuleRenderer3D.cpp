@@ -33,10 +33,14 @@ bool ModuleRenderer3D::Init()
 		ret = false;
 	}
 
+	sprintf_s(gl_version, SHORT_STRING, "%s", glGetString(GL_VERSION));
+
 	GLenum gl_enum = glewInit();
 
 	if (gl_enum != GLEW_OK)
 		App->console.AddLOG("[error] Glew hasn't been initialized!");
+
+	sprintf_s(glew_version, SHORT_STRING, "%s", glewGetString(GLEW_VERSION));
 	
 	if(ret == true)
 	{

@@ -47,7 +47,7 @@ public:
 		
 private:
 
-	char app_name[128], organization[128];
+	char app_name[SHORT_STRING], organization[SHORT_STRING];
 
 	bool					app_marked_for_closing = false;
 	std::list<Module*>		list_modules;

@@ -1,6 +1,7 @@
 #include "ModuleEditor.h"
 #include "Application.h"
 #include "ModuleWindow.h"
+#include "ModuleRenderer3D.h"
 #include "imgui\imgui.h"
 #include "imgui\imgui_impl_sdl_gl3.h"
 
@@ -123,12 +124,35 @@ void ModuleEditor::ShowConfMenu()
 		sprintf_s(title, 25, "Miliseconds %.1f", App->perf_info.getMilisecondsHist()[HISTOGRAM_VALUES - 1]);
 		ImGui::PlotHistogram("##miliseconds", App->perf_info.getMilisecondsHist(), HISTOGRAM_VALUES, 0, title, 0.0f, 40.0f, ImVec2(310, 100));
 	}	
-	if (ImGui::CollapsingHeader("Hardware"))
+	if (ImGui::CollapsingHeader("Software & Hardware"))
 	{
+		ImGui::LabelText("", "%s", "Software");
+		ImGui::Separator();
+
+		// SDL
 		static SDL_version ver; SDL_GetVersion(&ver);
-		ImGui::LabelText("", "%s", "SDL Version:");
-		ImGui::SameLine();
+		ImGui::LabelText("", "%s", "SDL Version:"); ImGui::SameLine();		
 		ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.5f, 1.0f), "%u.%u.%u", ver.major, ver.minor, ver.patch);
+
+		// OpenGL
+		ImGui::LabelText("", "%s", "OpenGL Version:"); ImGui::SameLine();
+		ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.5f, 1.0f), "%s", App->renderer3D->gl_version);
+
+		// Glew
+		ImGui::LabelText("", "%s", "GLew Version:"); ImGui::SameLine();
+		ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.5f, 1.0f), "%s", App->renderer3D->glew_version);
+
+		// Bullet
+		ImGui::LabelText("", "%s", "Bullet Version:"); ImGui::SameLine();
+		ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.5f, 1.0f), "%u.%u", BT_BULLET_VERSION / 100, BT_BULLET_VERSION % 200);
+
+		// ImGUI
+		ImGui::LabelText("", "%s", "ImGUI Version:"); ImGui::SameLine();
+		ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.5f, 1.0f), "%s", ImGui::GetVersion());
+
+		//MathGeoLib
+		ImGui::LabelText("", "%s", "MathGeoLib Version:"); ImGui::SameLine();
+		ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.5f, 1.0f), "%s", "1.5");
 	}
 	ImGui::End();
 }
