@@ -40,7 +40,7 @@ struct Console
 	static int   Strnicmp(const char* str1, const char* str2, int n) { int d = 0; while (n > 0 && (d = toupper(*str2) - toupper(*str1)) == 0 && *str1) { str1++; str2++; n--; } return d; }
 	static char* Strdup(const char *str) { size_t len = strlen(str) + 1; void* buff = malloc(len); return (char*)memcpy(buff, (const void*)str, len); }
 
-	void    ClearLOG()
+	void ClearLOG()
 	{
 		for (int i = 0; i < Items.Size; i++)
 			free(Items[i]);
@@ -48,7 +48,7 @@ struct Console
 		ScrollToBottom = true;
 	}
 
-	void    AddLOG(const char* fmt, ...) IM_PRINTFARGS(2)
+	void AddLOG(const char* fmt, ...) IM_PRINTFARGS(2)
 	{
 		char buf[1024];
 		va_list args;
@@ -60,7 +60,7 @@ struct Console
 		ScrollToBottom = true;
 	}
 
-	void    Draw(const char* title, bool* p_open)
+	void Draw(const char* title, bool* p_open)
 	{
 		ImGui::SetNextWindowSize(ImVec2(520, 600), ImGuiSetCond_FirstUseEver);
 		if (!ImGui::Begin(title, p_open))
@@ -186,7 +186,7 @@ struct Console
 		return console->TextEditCallback(data);
 	}
 
-	int     TextEditCallback(ImGuiTextEditCallbackData* data)
+	int TextEditCallback(ImGuiTextEditCallbackData* data)
 	{
 		//AddLOG("cursor: %d, selection: %d-%d", data->CursorPos, data->SelectionStart, data->SelectionEnd);
 		switch (data->EventFlag)

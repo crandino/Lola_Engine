@@ -23,13 +23,13 @@ ModuleInput::~ModuleInput()
 // Called before render is available
 bool ModuleInput::Init()
 {
-	DEBUG("Init SDL input event system");
+	App->console.AddLOG("Init SDL input event system");
 	bool ret = true;
 	SDL_Init(0);
 
 	if(SDL_InitSubSystem(SDL_INIT_EVENTS) < 0)
 	{
-		DEBUG("SDL_EVENTS could not initialize! SDL_Error: %s\n", SDL_GetError());
+		App->console.AddLOG("[error] SDL_EVENTS could not initialize! SDL_Error: %s\n", SDL_GetError());
 		ret = false;
 	}
 
@@ -129,7 +129,7 @@ UPDATE_STATUS ModuleInput::PreUpdate(float dt)
 // Called before quitting
 bool ModuleInput::CleanUp()
 {
-	DEBUG("Quitting SDL input event subsystem");
+	App->console.AddLOG("Quitting SDL input event subsystem");
 	SDL_QuitSubSystem(SDL_INIT_EVENTS);
 	return true;
 }

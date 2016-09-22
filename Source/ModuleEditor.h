@@ -3,7 +3,6 @@
 
 #include "Module.h"
 #include "Globals.h"
-#include "Console.h"
 
 class ModuleEditor : public Module
 {
@@ -20,8 +19,6 @@ class ModuleEditor : public Module
 
 	private:
 		
-		Console console;
-
 		//Windows variables
 		bool about_menu = false;
 		bool conf_menu = false;

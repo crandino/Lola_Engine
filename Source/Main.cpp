@@ -17,11 +17,9 @@ enum MAIN_STATES
 
 int main(int argc, char ** argv)
 {
-	DEBUG("Starting game '%s'...", TITLE);
-
 	int main_return = EXIT_FAILURE;
 	MAIN_STATES state = MAIN_CREATION;
-	Application* App = NULL;
+	Application* App = NULL;	
 
 	while (state != MAIN_EXIT)
 	{
@@ -29,23 +27,24 @@ int main(int argc, char ** argv)
 		{
 		case MAIN_CREATION:
 
-			DEBUG("-------------- Application Creation --------------");
 			App = new Application();
+			App->console.AddLOG("Starting game '%s'...", TITLE);
+			App->console.AddLOG("-------------- Application Creation --------------");
 			state = MAIN_START;
 			break;
 
 		case MAIN_START:
 
-			DEBUG("-------------- Application Init --------------");
+			App->console.AddLOG("-------------- Application Init --------------");
 			if (App->Init() == false)
 			{
-				DEBUG("Application Init exits with ERROR");
+				App->console.AddLOG("[error] Application Init exits with ERROR");
 				state = MAIN_EXIT;
 			}
 			else
 			{
 				state = MAIN_UPDATE;
-				DEBUG("-------------- Application Update --------------");
+				App->console.AddLOG("-------------- Application Update --------------");
 			}
 
 			break;
@@ -56,7 +55,7 @@ int main(int argc, char ** argv)
 
 			if (update_return == UPDATE_ERROR)
 			{
-				DEBUG("Application Update exits with ERROR");
+				App->console.AddLOG("[error] Application Update exits with ERROR");
 				state = MAIN_EXIT;
 			}
 
@@ -67,10 +66,10 @@ int main(int argc, char ** argv)
 
 		case MAIN_FINISH:
 
-			DEBUG("-------------- Application CleanUp --------------");
+			App->console.AddLOG("-------------- Application CleanUp --------------");
 			if (App->CleanUp() == false)
 			{
-				DEBUG("Application CleanUp exits with ERROR");
+				App->console.AddLOG("[error] Application CleanUp exits with ERROR");
 			}
 			else
 				main_return = EXIT_SUCCESS;
@@ -82,7 +81,8 @@ int main(int argc, char ** argv)
 		}
 	}
 
+	App->console.AddLOG("Exiting game '%s'...\n", TITLE);
 	delete App;
-	DEBUG("Exiting game '%s'...\n", TITLE);
+	
 	return main_return;
 }

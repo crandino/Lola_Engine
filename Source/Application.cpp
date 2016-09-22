@@ -55,7 +55,7 @@ bool Application::Init()
 	}
 
 	// After all Init calls we call Start() in all modules
-	DEBUG("Application Start --------------");
+	console.AddLOG("-------------- Application Start --------------");
 	item = list_modules.begin();
 
 	while(item != list_modules.end() && ret == true)

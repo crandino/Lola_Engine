@@ -14,7 +14,7 @@ ModuleSceneIntro::~ModuleSceneIntro()
 // Load assets
 bool ModuleSceneIntro::Start()
 {
-	DEBUG("Loading Intro scene");
+	App->console.AddLOG("Loading Intro scene");
 	bool ret = true;
 
 	return ret;
@@ -23,7 +23,7 @@ bool ModuleSceneIntro::Start()
 // Cleaning assets
 bool ModuleSceneIntro::CleanUp()
 {
-	DEBUG("Unloading Intro scene");
+	App->console.AddLOG("Unloading Intro scene");
 	return true;
 }
 

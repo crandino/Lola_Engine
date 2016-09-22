@@ -12,12 +12,15 @@
 #include "ModuleEditor.h"
 
 #include "Performance.h"
+#include "Console.h"
 
 #include <list>
 
 class Application
 {
 public:
+
+	Console				console;
 
 	ModuleWindow		*window;
 	ModuleInput			*input;
