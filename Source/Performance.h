@@ -17,7 +17,8 @@ private:
 	// Timers and DT
 	PerfTimer	dt_timer;
 	Timer		total_timer;
-	float		dt;
+	float		ms_dt;
+	float		sec_dt;
 
 	int			frame_rate;					// Current framerate
 	uint		avg_fps;
@@ -50,7 +51,8 @@ public:
 	void PreUpdate()
 	{
 		// Calculate dt. Differential time since last frame.
-		dt = dt_timer.ReadMs();
+		ms_dt = dt_timer.ReadMs();
+		sec_dt = ms_dt / 1000.0f;
 
 		// Starting timers
 		dt_timer.Start();
@@ -97,7 +99,9 @@ public:
 	}
 
 	// Getters
-	float &getDt() { return dt; }
+	float &getMsDt() { return ms_dt; }
+	float &getSecDt() { return sec_dt; }
+
 	int &getFrameRate() { return frame_rate; }
 	float *getFrameRateHist() {return frame_rate_hist; }
 	float *getMilisecondsHist()	{ return miliseconds_hist; }

@@ -32,7 +32,7 @@ public:
 	
 	Color color;
 	math::float4x4 transform;			// With glmath.h was mat4x4
-	bool axis,wire;
+	bool axis, wire;
 
 protected:
 	PrimitiveTypes type;

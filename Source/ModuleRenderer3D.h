@@ -26,6 +26,8 @@ public:
 
 	void OnResize(int width, int height);
 
+	void DrawDirectMode();
+
 public:
 
 	//ImVec4 clear_color;

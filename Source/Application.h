@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __APPLICATION_H__
+#define __APPLICATION_H__
 
 #include "Globals.h"
 #include "Module.h"
@@ -58,3 +59,5 @@ private:
 	void AddModule(Module* mod);
 
 };
+
+#endif //!__APPLICATION_H__

@@ -93,7 +93,7 @@ UPDATE_STATUS Application::Update()
 	
 	while(item != list_modules.end() && ret == UPDATE_CONTINUE)
 	{
-		ret = (*item)->PreUpdate(perf_info.getDt());
+		ret = (*item)->PreUpdate(perf_info.getSecDt());
 		++item;
 	}
 
@@ -101,7 +101,7 @@ UPDATE_STATUS Application::Update()
 
 	while(item != list_modules.end() && ret == UPDATE_CONTINUE)
 	{
-		ret = (*item)->Update(perf_info.getDt());
+		ret = (*item)->Update(perf_info.getSecDt());
 		++item;
 	}
 
@@ -109,7 +109,7 @@ UPDATE_STATUS Application::Update()
 
 	while(item != list_modules.end() && ret == UPDATE_CONTINUE)
 	{
-		ret = (*item)->PostUpdate(perf_info.getDt());
+		ret = (*item)->PostUpdate(perf_info.getSecDt());
 		++item;
 	}
 
