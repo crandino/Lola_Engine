@@ -14,7 +14,7 @@ ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled) : Module(ap
 	Y.Set(0.0f, 1.0f, 0.0f);
 	Z.Set(0.0f, 0.0f, 1.0f);
 
-	Position.Set(0.0f, 0.0f, 5.0f);
+	Position.Set(1.0f, 0.0f, 4.0f);
 	Reference.Set(0.0f, 0.0f, 0.0f);
 }
 
