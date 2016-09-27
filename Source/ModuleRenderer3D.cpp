@@ -188,134 +188,98 @@ void ModuleRenderer3D::OnResize(int width, int height)
 
 void ModuleRenderer3D::DrawDirectMode()
 {
-	const int num_vertices = 36;
+	// --- Array Vertexs --- drawn by index: see Index Array
+	const int num_vertices = 8;
 	math::vec *vertices = new math::vec[num_vertices];
 	int i = 0;
 
-	// Bottom
-	vertices[i++] = { 0.0f, 0.0f, 0.0f };
-	vertices[i++] = { 2.5f, 0.0f, 0.0f };
-	vertices[i++] = { 0.0f, 0.0f, 2.5f };
-	vertices[i++] = { 0.0f, 0.0f, 2.5f };
-	vertices[i++] = { 2.5f, 0.0f, 0.0f };
-	vertices[i++] = { 2.5f, 0.0f, 2.5f };
+	/*       6-------7
+	       / ¦     / |
+		  2 -¦--- 3  |
+		  |  4----|- 5                      
+          | /     | /
+		  0 ----- 1	
+	*/
 
-	// Top
-	vertices[i++] = { 0.0f, 2.5f, 0.0f };
-	vertices[i++] = { 0.0f, 2.5f, 2.5f };
-	vertices[i++] = { 2.5f, 2.5f, 0.0f };
-	vertices[i++] = { 2.5f, 2.5f, 0.0f };
-	vertices[i++] = { 0.0f, 2.5f, 2.5f };
-	vertices[i++] = { 2.5f, 2.5f, 2.5f };
-
-	// Front
-	vertices[i++] = { 0.0f, 0.0f, 0.0f };
-	vertices[i++] = { 0.0f, 0.0f, 2.5f };
-	vertices[i++] = { 0.0f, 2.5f, 0.0f };
-	vertices[i++] = { 0.0f, 0.0f, 2.5f };
-	vertices[i++] = { 0.0f, 2.5f, 2.5f };
-	vertices[i++] = { 0.0f, 2.5f, 0.0f };
-
-	// Right
-	vertices[i++] = { 0.0f, 0.0f, 2.5f };
-	vertices[i++] = { 2.5f, 0.0f, 2.5f };
-	vertices[i++] = { 0.0f, 2.5f, 2.5f };
-	vertices[i++] = { 2.5f, 0.0f, 2.5f };
-	vertices[i++] = { 2.5f, 2.5f, 2.5f };
-	vertices[i++] = { 0.0f, 2.5f, 2.5f };
-
-	// Left
-	vertices[i++] = { 0.0f, 0.0f, 0.0f };
-	vertices[i++] = { 2.5f, 2.5f, 0.0f };
-	vertices[i++] = { 2.5f, 0.0f, 0.0f };
-	vertices[i++] = { 0.0f, 0.0f, 0.0f };
-	vertices[i++] = { 0.0f, 2.5f, 0.0f };
-	vertices[i++] = { 2.5f, 2.5f, 0.0f };
-
-	// Rear
-	vertices[i++] = { 2.5f, 0.0f, 0.0f };
-	vertices[i++] = { 2.5f, 2.5f, 0.0f };
-	vertices[i++] = { 2.5f, 0.0f, 2.5f };
-	vertices[i++] = { 2.5f, 2.5f, 0.0f };
-	vertices[i++] = { 2.5f, 2.5f, 2.5f };
-	vertices[i++] = { 2.5f, 0.0f, 2.5f };
+	vertices[i++] = { 0.0f, 0.0f, 0.0f };  // 0
+	vertices[i++] = { 0.0f, 0.0f, 2.0f };  // 1
+	vertices[i++] = { 0.0f, 2.0f, 0.0f };  // 2
+	vertices[i++] = { 0.0f, 2.0f, 2.0f };  // 3
+	vertices[i++] = { 2.0f, 0.0f, 0.0f };  // 4
+	vertices[i++] = { 2.0f, 0.0f, 2.0f };  // 5
+	vertices[i++] = { 2.0f, 2.0f, 0.0f };  // 6
+	vertices[i++] = { 2.0f, 2.0f, 2.0f };  // 7
 
 	uint my_id = 0;
+	glEnableClientState(GL_VERTEX_ARRAY);
 	glGenBuffers(1, (GLuint*) &(my_id));
 	glBindBuffer(GL_ARRAY_BUFFER, my_id);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * num_vertices * 3, vertices, GL_STATIC_DRAW);
-	glEnableClientState(GL_VERTEX_ARRAY);
 	glBindBuffer(GL_ARRAY_BUFFER, my_id);
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
-	// ... draw other buffers
-	glDrawArrays(GL_TRIANGLES, 0, num_vertices * 3);
+
+	//glDrawArrays(GL_TRIANGLES, 0, num_vertices * 3);
+
+	// --- Index Array ----
+	const int num_indices = 36;
+	uint *indices = new uint[num_indices];
+	i = 0;
+
+	// Front
+	indices[i++] = 0;
+	indices[i++] = 1;
+	indices[i++] = 2;
+	indices[i++] = 1;
+	indices[i++] = 3;
+	indices[i++] = 2;
+
+	// Right
+	indices[i++] = 3;
+	indices[i++] = 1;
+	indices[i++] = 5;
+	indices[i++] = 3;
+	indices[i++] = 5;
+	indices[i++] = 7;
+
+	// Left
+	indices[i++] = 4;
+	indices[i++] = 0;
+	indices[i++] = 2;
+	indices[i++] = 2;
+	indices[i++] = 6;
+	indices[i++] = 4;
+
+	// Rear
+	indices[i++] = 6;
+	indices[i++] = 5;
+	indices[i++] = 4;
+	indices[i++] = 6;
+	indices[i++] = 7;
+	indices[i++] = 5;
+
+	// Top
+	indices[i++] = 6;
+	indices[i++] = 2;
+	indices[i++] = 3;
+	indices[i++] = 6;
+	indices[i++] = 3;
+	indices[i++] = 7;
+
+	// Bottom
+	indices[i++] = 0;
+	indices[i++] = 4;
+	indices[i++] = 1;
+	indices[i++] = 4;
+	indices[i++] = 5;
+	indices[i++] = 1;
+
+	uint my_indices = 0;
+	glGenBuffers(1, (GLuint*) &(my_indices));
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, my_indices);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint)*num_indices, indices, GL_STATIC_DRAW);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, my_indices);
+	glIndexPointer(GL_UNSIGNED_INT, 0, NULL);
+	glDrawElements(GL_TRIANGLES, sizeof(uint)*num_indices, GL_UNSIGNED_INT, NULL);
 	glDisableClientState(GL_VERTEX_ARRAY);
 
-	//glBegin(GL_TRIANGLES);
-
-	//glLineWidth(2.0f);
-
-	//// Bottom
-	//glNormal3f(0.0f, -1.0f, 0.0f);
-	//glVertex3f(0.0f, 0.0f, 0.0f);
-	//glVertex3f(2.5f, 0.0f, 0.0f);
-	//glVertex3f(0.0f, 0.0f, 2.5f);	
-
-	//glVertex3f(0.0f, 0.0f, 2.5f);
-	//glVertex3f(2.5f, 0.0f, 0.0f);
-	//glVertex3f(2.5f, 0.0f, 2.5f);		
-
-	//// Top
-	//glNormal3f(0.0f, 1.0f, 0.0f);
-	//glVertex3f(0.0f, 2.5f, 0.0f);
-	//glVertex3f(0.0f, 2.5f, 2.5f);
-	//glVertex3f(2.5f, 2.5f, 0.0f);	
-
-	//glVertex3f(2.5f, 2.5f, 0.0f);
-	//glVertex3f(0.0f, 2.5f, 2.5f);
-	//glVertex3f(2.5f, 2.5f, 2.5f);
-
-	//// Front
-	//glNormal3f(0.0f, 0.0f, 1.0f);
-	//glVertex3f(0.0f, 0.0f, 0.0f);
-	//glVertex3f(0.0f, 0.0f, 2.5f);
-	//glVertex3f(0.0f, 2.5f, 0.0f);
-
-	//glVertex3f(0.0f, 0.0f, 2.5f);
-	//glVertex3f(0.0f, 2.5f, 2.5f);
-	//glVertex3f(0.0f, 2.5f, 0.0f);
-
-	//// Right
-	//glNormal3f(1.0f, 0.0f, 0.0f);
-	//glVertex3f(0.0f, 0.0f, 2.5f);
-	//glVertex3f(2.5f, 0.0f, 2.5f);
-	//glVertex3f(0.0f, 2.5f, 2.5f);
-
-	//glVertex3f(2.5f, 0.0f, 2.5f);
-	//glVertex3f(2.5f, 2.5f, 2.5f);
-	//glVertex3f(0.0f, 2.5f, 2.5f);
-
-	//// Left
-	//glNormal3f(-1.0f, 0.0f, 0.0f);
-	//glVertex3f(0.0f, 0.0f, 0.0f);
-	//glVertex3f(2.5f, 2.5f, 0.0f);
-	//glVertex3f(2.5f, 0.0f, 0.0f);
-
-	//glVertex3f(0.0f, 0.0f, 0.0f);
-	//glVertex3f(0.0f, 2.5f, 0.0f);
-	//glVertex3f(2.5f, 2.5f, 0.0f);
-
-	//// Rear
-	//glNormal3f(0.0f, 0.0f, -1.0f);
-	//glVertex3f(2.5f, 0.0f, 0.0f);
-	//glVertex3f(2.5f, 2.5f, 0.0f);
-	//glVertex3f(2.5f, 0.0f, 2.5f);	
-
-	//glVertex3f(2.5f, 2.5f, 0.0f);
-	//glVertex3f(2.5f, 2.5f, 2.5f);
-	//glVertex3f(2.5f, 0.0f, 2.5f);
-
-	//glLineWidth(1.0f);
-
-	//glEnd();
 }
