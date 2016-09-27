@@ -131,7 +131,8 @@ UPDATE_STATUS ModuleRenderer3D::PreUpdate(float dt)
 	for(uint i = 0; i < MAX_LIGHTS; ++i)
 		lights[i].Render();
 
-	DrawDirectMode();
+	//DrawDirectMode();
+	DrawSolidSphere(2.0, 50, 50);
 
 	return UPDATE_CONTINUE;
 }
@@ -188,6 +189,8 @@ void ModuleRenderer3D::OnResize(int width, int height)
 
 void ModuleRenderer3D::DrawDirectMode()
 {
+	glEnableClientState(GL_VERTEX_ARRAY);
+	
 	// --- Array Vertexs --- drawn by index: see Index Array
 	const int num_vertices = 8;
 	math::vec *vertices = new math::vec[num_vertices];
@@ -195,10 +198,10 @@ void ModuleRenderer3D::DrawDirectMode()
 
 	/*       6-------7
 	       / ¦     / |
-		  2 -¦--- 3  |
-		  |  4----|- 5                      
-          | /     | /
-		  0 ----- 1	
+		  2 -¦--- 3  |   Y     X
+		  |  4----|- 5   |   /                 
+          | /     | /    | /
+		  0 ----- 1	     O __ __ Z
 	*/
 
 	vertices[i++] = { 0.0f, 0.0f, 0.0f };  // 0
@@ -210,8 +213,7 @@ void ModuleRenderer3D::DrawDirectMode()
 	vertices[i++] = { 2.0f, 2.0f, 0.0f };  // 6
 	vertices[i++] = { 2.0f, 2.0f, 2.0f };  // 7
 
-	uint my_id = 0;
-	glEnableClientState(GL_VERTEX_ARRAY);
+	uint my_id = 0;	
 	glGenBuffers(1, (GLuint*) &(my_id));
 	glBindBuffer(GL_ARRAY_BUFFER, my_id);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * num_vertices * 3, vertices, GL_STATIC_DRAW);
@@ -278,8 +280,70 @@ void ModuleRenderer3D::DrawDirectMode()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, my_indices);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint)*num_indices, indices, GL_STATIC_DRAW);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, my_indices);
-	glIndexPointer(GL_UNSIGNED_INT, 0, NULL);
-	glDrawElements(GL_TRIANGLES, sizeof(uint)*num_indices, GL_UNSIGNED_INT, NULL);
+	
+	glDrawElements(GL_TRIANGLES, num_indices, GL_UNSIGNED_INT, NULL);
 	glDisableClientState(GL_VERTEX_ARRAY);
+
+}
+
+void ModuleRenderer3D::DrawSolidSphere(float radius, unsigned int rings, unsigned int sectors)
+{
+	float const R = 1. / (float)(rings - 1);
+	float const S = 1. / (float)(sectors - 1);
+	int r, s;
+
+	GLfloat *vertices = new GLfloat[rings * sectors * 3];
+	GLfloat *normals = new GLfloat[rings * sectors * 3];	
+	//texcoords.resize(rings * sectors * 2);
+
+	GLfloat *v = vertices;
+	GLfloat *n = normals;
+
+	for (r = 0; r < rings; r++) for (s = 0; s < sectors; s++) {
+		float const y = math::Sin((-math::pi / 2.0f) + math::pi * r * R);
+		float const x = math::Cos(2.0f * math::pi * s * S) * math::Sin(math::pi * r * R);
+		float const z = math::Sin(2.0f * math::pi * s * S) * math::Sin(math::pi * r * R);
+
+	/*	*t++ = s*S;
+		*t++ = r*R;*/
+
+		*v++ = x * radius;
+		*v++ = y * radius;
+		*v++ = z * radius;		
+
+		*n++ = x;
+		*n++ = y;
+		*n++ = z;
+	}
+
+	GLushort *indices = new GLushort[(rings - 1) * (sectors - 1) * 4];
+	GLushort *i = indices;
+	//indices.resize(rings * sectors * 4);
+	//std::vector<GLushort>::iterator i = indices.begin();
+
+	for (r = 0; r < rings - 1; r++)
+	{
+		for (s = 0; s < sectors - 1; s++)
+		{
+			*i++ = r * sectors + s;
+			*i++ = r * sectors + (s + 1);
+			*i++ = (r + 1) * sectors + (s + 1);
+			*i++ = (r + 1) * sectors + s;
+		}
+	}
+
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glEnableClientState(GL_NORMAL_ARRAY);
+	//glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+	glVertexPointer(3, GL_FLOAT, 0, &vertices[0]);
+	glNormalPointer(GL_FLOAT, 0, &normals[0]);
+	//glTexCoordPointer(2, GL_FLOAT, 0, &texcoords[0]);
+	glDrawElements(GL_QUADS, (rings - 1) * (sectors - 1) * 4, GL_UNSIGNED_SHORT, &indices[0]);
+	
+	glDisableClientState(GL_VERTEX_ARRAY);
+	glDisableClientState(GL_NORMAL_ARRAY);
 
 }

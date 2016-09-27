@@ -27,6 +27,7 @@ public:
 	void OnResize(int width, int height);
 
 	void DrawDirectMode();
+	void DrawSolidSphere(float radius, unsigned int rings, unsigned int sectors);
 
 public:
 
