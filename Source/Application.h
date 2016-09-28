@@ -11,6 +11,7 @@
 #include "ModuleCamera3D.h"
 #include "ModulePhysics3D.h"
 #include "ModuleEditor.h"
+#include "ModuleGeometryLoader.h"
 
 #include "Performance.h"
 #include "Console.h"
@@ -21,17 +22,18 @@ class Application
 {
 public:
 
-	Console				console;
-	Performance			perf_info;
+	Console					console;
+	Performance				perf_info;
 
-	ModuleWindow		*window;
-	ModuleInput			*input;
-	ModuleAudio			*audio;
-	ModuleSceneIntro	*scene_intro;
-	ModuleRenderer3D	*renderer3D;
-	ModuleCamera3D		*camera;
-	ModulePhysics3D		*physics;
-	ModuleEditor	    *editor;	
+	ModuleWindow			*window;
+	ModuleGeometryLoader    *geo_loader;
+	ModuleInput				*input;
+	ModuleAudio				*audio;
+	ModuleSceneIntro		*scene_intro;
+	ModuleRenderer3D		*renderer3D;
+	ModuleCamera3D			*camera;
+	ModulePhysics3D			*physics;
+	ModuleEditor			*editor;	
 
 	Application();
 	~Application();

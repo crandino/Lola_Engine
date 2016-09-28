@@ -207,6 +207,7 @@
     <ClCompile Include="Source\PerfTimer.cpp">
       <Filter>Source\Tools</Filter>
     </ClCompile>
+    <ClCompile Include="Source\ModuleGeometryLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Color.h">
@@ -481,6 +482,9 @@
     </ClInclude>
     <ClInclude Include="Source\Console.h">
       <Filter>Source\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ModuleGeometryLoader.h">
+      <Filter>Source\Modules</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

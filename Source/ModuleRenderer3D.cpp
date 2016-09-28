@@ -312,7 +312,7 @@ void ModuleRenderer3D::DrawSolidSphere(float radius, unsigned int rings, unsigne
 		*v++ = z * radius;		
 
 		*n++ = x;
-		*n++ = y;
+		*n++ = -y;
 		*n++ = z;
 	}
 

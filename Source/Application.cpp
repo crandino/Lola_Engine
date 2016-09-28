@@ -3,6 +3,7 @@
 Application::Application()
 {
 	window = new ModuleWindow(this);
+	geo_loader = new ModuleGeometryLoader(this);
 	input = new ModuleInput(this);
 	audio = new ModuleAudio(this, true);
 	scene_intro = new ModuleSceneIntro(this);
@@ -17,6 +18,7 @@ Application::Application()
 
 	// Main Modules
 	AddModule(window);
+	AddModule(geo_loader);
 	AddModule(camera);
 	AddModule(input);
 	AddModule(audio);
