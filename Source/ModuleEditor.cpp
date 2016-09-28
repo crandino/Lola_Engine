@@ -1,7 +1,10 @@
 #include "ModuleEditor.h"
+
 #include "Application.h"
 #include "ModuleWindow.h"
+#include "ModuleInput.h"
 #include "ModuleRenderer3D.h"
+
 #include "imgui\imgui.h"
 #include "imgui\imgui_impl_sdl_gl3.h"
 
@@ -143,8 +146,8 @@ void ModuleEditor::ShowConfMenu()
 		ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.5f, 1.0f), "%s", App->renderer3D->glew_version);
 
 		// Bullet
-		ImGui::LabelText("", "%s", "Bullet Version:"); ImGui::SameLine();
-		ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.5f, 1.0f), "%u.%u", BT_BULLET_VERSION / 100, BT_BULLET_VERSION % 200);
+		ImGui::LabelText("", "%s", "Bullet Version:");// ImGui::SameLine();
+		//ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.5f, 1.0f), "%u.%u", BT_BULLET_VERSION / 100, BT_BULLET_VERSION % 200);
 
 		// ImGUI
 		ImGui::LabelText("", "%s", "ImGUI Version:"); ImGui::SameLine();

@@ -3,20 +3,22 @@
 
 #include "Globals.h"
 #include "Module.h"
-#include "ModuleWindow.h"
-#include "ModuleInput.h"
-#include "ModuleAudio.h"
-#include "ModuleSceneIntro.h"
-#include "ModuleRenderer3D.h"
-#include "ModuleCamera3D.h"
-#include "ModulePhysics3D.h"
-#include "ModuleEditor.h"
-#include "ModuleGeometryLoader.h"
 
 #include "Performance.h"
 #include "Console.h"
 
 #include <list>
+
+class ModuleWindow;
+class ModuleGeometryLoader;
+class ModuleInput;
+class ModuleAudio;
+class ModuleSceneIntro;
+class ModuleRenderer3D;
+class ModuleCamera3D;
+class ModulePhysics3D;
+class ModuleEditor;
+class ModuleRenderer3D;
 
 class Application
 {
@@ -25,15 +27,15 @@ public:
 	Console					console;
 	Performance				perf_info;
 
-	ModuleWindow			*window;
-	ModuleGeometryLoader    *geo_loader;
-	ModuleInput				*input;
-	ModuleAudio				*audio;
-	ModuleSceneIntro		*scene_intro;
-	ModuleRenderer3D		*renderer3D;
-	ModuleCamera3D			*camera;
-	ModulePhysics3D			*physics;
-	ModuleEditor			*editor;	
+	ModuleWindow			*window = nullptr;
+	ModuleGeometryLoader    *geo_loader = nullptr;
+	ModuleInput				*input = nullptr;
+	ModuleAudio				*audio = nullptr;
+	ModuleSceneIntro		*scene_intro = nullptr;
+	ModuleRenderer3D		*renderer3D = nullptr;
+	ModuleCamera3D			*camera = nullptr;
+	ModulePhysics3D			*physics = nullptr;
+	ModuleEditor			*editor = nullptr;
 
 	Application();
 	~Application();
@@ -50,7 +52,8 @@ public:
 		
 private:
 
-	char app_name[SHORT_STRING], organization[SHORT_STRING];
+	char app_name[SHORT_STRING];
+	char organization[SHORT_STRING];
 
 	bool					app_marked_for_closing = false;
 	std::list<Module*>		list_modules;

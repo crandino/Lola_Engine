@@ -10,6 +10,8 @@
 
 #define MAX_LIGHTS 8
 
+#include "SDL\include\SDL_video.h"
+
 class ModuleRenderer3D : public Module
 {
 public:

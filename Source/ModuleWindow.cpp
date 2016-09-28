@@ -1,6 +1,8 @@
+#include "ModuleWindow.h"
+
 #include "Globals.h"
 #include "Application.h"
-#include "ModuleWindow.h"
+
 #include "imgui\imgui.h"
 #include "imgui\imgui_impl_sdl_gl3.h"
 
@@ -13,8 +15,7 @@ ModuleWindow::ModuleWindow(Application* app, bool start_enabled) : Module(app, s
 
 // Destructor
 ModuleWindow::~ModuleWindow()
-{
-}
+{ }
 
 // Called before render is available
 bool ModuleWindow::Init()

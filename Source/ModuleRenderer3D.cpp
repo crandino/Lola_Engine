@@ -1,6 +1,10 @@
-#include "Globals.h"
-#include "Application.h"
 #include "ModuleRenderer3D.h"
+
+#include "Application.h"
+#include "ModuleCamera3D.h"
+#include "ModuleWindow.h"
+#include "Globals.h"
+
 #include "Glew\include\glew.h"
 #include "SDL\include\SDL_opengl.h"
 #include <gl/GL.h>
