@@ -3,7 +3,9 @@
 #include "Application.h"
 #include "ModuleCamera3D.h"
 #include "ModuleWindow.h"
+#include "ModuleGeometryLoader.h"
 #include "Globals.h"
+#include "Mesh.h"
 
 #include "Glew\include\glew.h"
 #include "SDL\include\SDL_opengl.h"
@@ -136,8 +138,18 @@ UPDATE_STATUS ModuleRenderer3D::PreUpdate(float dt)
 		lights[i].Render();
 
 	//DrawDirectMode();
-	DrawSolidSphere(2.0, 50, 50);
+	//DrawSolidSphere(2.0, 50, 50);
 
+	return UPDATE_CONTINUE;
+}
+
+// Update present buffer to screen
+UPDATE_STATUS ModuleRenderer3D::Update(float dt)
+{
+	for (int i = 0; i < App->geo_loader->meshes.size(); ++i)
+	{
+		DrawMesh(App->geo_loader->meshes[i]);
+	}
 	return UPDATE_CONTINUE;
 }
 
@@ -287,67 +299,28 @@ void ModuleRenderer3D::DrawDirectMode()
 	
 	glDrawElements(GL_TRIANGLES, num_indices, GL_UNSIGNED_INT, NULL);
 	glDisableClientState(GL_VERTEX_ARRAY);
-
 }
 
-void ModuleRenderer3D::DrawSolidSphere(float radius, unsigned int rings, unsigned int sectors)
+void ModuleRenderer3D::LoadMeshBuffer(const Mesh *mesh)
 {
-	float const R = 1. / (float)(rings - 1);
-	float const S = 1. / (float)(sectors - 1);
-	int r, s;
+	glGenBuffers(1, (GLuint*) &(mesh->id_vertices));
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_vertices);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(float) * mesh->num_vertices * 3 , mesh->vertices, GL_STATIC_DRAW);
 
-	GLfloat *vertices = new GLfloat[rings * sectors * 3];
-	GLfloat *normals = new GLfloat[rings * sectors * 3];	
-	//texcoords.resize(rings * sectors * 2);
-
-	GLfloat *v = vertices;
-	GLfloat *n = normals;
-
-	for (r = 0; r < rings; r++) for (s = 0; s < sectors; s++) {
-		float const y = math::Sin((-math::pi / 2.0f) + math::pi * r * R);
-		float const x = math::Cos(2.0f * math::pi * s * S) * math::Sin(math::pi * r * R);
-		float const z = math::Sin(2.0f * math::pi * s * S) * math::Sin(math::pi * r * R);
-
-	/*	*t++ = s*S;
-		*t++ = r*R;*/
-
-		*v++ = x * radius;
-		*v++ = y * radius;
-		*v++ = z * radius;		
-
-		*n++ = x;
-		*n++ = -y;
-		*n++ = z;
-	}
-
-	GLushort *indices = new GLushort[(rings - 1) * (sectors - 1) * 4];
-	GLushort *i = indices;
-	//indices.resize(rings * sectors * 4);
-	//std::vector<GLushort>::iterator i = indices.begin();
-
-	for (r = 0; r < rings - 1; r++)
-	{
-		for (s = 0; s < sectors - 1; s++)
-		{
-			*i++ = r * sectors + s;
-			*i++ = r * sectors + (s + 1);
-			*i++ = (r + 1) * sectors + (s + 1);
-			*i++ = (r + 1) * sectors + s;
-		}
-	}
-
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glEnableClientState(GL_NORMAL_ARRAY);
-	//glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
-	glVertexPointer(3, GL_FLOAT, 0, &vertices[0]);
-	glNormalPointer(GL_FLOAT, 0, &normals[0]);
-	//glTexCoordPointer(2, GL_FLOAT, 0, &texcoords[0]);
-	glDrawElements(GL_QUADS, (rings - 1) * (sectors - 1) * 4, GL_UNSIGNED_SHORT, &indices[0]);
-	
-	glDisableClientState(GL_VERTEX_ARRAY);
-	glDisableClientState(GL_NORMAL_ARRAY);
-
+	glGenBuffers(1, (GLuint*) &(mesh->id_indices));
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_indices);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint)*mesh->num_indices, mesh->indices, GL_STATIC_DRAW);
 }
+
+void ModuleRenderer3D::DrawMesh(const Mesh *mesh)
+{
+	glEnableClientState(GL_VERTEX_ARRAY);
+	
+	glVertexPointer(3, GL_FLOAT, 0, mesh->vertices);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_indices);
+
+	glDrawElements(GL_TRIANGLES, mesh->num_indices, GL_UNSIGNED_INT, NULL);
+
+	glDisableClientState(GL_VERTEX_ARRAY);
+}
+

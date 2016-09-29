@@ -5,12 +5,15 @@
 #include "Globals.h"
 //#include "glmath.h"
 #include "Light.h"
+#include "Mesh.h"
+
 #include "imgui\imgui.h"
 #include "MathGeoLib\MathGeoLib.h"
+#include "SDL\include\SDL_video.h"
 
 #define MAX_LIGHTS 8
 
-#include "SDL\include\SDL_video.h"
+struct Mesh;
 
 class ModuleRenderer3D : public Module
 {
@@ -23,13 +26,16 @@ public:
 
 	bool Init();
 	UPDATE_STATUS PreUpdate(float dt);
+	UPDATE_STATUS Update(float dt);
 	UPDATE_STATUS PostUpdate(float dt);
 	bool CleanUp();
 
 	void OnResize(int width, int height);
 
+	void LoadMeshBuffer(const Mesh *mesh);
+	void DrawMesh(const Mesh *mesh);
+
 	void DrawDirectMode();
-	void DrawSolidSphere(float radius, unsigned int rings, unsigned int sectors);
 
 public:
 
