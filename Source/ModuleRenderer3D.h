@@ -32,7 +32,7 @@ public:
 
 	void OnResize(int width, int height);
 
-	void LoadMeshBuffer(const Mesh *mesh);
+	bool LoadMeshBuffer(const Mesh *mesh);
 	void DrawMesh(const Mesh *mesh);
 
 	void DrawDirectMode();

@@ -23,7 +23,7 @@ public:
 
 private:
 
-	const Mesh *LoadGeometry(const char *file_name);
+	void LoadGeometry(const char *file_name);
 };
 
 #endif // !__MODULEGEOMETRYLOADER_H__

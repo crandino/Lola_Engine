@@ -37,7 +37,7 @@ bool ModuleGeometryLoader::Init()
 UPDATE_STATUS ModuleGeometryLoader::PreUpdate(float dt)
 {
 	if(App->input->GetKey(SDL_SCANCODE_X) == KEY_DOWN)
-		meshes.push_back(LoadGeometry("C:/Users/Carlos/Desktop/warrior.fbx"));
+		LoadGeometry("C:/Users/Carlos/Desktop/tank2.fbx");
 
 	return UPDATE_CONTINUE;
 }
@@ -65,17 +65,15 @@ bool ModuleGeometryLoader::CleanUp()
 	return ret;
 }
 
-const Mesh *ModuleGeometryLoader::LoadGeometry(const char *full_path)
+void ModuleGeometryLoader::LoadGeometry(const char *full_path)
 {
-	Mesh *mesh = NULL;
-
 	const aiScene* scene = aiImportFile(full_path, aiProcessPreset_TargetRealtime_MaxQuality);
 	if (scene != nullptr && scene->HasMeshes())
 	{
-		mesh = new Mesh();
 		// For each mesh...
 		for (uint i = 0; i < scene->mNumMeshes; ++i)
 		{
+			Mesh *mesh = new Mesh();
 			aiMesh *ai_mesh = scene->mMeshes[i];
 
 			// Copying vertices...
@@ -83,6 +81,12 @@ const Mesh *ModuleGeometryLoader::LoadGeometry(const char *full_path)
 			mesh->vertices = new math::float3[mesh->num_vertices];
 			memcpy(mesh->vertices, ai_mesh->mVertices, sizeof(math::float3) * mesh->num_vertices);
 			DEBUG("New mesh with %d vertices", mesh->num_vertices);
+
+			// Copying normals...
+			mesh->num_normals = ai_mesh->mNumVertices;
+			mesh->normals = new math::float3[mesh->num_normals];
+			memcpy(mesh->normals, ai_mesh->mNormals, sizeof(math::float3) * mesh->num_vertices);
+			DEBUG("New mesh with %d normals", mesh->num_vertices);
 
 			// Copying indicies (faces on Assimp)
 			if (ai_mesh->HasFaces())
@@ -101,12 +105,11 @@ const Mesh *ModuleGeometryLoader::LoadGeometry(const char *full_path)
 			}
 
 			App->renderer3D->LoadMeshBuffer(mesh);
+			meshes.push_back(mesh);
 		}
 
 		aiReleaseImport(scene);
 	}
 	else
 		DEBUG("Error loading scene %s", full_path);
-
-	return mesh;
 }

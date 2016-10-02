@@ -301,26 +301,69 @@ void ModuleRenderer3D::DrawDirectMode()
 	glDisableClientState(GL_VERTEX_ARRAY);
 }
 
-void ModuleRenderer3D::LoadMeshBuffer(const Mesh *mesh)
+bool ModuleRenderer3D::LoadMeshBuffer(const Mesh *mesh)
 {
-	glGenBuffers(1, (GLuint*) &(mesh->id_vertices));
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_vertices);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(float) * mesh->num_vertices * 3 , mesh->vertices, GL_STATIC_DRAW);
+	bool ret = true;
 
+	// Vertices
+	glGenBuffers(1, (GLuint*) &(mesh->id_vertices));
+	if (mesh->id_vertices == 0)
+	{
+		DEBUG("[error] Vertices buffer has not been binded!");
+		ret = false;
+	}
+	else
+	{
+		glBindBuffer(GL_ARRAY_BUFFER, mesh->id_vertices);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * mesh->num_vertices * 3, mesh->vertices, GL_STATIC_DRAW);
+	}
+
+	// Normals
+	glGenBuffers(1, (GLuint*) &(mesh->id_normals));
+	if (mesh->id_normals == 0)
+	{
+		DEBUG("[error] Normals buffer has not been binded!");
+		ret = false;
+	}
+	else
+	{
+		glBindBuffer(GL_ARRAY_BUFFER, mesh->id_normals);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * mesh->num_normals * 3, mesh->normals, GL_STATIC_DRAW);
+	}
+	
+	// Indices
 	glGenBuffers(1, (GLuint*) &(mesh->id_indices));
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_indices);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint)*mesh->num_indices, mesh->indices, GL_STATIC_DRAW);
+	if (mesh->id_indices == 0)
+	{
+		DEBUG("[error] Indices buffer has not been binded!");
+		ret = false;
+	}
+	else
+	{
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_indices);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint)*mesh->num_indices, mesh->indices, GL_STATIC_DRAW);
+	}
+
+	return ret;
 }
 
 void ModuleRenderer3D::DrawMesh(const Mesh *mesh)
 {
 	glEnableClientState(GL_VERTEX_ARRAY);
+	glEnableClientState(GL_NORMAL_ARRAY);
 	
-	glVertexPointer(3, GL_FLOAT, 0, mesh->vertices);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_indices);
+	glBindBuffer(GL_ARRAY_BUFFER, mesh->id_vertices);	
+	glVertexPointer(3, GL_FLOAT, 0, NULL);
 
+	glBindBuffer(GL_ARRAY_BUFFER, mesh->id_normals);
+	glNormalPointer(GL_FLOAT, 0, NULL);
+	
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_indices);	
 	glDrawElements(GL_TRIANGLES, mesh->num_indices, GL_UNSIGNED_INT, NULL);
+	
+	
 
 	glDisableClientState(GL_VERTEX_ARRAY);
+	//glDisableClientState(GL_NORMAL_ARRAY);
 }
 
