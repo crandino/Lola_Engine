@@ -11,6 +11,7 @@
 
 class ModuleWindow;
 class ModuleGeometryLoader;
+class ModuleFileSystem;
 class ModuleInput;
 class ModuleAudio;
 class ModuleSceneIntro;
@@ -24,11 +25,12 @@ class Application
 {
 public:
 
-	Console					console;
 	Performance				perf_info;
+	Console					*console = nullptr;
 
 	ModuleWindow			*window = nullptr;
 	ModuleGeometryLoader    *geo_loader = nullptr;
+	ModuleFileSystem		*file_system = nullptr;
 	ModuleInput				*input = nullptr;
 	ModuleAudio				*audio = nullptr;
 	ModuleSceneIntro		*scene_intro = nullptr;
@@ -62,7 +64,8 @@ private:
 	void FinishUpdate();	
 
 	void AddModule(Module* mod);
-
 };
+
+extern Application *App;
 
 #endif //!__APPLICATION_H__

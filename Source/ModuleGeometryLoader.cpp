@@ -30,7 +30,6 @@ bool ModuleGeometryLoader::Init()
 	struct aiLogStream stream;
 	stream = aiGetPredefinedLogStream(aiDefaultLogStream_DEBUGGER, nullptr);
 	aiAttachLogStream(&stream);
-
 	return ret;
 }
 
@@ -38,7 +37,7 @@ bool ModuleGeometryLoader::Init()
 UPDATE_STATUS ModuleGeometryLoader::PreUpdate(float dt)
 {
 	if(App->input->GetKey(SDL_SCANCODE_X) == KEY_DOWN)
-		meshes.push_back(LoadGeometry("C:/Users/Carlos/Desktop/Tank.fbx"));
+		meshes.push_back(LoadGeometry("C:/Users/Carlos/Desktop/warrior.fbx"));
 
 	return UPDATE_CONTINUE;
 }
@@ -83,7 +82,7 @@ const Mesh *ModuleGeometryLoader::LoadGeometry(const char *full_path)
 			mesh->num_vertices = ai_mesh->mNumVertices;
 			mesh->vertices = new math::float3[mesh->num_vertices];
 			memcpy(mesh->vertices, ai_mesh->mVertices, sizeof(math::float3) * mesh->num_vertices);
-			App->console.AddLOG("New mesh with %d vertices", mesh->num_vertices);
+			DEBUG("New mesh with %d vertices", mesh->num_vertices);
 
 			// Copying indicies (faces on Assimp)
 			if (ai_mesh->HasFaces())
@@ -93,7 +92,9 @@ const Mesh *ModuleGeometryLoader::LoadGeometry(const char *full_path)
 				for (uint j = 0; j < ai_mesh->mNumFaces; ++j)
 				{
 					if (ai_mesh->mFaces[j].mNumIndices != 3)
-						App->console.AddLOG("WARNING, geometry face with != 3 indices!");
+					{
+						DEBUG("WARNING, geometry face with != 3 indices!");
+					}						
 					else
 						memcpy(&mesh->indices[j * 3], ai_mesh->mFaces[j].mIndices, 3 * sizeof(uint));
 				}
@@ -105,7 +106,7 @@ const Mesh *ModuleGeometryLoader::LoadGeometry(const char *full_path)
 		aiReleaseImport(scene);
 	}
 	else
-		App->console.AddLOG("Error loading scene %s", full_path);
+		DEBUG("Error loading scene %s", full_path);
 
 	return mesh;
 }

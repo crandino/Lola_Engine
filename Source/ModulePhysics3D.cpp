@@ -43,7 +43,7 @@ ModulePhysics3D::~ModulePhysics3D()
 // Render not available yet----------------------------------
 bool ModulePhysics3D::Init()
 {
-	App->console.AddLOG("Creating 3D Physics simulation");
+	DEBUG("Creating 3D Physics simulation");
 	bool ret = true;
 
 	return ret;
@@ -52,7 +52,7 @@ bool ModulePhysics3D::Init()
 // ---------------------------------------------------------
 bool ModulePhysics3D::Start()
 {
-	App->console.AddLOG("Creating Physics environment");
+	DEBUG("Creating Physics environment");
 
 	world = new btDiscreteDynamicsWorld(dispatcher, broad_phase, solver, collision_conf);
 	world->setDebugDrawer(debug_draw);
@@ -143,7 +143,7 @@ UPDATE_STATUS ModulePhysics3D::PostUpdate(float dt)
 // Called before quitting
 bool ModulePhysics3D::CleanUp()
 {
-	App->console.AddLOG("Destroying 3D Physics simulation");
+	DEBUG("Destroying 3D Physics simulation");
 
 	// Remove from the world all collision bodies
 	for(int i = world->getNumCollisionObjects() - 1; i >= 0; i--)

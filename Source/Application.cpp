@@ -4,6 +4,7 @@
 #include "ModuleInput.h"
 #include "ModuleAudio.h"
 #include "ModuleSceneIntro.h"
+#include "ModuleFileSystem.h"
 #include "ModuleCamera3D.h"
 #include "ModulePhysics3D.h"
 #include "ModuleEditor.h"
@@ -14,6 +15,7 @@ Application::Application()
 {
 	window = new ModuleWindow(this);
 	geo_loader = new ModuleGeometryLoader(this);
+	file_system = new ModuleFileSystem(this);
 	input = new ModuleInput(this);
 	audio = new ModuleAudio(this, true);
 	scene_intro = new ModuleSceneIntro(this);
@@ -44,6 +46,9 @@ Application::Application()
 	// Strings
 	sprintf_s(app_name, SHORT_STRING, "LOLA Engine");
 	sprintf_s(organization, SHORT_STRING, "CITM");
+
+	// Console
+	console = new Console();
 }
 
 Application::~Application()
@@ -55,6 +60,9 @@ Application::~Application()
 		delete (*item);
 		++item;
 	}
+
+	// Console
+	if (console) delete console;
 }
 
 bool Application::Init()
@@ -71,7 +79,7 @@ bool Application::Init()
 	}
 
 	// After all Init calls we call Start() in all modules
-	console.AddLOG("-------------- Application Start --------------");
+	DEBUG("-------------- Application Start --------------");
 	item = list_modules.begin();
 
 	while(item != list_modules.end() && ret == true)
@@ -143,6 +151,7 @@ bool Application::CleanUp()
 		ret = (*item)->CleanUp();
 		++item;
 	}
+
 	return ret;
 }
 

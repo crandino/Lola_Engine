@@ -15,11 +15,13 @@ enum MAIN_STATES
 	MAIN_EXIT
 };
 
+Application *App = nullptr;
+
 int main(int argc, char ** argv)
 {
 	int main_return = EXIT_FAILURE;
 	MAIN_STATES state = MAIN_CREATION;
-	Application* App = NULL;	
+	//Application* App = NULL;	
 
 	while (state != MAIN_EXIT)
 	{
@@ -28,23 +30,23 @@ int main(int argc, char ** argv)
 		case MAIN_CREATION:
 
 			App = new Application();
-			App->console.AddLOG("Starting game '%s'...", TITLE);
-			App->console.AddLOG("-------------- Application Creation --------------");
+			DEBUG("Starting game '%s'...", TITLE);
+			DEBUG("-------------- Application Creation --------------");
 			state = MAIN_START;
 			break;
 
 		case MAIN_START:
 
-			App->console.AddLOG("-------------- Application Init --------------");
+			DEBUG("-------------- Application Init --------------");
 			if (App->Init() == false)
 			{
-				App->console.AddLOG("[error] Application Init exits with ERROR");
+				DEBUG("[error] Application Init exits with ERROR");
 				state = MAIN_EXIT;
 			}
 			else
 			{
 				state = MAIN_UPDATE;
-				App->console.AddLOG("-------------- Application Update --------------");
+				DEBUG("-------------- Application Update --------------");
 			}
 
 			break;
@@ -55,7 +57,7 @@ int main(int argc, char ** argv)
 
 			if (update_return == UPDATE_ERROR)
 			{
-				App->console.AddLOG("[error] Application Update exits with ERROR");
+				DEBUG("[error] Application Update exits with ERROR");
 				state = MAIN_EXIT;
 			}
 
@@ -66,10 +68,10 @@ int main(int argc, char ** argv)
 
 		case MAIN_FINISH:
 
-			App->console.AddLOG("-------------- Application CleanUp --------------");
+			DEBUG("-------------- Application CleanUp --------------");
 			if (App->CleanUp() == false)
 			{
-				App->console.AddLOG("[error] Application CleanUp exits with ERROR");
+				DEBUG("[error] Application CleanUp exits with ERROR");
 			}
 			else
 				main_return = EXIT_SUCCESS;
@@ -81,7 +83,7 @@ int main(int argc, char ** argv)
 		}
 	}
 
-	App->console.AddLOG("Exiting game '%s'...\n", TITLE);
+	DEBUG("Exiting game '%s'...\n", TITLE);
 	delete App;
 	
 	return main_return;

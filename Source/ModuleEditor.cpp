@@ -25,7 +25,7 @@ bool ModuleEditor::Init()
 	if (App->window->window != NULL)
 	{
 		// Setup ImGui binding
-		App->console.AddLOG("Setup ImGUI binding");
+		DEBUG("Setup ImGUI binding");
 		ImGui_ImplSdlGL3_Init(App->window->window);
 	}		
 
@@ -65,7 +65,7 @@ UPDATE_STATUS ModuleEditor::PostUpdate(float dt)
 
 bool ModuleEditor::CleanUp()
 {
-	App->console.AddLOG("Closing ImGUI");
+	DEBUG("Closing ImGUI");
 	ImGui_ImplSdlGL3_Shutdown();
 	return true;
 }
@@ -162,5 +162,5 @@ void ModuleEditor::ShowConfMenu()
 
 void ModuleEditor::ShowConsole()
 {
-	App->console.Draw("Console", &console_menu);
+	App->console->Draw("Console", &console_menu);
 }
