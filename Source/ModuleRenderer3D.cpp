@@ -351,7 +351,7 @@ void ModuleRenderer3D::DrawMesh(const Mesh *mesh)
 {
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_NORMAL_ARRAY);
-	
+
 	glBindBuffer(GL_ARRAY_BUFFER, mesh->id_vertices);	
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
 
@@ -359,11 +359,9 @@ void ModuleRenderer3D::DrawMesh(const Mesh *mesh)
 	glNormalPointer(GL_FLOAT, 0, NULL);
 	
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_indices);	
-	glDrawElements(GL_TRIANGLES, mesh->num_indices, GL_UNSIGNED_INT, NULL);
-	
-	
+	glDrawElements(GL_TRIANGLES, mesh->num_indices, GL_UNSIGNED_INT, NULL);	
 
 	glDisableClientState(GL_VERTEX_ARRAY);
-	//glDisableClientState(GL_NORMAL_ARRAY);
+	glDisableClientState(GL_NORMAL_ARRAY);
 }
 

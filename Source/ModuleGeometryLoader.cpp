@@ -68,6 +68,8 @@ bool ModuleGeometryLoader::CleanUp()
 void ModuleGeometryLoader::LoadGeometry(const char *full_path)
 {
 	const aiScene* scene = aiImportFile(full_path, aiProcessPreset_TargetRealtime_MaxQuality);
+
+	//const aiScene* scene = aiImportFile(full_path, aiProcessPreset_TargetRealtime_MaxQuality);
 	if (scene != nullptr && scene->HasMeshes())
 	{
 		// For each mesh...
@@ -111,5 +113,5 @@ void ModuleGeometryLoader::LoadGeometry(const char *full_path)
 		aiReleaseImport(scene);
 	}
 	else
-		DEBUG("Error loading scene %s", full_path);
+		DEBUG("Error loading scene %s: %s", full_path, aiGetErrorString());
 }
