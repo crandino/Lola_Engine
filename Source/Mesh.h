@@ -13,12 +13,15 @@ struct Mesh
 	uint num_normals = 0;
 	math::float3 *normals = nullptr;
 
+	// Tex coordinates
+	uint id_tex_coord = 0; // id in VRAM
+	uint num_tex_coord = 0;
+	math::float2 *tex_coord = nullptr;
+
 	// Indices
 	uint id_indices = 0; // id in VRAM
 	uint num_indices = 0;
-	uint* indices = nullptr;
-
-	
+	uint* indices = nullptr;	
 };
 
 #endif __MESH_H__

@@ -330,6 +330,19 @@ bool ModuleRenderer3D::LoadMeshBuffer(const Mesh *mesh)
 		glBindBuffer(GL_ARRAY_BUFFER, mesh->id_normals);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * mesh->num_normals * 3, mesh->normals, GL_STATIC_DRAW);
 	}
+
+	// Texture coordinates
+	glGenBuffers(1, (GLuint*) &(mesh->id_tex_coord));
+	if (mesh->id_tex_coord == 0)
+	{
+		DEBUG("[error] Texture coordinates buffer has not been binded!");
+		ret = false;
+	}
+	else
+	{
+		glBindBuffer(GL_ARRAY_BUFFER, mesh->id_tex_coord);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * mesh->num_tex_coord * 2, mesh->tex_coord, GL_STATIC_DRAW);
+	}
 	
 	// Indices
 	glGenBuffers(1, (GLuint*) &(mesh->id_indices));
@@ -351,17 +364,30 @@ void ModuleRenderer3D::DrawMesh(const Mesh *mesh)
 {
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_NORMAL_ARRAY);
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+
+	glEnable(GL_TEXTURE_2D);
 
 	glBindBuffer(GL_ARRAY_BUFFER, mesh->id_vertices);	
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
 
 	glBindBuffer(GL_ARRAY_BUFFER, mesh->id_normals);
 	glNormalPointer(GL_FLOAT, 0, NULL);
+
+	glBindBuffer(GL_ARRAY_BUFFER, mesh->id_tex_coord);
+	glTexCoordPointer(2, GL_FLOAT, 0, NULL);
+
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glBindTexture(GL_TEXTURE_2D, App->geo_loader->ImageName);
 	
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_indices);	
 	glDrawElements(GL_TRIANGLES, mesh->num_indices, GL_UNSIGNED_INT, NULL);	
 
+	glDisable(GL_TEXTURE_2D);
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_NORMAL_ARRAY);
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+	
+
 }
 

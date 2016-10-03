@@ -16,8 +16,5 @@ void Debug(const char file[], int line, const char* format, ...)
 	OutputDebugString(tmp_string2);
 
 	if (App->console != nullptr)
-	{
-		App->console->AddLOG(tmp_string);
-	}
-		
+		App->console->AddLOG(tmp_string);		
 }
