@@ -3,7 +3,6 @@
 
 #include "Module.h"
 #include "Globals.h"
-//#include "glmath.h"
 #include "Light.h"
 #include "Mesh.h"
 
@@ -12,6 +11,8 @@
 #include "SDL\include\SDL_video.h"
 
 #define MAX_LIGHTS 8
+#define CHECKERS_HEIGHT 128
+#define CHECKERS_WIDTH 128
 
 struct Mesh;
 
@@ -44,6 +45,12 @@ public:
 	SDL_GLContext context;
 	math::float3x3 NormalMatrix;
 	math::float4x4 ModelMatrix, ViewMatrix, ProjectionMatrix;
+
+private:
+
+	uint checker_id;
+	unsigned char check_image[CHECKERS_HEIGHT][CHECKERS_WIDTH][4];
+	void GenerateChecker(uint *buffer);
 };
 
 #endif // !__MODULERENDERER3D_H__

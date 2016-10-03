@@ -3,10 +3,6 @@
 
 #include "Module.h"
 #include "MathGeoLib\MathGeoLib.h"
-#include "Glew\include\glew.h"
-
-#define CHECKERS_HEIGHT 128
-#define CHECKERS_WIDTH 128
 
 struct Mesh;
 
@@ -25,11 +21,8 @@ public:
 	UPDATE_STATUS PostUpdate(float dt);
 	bool CleanUp();	
 
-	uint ImageName;
-
 private:
 
-	GLubyte checkImage[CHECKERS_HEIGHT][CHECKERS_WIDTH][4];
 	void LoadGeometry(const char *file_name);
 };
 

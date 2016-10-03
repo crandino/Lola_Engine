@@ -3,6 +3,7 @@
 #include "Application.h"
 #include "ModuleRenderer3D.h"
 #include "ModuleInput.h"
+#include "ModuleFileSystem.h"
 #include "Mesh.h"
 
 #include "Assimp/include/cimport.h"
@@ -31,16 +32,6 @@ bool ModuleGeometryLoader::Init()
 	stream = aiGetPredefinedLogStream(aiDefaultLogStream_DEBUGGER, nullptr);
 	aiAttachLogStream(&stream);
 
-	for (int i = 0; i < CHECKERS_HEIGHT; i++) {
-		for (int j = 0; j < CHECKERS_WIDTH; j++) {
-			int c = ((((i&0x8) == 0)^(((j&0x8)) == 0))) * 255;
-			checkImage[i][j][0] = (GLubyte)c;
-			checkImage[i][j][1] = (GLubyte)c;
-			checkImage[i][j][2] = (GLubyte)c;
-			checkImage[i][j][3] = (GLubyte)255;
-		}
-	}
-
 	return ret;
 }
 
@@ -48,18 +39,7 @@ bool ModuleGeometryLoader::Init()
 UPDATE_STATUS ModuleGeometryLoader::PreUpdate(float dt)
 {
 	if (App->input->GetKey(SDL_SCANCODE_X) == KEY_DOWN)
-	{
-		LoadGeometry("C:/Users/Carlos/Desktop/tank2.fbx");
-		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-		glGenTextures(1, &ImageName);
-		glBindTexture(GL_TEXTURE_2D, ImageName);		
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, CHECKERS_WIDTH, CHECKERS_HEIGHT,
-		0, GL_RGBA, GL_UNSIGNED_BYTE, checkImage);		
-	}		
+		LoadGeometry("Models/Tank2.fbx");		
 
 	return UPDATE_CONTINUE;
 }
@@ -89,9 +69,8 @@ bool ModuleGeometryLoader::CleanUp()
 
 void ModuleGeometryLoader::LoadGeometry(const char *full_path)
 {
-	const aiScene* scene = aiImportFile(full_path, aiProcessPreset_TargetRealtime_MaxQuality);
+	const aiScene* scene = aiImportFileEx(full_path, aiProcessPreset_TargetRealtime_MaxQuality, App->file_system->GetAssimpIO());
 
-	//const aiScene* scene = aiImportFile(full_path, aiProcessPreset_TargetRealtime_MaxQuality);
 	if (scene != nullptr && scene->HasMeshes())
 	{
 		// For each mesh...

@@ -31,6 +31,7 @@ Application::Application()
 	// Main Modules
 	AddModule(window);
 	AddModule(geo_loader);
+	AddModule(file_system);
 	AddModule(camera);
 	AddModule(input);
 	AddModule(audio);

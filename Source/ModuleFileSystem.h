@@ -2,6 +2,7 @@
 #define __MODULEFILESYSTEM_H__
 
 #include "Module.h"
+#include "Assimp\include\cfileio.h"
 
 struct SDL_RWops;
 int close_sdl_rwops(SDL_RWops *rw);
@@ -26,6 +27,14 @@ public:
 	const char *GetSaveDirectory() const;
 	bool IsDirectory(const char *dir) const;
 	bool Exists(const char *file) const;
+
+	aiFileIO * ModuleFileSystem::GetAssimpIO();
+
+private:
+
+	aiFileIO* AssimpIO = nullptr;	
+	void ModuleFileSystem::CreateAssimpIO();
+	
 };
 
 
