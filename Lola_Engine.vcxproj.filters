@@ -213,6 +213,9 @@
     <ClCompile Include="Source\ModuleFileSystem.cpp">
       <Filter>Source\Modules</Filter>
     </ClCompile>
+    <ClCompile Include="Source\ModuleTextureLoader.cpp">
+      <Filter>Source\Modules</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Color.h">
@@ -495,6 +498,9 @@
       <Filter>Source\Helpers</Filter>
     </ClInclude>
     <ClInclude Include="Source\ModuleFileSystem.h">
+      <Filter>Source\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ModuleTextureLoader.h">
       <Filter>Source\Modules</Filter>
     </ClInclude>
   </ItemGroup>

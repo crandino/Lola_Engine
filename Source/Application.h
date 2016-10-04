@@ -11,6 +11,7 @@
 
 class ModuleWindow;
 class ModuleGeometryLoader;
+class ModuleTextureLoader;
 class ModuleFileSystem;
 class ModuleInput;
 class ModuleAudio;
@@ -30,6 +31,7 @@ public:
 
 	ModuleWindow			*window = nullptr;
 	ModuleGeometryLoader    *geo_loader = nullptr;
+	ModuleTextureLoader     *tex_loader = nullptr;
 	ModuleFileSystem		*file_system = nullptr;
 	ModuleInput				*input = nullptr;
 	ModuleAudio				*audio = nullptr;

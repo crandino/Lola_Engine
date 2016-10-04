@@ -4,6 +4,7 @@
 #include "ModuleCamera3D.h"
 #include "ModuleWindow.h"
 #include "ModuleGeometryLoader.h"
+#include "ModuleTextureLoader.h"
 #include "Globals.h"
 #include "Mesh.h"
 
@@ -11,6 +12,8 @@
 #include "SDL\include\SDL_opengl.h"
 #include <gl/GL.h>
 #include <gl/GLU.h>
+
+#include "Devil\include\ilut.h"
 
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
@@ -388,6 +391,7 @@ void ModuleRenderer3D::DrawMesh(const Mesh *mesh)
 	glEnableClientState(GL_NORMAL_ARRAY);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 	glEnable(GL_TEXTURE_2D);
+	//ilutRenderer(ILUT_OPENGL);
 
 	glBindBuffer(GL_ARRAY_BUFFER, mesh->id_vertices);	
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
@@ -398,8 +402,9 @@ void ModuleRenderer3D::DrawMesh(const Mesh *mesh)
 	glBindBuffer(GL_ARRAY_BUFFER, mesh->id_tex_coord);
 	glTexCoordPointer(2, GL_FLOAT, 0, NULL);
 
-	glBindTexture(GL_TEXTURE_2D, 0);
-	glBindTexture(GL_TEXTURE_2D, checker_id);
+	glBindTexture(GL_TEXTURE_2D, 0); // Cleanning bind buffer;
+	//glBindTexture(GL_TEXTURE_2D, checker_id);
+	glBindTexture(GL_TEXTURE_2D, App->tex_loader->lenna_gl);
 	
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_indices);	
 	glDrawElements(GL_TRIANGLES, mesh->num_indices, GL_UNSIGNED_INT, NULL);	

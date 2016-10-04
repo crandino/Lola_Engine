@@ -11,8 +11,8 @@
 #include "SDL\include\SDL_video.h"
 
 #define MAX_LIGHTS 8
-#define CHECKERS_HEIGHT 128
-#define CHECKERS_WIDTH 128
+#define CHECKERS_HEIGHT 512
+#define CHECKERS_WIDTH 512
 
 struct Mesh;
 

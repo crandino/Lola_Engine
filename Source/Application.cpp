@@ -9,12 +9,14 @@
 #include "ModulePhysics3D.h"
 #include "ModuleEditor.h"
 #include "ModuleGeometryLoader.h"
+#include "ModuleTextureLoader.h"
 #include "ModuleRenderer3D.h"
 
 Application::Application()
 {
 	window = new ModuleWindow(this);
 	geo_loader = new ModuleGeometryLoader(this);
+	tex_loader = new ModuleTextureLoader(this);
 	file_system = new ModuleFileSystem(this);
 	input = new ModuleInput(this);
 	audio = new ModuleAudio(this, true);
@@ -29,13 +31,16 @@ Application::Application()
 	// They will CleanUp() in reverse order
 
 	// Main Modules
-	AddModule(window);
-	AddModule(geo_loader);
-	AddModule(file_system);
+	AddModule(window);	
 	AddModule(camera);
 	AddModule(input);
 	AddModule(audio);
 	AddModule(physics);
+
+	// Loaders	
+	AddModule(file_system);
+	AddModule(geo_loader);
+	AddModule(tex_loader);
 	
 	// Scenes
 	AddModule(scene_intro);

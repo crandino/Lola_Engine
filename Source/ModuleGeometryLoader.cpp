@@ -2,6 +2,7 @@
 
 #include "Application.h"
 #include "ModuleRenderer3D.h"
+#include "ModuleTextureLoader.h"
 #include "ModuleInput.h"
 #include "ModuleFileSystem.h"
 #include "Mesh.h"
@@ -39,7 +40,11 @@ bool ModuleGeometryLoader::Init()
 UPDATE_STATUS ModuleGeometryLoader::PreUpdate(float dt)
 {
 	if (App->input->GetKey(SDL_SCANCODE_X) == KEY_DOWN)
-		LoadGeometry("Models/Tank2.fbx");		
+	{
+		App->tex_loader->LoadTexture("PAco");
+		LoadGeometry("Models/tank_bi.fbx");
+	}
+				
 
 	return UPDATE_CONTINUE;
 }

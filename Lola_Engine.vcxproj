@@ -127,6 +127,7 @@
     <ClCompile Include="Source\ModulePhysics3D.cpp" />
     <ClCompile Include="Source\ModuleRenderer3D.cpp" />
     <ClCompile Include="Source\ModuleSceneIntro.cpp" />
+    <ClCompile Include="Source\ModuleTextureLoader.cpp" />
     <ClCompile Include="Source\ModuleWindow.cpp" />
     <ClCompile Include="Source\PerfTimer.cpp" />
     <ClCompile Include="Source\PhysBody3D.cpp" />
@@ -221,6 +222,7 @@
     <ClInclude Include="Source\ModulePhysics3D.h" />
     <ClInclude Include="Source\ModuleRenderer3D.h" />
     <ClInclude Include="Source\ModuleSceneIntro.h" />
+    <ClInclude Include="Source\ModuleTextureLoader.h" />
     <ClInclude Include="Source\ModuleWindow.h" />
     <ClInclude Include="Source\Performance.h" />
     <ClInclude Include="Source\PerfTimer.h" />
