@@ -2,7 +2,6 @@
 #define __MODULEGAMEOBJECTMANAGER_H__
 
 #include "Module.h"
-#include <stack>
 #include <vector>
 
 class GameObject;

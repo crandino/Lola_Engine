@@ -497,9 +497,6 @@
     <ClInclude Include="Source\Console.h">
       <Filter>Source\Helpers</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Mesh.h">
-      <Filter>Source\Helpers</Filter>
-    </ClInclude>
     <ClInclude Include="Source\ModuleFileSystem.h">
       <Filter>Source\Modules</Filter>
     </ClInclude>

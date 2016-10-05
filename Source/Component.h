@@ -16,8 +16,8 @@ class Component
 
 protected:
 
-	bool					active;
 	COMPONENT_TYPE            type;
+	bool					active;		
 	unsigned int				id;
 
 public:
@@ -32,7 +32,7 @@ public:
 		return true;
 	}
 
-	COMPONENT_TYPE GetType()
+	COMPONENT_TYPE &GetType()
 	{
 		return type;
 	}

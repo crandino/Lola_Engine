@@ -216,7 +216,6 @@
     <ClInclude Include="Source\MathGeoLib\Math\sse_mathfun.h" />
     <ClInclude Include="Source\MathGeoLib\Math\TransformOps.h" />
     <ClInclude Include="Source\MathGeoLib\Time\Clock.h" />
-    <ClInclude Include="Source\Mesh.h" />
     <ClInclude Include="Source\Module.h" />
     <ClInclude Include="Source\ModuleAudio.h" />
     <ClInclude Include="Source\ModuleCamera3D.h" />

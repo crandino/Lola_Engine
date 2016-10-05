@@ -13,6 +13,9 @@
 #include "Assimp/include/cfileio.h"
 
 #include "ComponentMesh.h"
+#include "ComponentTransform.h"
+
+#include <stack>
 
 #pragma comment (lib, "Source/Assimp/libx86/assimp.lib")
 
@@ -45,7 +48,7 @@ bool ModuleGameObjectManager::Init()
 UPDATE_STATUS ModuleGameObjectManager::PreUpdate(float dt)
 {
 	if (App->input->GetKey(SDL_SCANCODE_G) == KEY_DOWN)
-		ImportModel("Models/primitives.fbx");
+		ImportModel("Models/primitives_with_parent.fbx");
 
 	return UPDATE_CONTINUE;
 }
@@ -134,65 +137,63 @@ void ModuleGameObjectManager::ImportModel(const char *file_name)
 
 	if (scene != nullptr)
 	{
-		GameObject *new_go = CreateGameObject(file_name, nullptr);
-
 		if (scene->HasMeshes())
 		{
-			// For each mesh...
-			for (uint i = 0; i < scene->mNumMeshes; ++i)
+			std::stack<aiNode*> nodes_stack;
+			std::stack<GameObject*> go_stack;
+
+			nodes_stack.push(scene->mRootNode);
+			go_stack.push(root);
+
+			aiNode *curr_node;
+			GameObject *parent;
+
+			while (!nodes_stack.empty())
 			{
-				ComponentMesh *comp_mesh = new ComponentMesh();
-				aiMesh *ai_mesh = scene->mMeshes[i];
-				DEBUG("Creating new mesh %s", ai_mesh->mName);
+				curr_node = nodes_stack.top();
+				parent = go_stack.top();
 
-				// Copying vertices...
-				comp_mesh->num_vertices = ai_mesh->mNumVertices;
-				comp_mesh->vertices = new math::float3[comp_mesh->num_vertices];
-				memcpy(comp_mesh->vertices, ai_mesh->mVertices, sizeof(math::float3) * comp_mesh->num_vertices);
-				DEBUG("  -> %d vertices", comp_mesh->num_vertices);
+				int num_children = curr_node->mNumChildren;
 
-				// Copying normals...
-				comp_mesh->num_normals = ai_mesh->mNumVertices;
-				comp_mesh->normals = new math::float3[comp_mesh->num_normals];
-				memcpy(comp_mesh->normals, ai_mesh->mNormals, sizeof(math::float3) * comp_mesh->num_normals);
-				DEBUG("  -> %d normals", comp_mesh->num_normals);
-
-				// Copying texture coordinates...
-				uint UV_index = 0;
-				if (ai_mesh->HasTextureCoords(UV_index))
+				if (num_children > 0)
 				{
-					comp_mesh->num_tex_coord = ai_mesh->mNumVertices;
-					comp_mesh->tex_coord = new math::float2[comp_mesh->num_tex_coord];
-					for (int l = 0; l < comp_mesh->num_tex_coord; ++l)
-					{
-						comp_mesh->tex_coord[l].x = ai_mesh->mTextureCoords[UV_index][l].x;
-						comp_mesh->tex_coord[l].y = ai_mesh->mTextureCoords[UV_index][l].y;
-					}
-					DEBUG("  -> %d texture coordinates", comp_mesh->num_tex_coord);				
-				}
+					nodes_stack.pop();
+					go_stack.pop();
 
-				// Copying indicies (faces on Assimp)
-				if (ai_mesh->HasFaces())
-				{
-					comp_mesh->num_indices = ai_mesh->mNumFaces * 3;
-					comp_mesh->indices = new uint[comp_mesh->num_indices]; // assume each face is a triangle
-					DEBUG("  -> %d indices", comp_mesh->num_indices);
-					for (uint j = 0; j < ai_mesh->mNumFaces; ++j)
+					for (int i = 0; i < num_children; ++i)
 					{
-						if (ai_mesh->mFaces[j].mNumIndices != 3)
-							DEBUG("WARNING, geometry face with != 3 indices!");
-						else
-						{
-							memcpy(&comp_mesh->indices[j * 3], ai_mesh->mFaces[j].mIndices, 3 * sizeof(uint));
-						}
+						GameObject *new_go = CreateGameObject(curr_node->mChildren[i]->mName.C_Str(), parent);
+						go_stack.push(new_go);
+						nodes_stack.push(curr_node->mChildren[i]);
+
+						// Creating components:
+						aiNode *node_to_add = nodes_stack.top();
+						// MESH
+						ComponentMesh *comp_mesh = new ComponentMesh();
+						aiMesh *ai_mesh = scene->mMeshes[*node_to_add->mMeshes];
+						comp_mesh->SetComponent(ai_mesh);
+
+						App->renderer3D->LoadMeshBuffer(comp_mesh);
+						new_go->components.push_back(comp_mesh);
+
+						//TRANSFORM
+						aiVector3D translation;
+						aiVector3D scaling;
+						aiQuaternion rotation;
+						ComponentTransform *comp_trans = new ComponentTransform();
+						node_to_add->mTransformation.Decompose(scaling, rotation, translation);
+						comp_trans->SetComponent(translation, scaling, rotation);
+						new_go->components.push_back(comp_trans);						
 					}
 				}
-
-				App->renderer3D->LoadMeshBuffer(comp_mesh);							
-				new_go->components.push_back(comp_mesh);
-			}			
+				else
+				{
+					nodes_stack.pop();
+					go_stack.pop();
+					
+				}
+			}
 		}
-
 		aiReleaseImport(scene);
 	}
 	else

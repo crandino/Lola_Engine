@@ -4,7 +4,6 @@
 #include "Module.h"
 #include "Globals.h"
 #include "Light.h"
-#include "Mesh.h"
 
 #include "imgui\imgui.h"
 #include "MathGeoLib\MathGeoLib.h"
