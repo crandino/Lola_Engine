@@ -1,6 +1,8 @@
 #ifndef __COMPONENT_H__
 #define __COMPONENT_H__
 
+class GameObject;
+
 enum COMPONENT_TYPE
 {
 	TRANSFORM,
@@ -21,6 +23,8 @@ protected:
 	unsigned int				id;
 
 public:
+
+	GameObject *game_object = nullptr;
 
 	Component()
 	{

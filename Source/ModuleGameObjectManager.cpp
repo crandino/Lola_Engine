@@ -174,7 +174,7 @@ void ModuleGameObjectManager::ImportModel(const char *file_name)
 						comp_mesh->SetComponent(ai_mesh);
 
 						App->renderer3D->LoadMeshBuffer(comp_mesh);
-						new_go->components.push_back(comp_mesh);
+						new_go->AddComponent(comp_mesh);
 
 						//TRANSFORM
 						aiVector3D translation;
@@ -183,7 +183,7 @@ void ModuleGameObjectManager::ImportModel(const char *file_name)
 						ComponentTransform *comp_trans = new ComponentTransform();
 						node_to_add->mTransformation.Decompose(scaling, rotation, translation);
 						comp_trans->SetComponent(translation, scaling, rotation);
-						new_go->components.push_back(comp_trans);						
+						new_go->AddComponent(comp_trans);
 					}
 				}
 				else

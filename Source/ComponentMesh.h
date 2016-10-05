@@ -64,7 +64,7 @@ public:
 		{
 			num_tex_coord = mesh->mNumVertices;
 			tex_coord = new math::float2[num_tex_coord];
-			for (int l = 0; l < num_tex_coord; ++l)
+			for (uint l = 0; l < num_tex_coord; ++l)
 			{
 				tex_coord[l].x = mesh->mTextureCoords[UV_index][l].x;
 				tex_coord[l].y = mesh->mTextureCoords[UV_index][l].y;

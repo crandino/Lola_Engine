@@ -4,19 +4,23 @@
 #include "Globals.h"
 #include <vector>
 
-class Component;
+#include "Component.h"
+
+class ComponentTransform;
 
 class GameObject
 {
 
-private:
+private:	
 	
 	bool						 active;
-	char			 name[SHORT_STRING];
-	
-	
+	char			 name[SHORT_STRING];	
 
 public:
+
+	// Unique components
+	ComponentTransform		 *transform = nullptr;
+
 
 	std::vector<Component*>  components;
 	std::vector<GameObject*>   children;
@@ -32,25 +36,19 @@ public:
 			parent->children.push_back(this);	
 	}
 
-	void Enable()
+	void AddComponent(Component *comp)
 	{
-		active = true;
+		comp->game_object = this;
+		components.push_back(comp);
+
+		if (comp->GetType() == COMPONENT_TYPE::TRANSFORM && transform == nullptr)
+			transform = (ComponentTransform*)comp;
 	}
 
-	void Disable()
-	{
-		active = false;
-	}
-
-	bool isActive() const
-	{
-		return active;
-	}
+	void Enable()	{ active = true;  }
+	void Disable()  { active = false;  }
+	bool isActive() const { return active; }
 	
 };
-
-
-
-
 
 #endif //!__GAMEOBJECT_H__

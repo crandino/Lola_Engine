@@ -7,6 +7,8 @@
 #include "Globals.h"
 
 #include "ComponentMesh.h"
+#include "ComponentTransform.h"
+#include "GameObject.h"
 
 #include "Glew\include\glew.h"
 #include "SDL\include\SDL_opengl.h"
@@ -384,11 +386,23 @@ bool ModuleRenderer3D::LoadMeshBuffer(const ComponentMesh *mesh)
 
 void ModuleRenderer3D::DrawMesh(const ComponentMesh *mesh)
 {
+	// Transformation 
+	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix();
+
+	math::float3 &position = mesh->game_object->transform->position;
+	math::float3 &scale = mesh->game_object->transform->scale;
+	math::Quat &rotation = mesh->game_object->transform->rotation;
+	
+	glTranslatef(position.x, position.y, position.z);
+	glScalef(scale.x, scale.y, scale.z);
+	glRotatef(math::RadToDeg(rotation.Angle()), rotation.x, rotation.y, rotation.z);	
+
+	// Rendering
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_NORMAL_ARRAY);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-	glEnable(GL_TEXTURE_2D);
-	//ilutRenderer(ILUT_OPENGL);
+	//glEnable(GL_TEXTURE_2D);
 
 	glBindBuffer(GL_ARRAY_BUFFER, mesh->id_vertices);	
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
@@ -406,9 +420,11 @@ void ModuleRenderer3D::DrawMesh(const ComponentMesh *mesh)
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_indices);	
 	glDrawElements(GL_TRIANGLES, mesh->num_indices, GL_UNSIGNED_INT, NULL);	
 
-	glDisable(GL_TEXTURE_2D);
+	//glDisable(GL_TEXTURE_2D);
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_NORMAL_ARRAY);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+
+	glPopMatrix();
 }
 
