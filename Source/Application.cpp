@@ -8,25 +8,23 @@
 #include "ModuleCamera3D.h"
 #include "ModulePhysics3D.h"
 #include "ModuleEditor.h"
-#include "ModuleGeometryLoader.h"
 #include "ModuleTextureLoader.h"
 #include "ModuleGameObjectManager.h"
 #include "ModuleRenderer3D.h"
 
 Application::Application()
 {
-	window = new ModuleWindow(this);
-	geo_loader = new ModuleGeometryLoader(this);
-	tex_loader = new ModuleTextureLoader(this);
-	file_system = new ModuleFileSystem(this);
-	input = new ModuleInput(this);
+	window = new ModuleWindow(this, true);
+	tex_loader = new ModuleTextureLoader(this, false);
+	file_system = new ModuleFileSystem(this, true);
+	input = new ModuleInput(this, true);
 	audio = new ModuleAudio(this, true);
-	scene_intro = new ModuleSceneIntro(this);
-	renderer3D = new ModuleRenderer3D(this);
-	camera = new ModuleCamera3D(this);
-	physics = new ModulePhysics3D(this);
-	gameobject_manager = new ModuleGameObjectManager(this);
-	editor = new ModuleEditor(this);
+	scene_intro = new ModuleSceneIntro(this, true);
+	renderer3D = new ModuleRenderer3D(this, true);
+	camera = new ModuleCamera3D(this, true);
+	physics = new ModulePhysics3D(this, true);
+	gameobject_manager = new ModuleGameObjectManager(this, true);
+	editor = new ModuleEditor(this, true);
 
 	// The order of calls is very important!
 	// Modules will Init() Start() and Update in this order
@@ -41,7 +39,6 @@ Application::Application()
 
 	// Loaders	
 	AddModule(file_system);
-	AddModule(geo_loader);
 	AddModule(tex_loader);
 	AddModule(gameobject_manager);
 	
@@ -93,7 +90,7 @@ bool Application::Init()
 
 	while(item != list_modules.end() && ret == true)
 	{
-		ret = (*item)->Start();
+		ret = (*item)->IsEnabled() ? (*item)->Start() : true;
 		++item;
 	}
 	
@@ -122,7 +119,7 @@ UPDATE_STATUS Application::Update()
 	
 	while(item != list_modules.end() && ret == UPDATE_CONTINUE)
 	{
-		ret = (*item)->PreUpdate(perf_info.getSecDt());
+		ret = (*item)->IsEnabled() ? (*item)->PreUpdate(perf_info.getSecDt()) : UPDATE_CONTINUE;
 		++item;
 	}
 
@@ -130,7 +127,7 @@ UPDATE_STATUS Application::Update()
 
 	while(item != list_modules.end() && ret == UPDATE_CONTINUE)
 	{
-		ret = (*item)->Update(perf_info.getSecDt());
+		ret = (*item)->IsEnabled() ? (*item)->Update(perf_info.getSecDt()) : UPDATE_CONTINUE;
 		++item;
 	}
 
@@ -138,7 +135,7 @@ UPDATE_STATUS Application::Update()
 
 	while(item != list_modules.end() && ret == UPDATE_CONTINUE)
 	{
-		ret = (*item)->PostUpdate(perf_info.getSecDt());
+		ret = (*item)->IsEnabled() ? (*item)->PostUpdate(perf_info.getSecDt()) : UPDATE_CONTINUE;
 		++item;
 	}
 

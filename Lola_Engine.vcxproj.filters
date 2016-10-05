@@ -210,9 +210,6 @@
     <ClCompile Include="Source\PerfTimer.cpp">
       <Filter>Source\Tools</Filter>
     </ClCompile>
-    <ClCompile Include="Source\ModuleGeometryLoader.cpp">
-      <Filter>Source\Modules</Filter>
-    </ClCompile>
     <ClCompile Include="Source\ModuleFileSystem.cpp">
       <Filter>Source\Modules</Filter>
     </ClCompile>
@@ -499,9 +496,6 @@
     </ClInclude>
     <ClInclude Include="Source\Console.h">
       <Filter>Source\Helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ModuleGeometryLoader.h">
-      <Filter>Source\Modules</Filter>
     </ClInclude>
     <ClInclude Include="Source\Mesh.h">
       <Filter>Source\Helpers</Filter>

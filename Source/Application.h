@@ -10,7 +10,6 @@
 #include <list>
 
 class ModuleWindow;
-class ModuleGeometryLoader;
 class ModuleTextureLoader;
 class ModuleFileSystem;
 class ModuleInput;
@@ -31,7 +30,6 @@ public:
 	Console					*console = nullptr;
 
 	ModuleWindow			*window = nullptr;
-	ModuleGeometryLoader    *geo_loader = nullptr;
 	ModuleTextureLoader     *tex_loader = nullptr;
 	ModuleFileSystem		*file_system = nullptr;
 	ModuleInput				*input = nullptr;

@@ -30,7 +30,13 @@ bool ModuleGameObjectManager::Init()
 {
 	bool ret = true;
 
+	// First gameobject of the scene
 	root = CreateGameObject("Root", nullptr);
+
+	// Stream log messages to Debug window
+	struct aiLogStream stream;
+	stream = aiGetPredefinedLogStream(aiDefaultLogStream_DEBUGGER, nullptr);
+	aiAttachLogStream(&stream);
 
 	return ret;
 }
@@ -74,6 +80,9 @@ UPDATE_STATUS ModuleGameObjectManager::PostUpdate(float dt)
 bool ModuleGameObjectManager::CleanUp()
 {
 	bool ret = true;
+
+	// detach log stream
+	aiDetachAllLogStreams();
 	
 	return ret;
 }

@@ -3,7 +3,6 @@
 #include "Application.h"
 #include "ModuleCamera3D.h"
 #include "ModuleWindow.h"
-#include "ModuleGeometryLoader.h"
 #include "ModuleTextureLoader.h"
 #include "Globals.h"
 
@@ -122,6 +121,9 @@ bool ModuleRenderer3D::Init()
 	// Projection matrix for
 	OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
+	// Default texture
+	GenerateChecker(&checker_id);
+
 	return ret;
 }
 
@@ -141,18 +143,12 @@ UPDATE_STATUS ModuleRenderer3D::PreUpdate(float dt)
 	for(uint i = 0; i < MAX_LIGHTS; ++i)
 		lights[i].Render();
 
-	GenerateChecker(&checker_id);
-
 	return UPDATE_CONTINUE;
 }
 
 // Update present buffer to screen
 UPDATE_STATUS ModuleRenderer3D::Update(float dt)
 {
-	for (int i = 0; i < App->geo_loader->meshes.size(); ++i)
-	{
-		//DrawMesh(App->geo_loader->meshes[i]);
-	}
 	return UPDATE_CONTINUE;
 }
 
@@ -161,8 +157,8 @@ UPDATE_STATUS ModuleRenderer3D::PostUpdate(float dt)
 {
 	// Rendering
 	glViewport(0, 0, (int)ImGui::GetIO().DisplaySize.x, (int)ImGui::GetIO().DisplaySize.y);	
-
 	SDL_GL_SwapWindow(App->window->window);
+
 	return UPDATE_CONTINUE;
 }
 
@@ -403,9 +399,9 @@ void ModuleRenderer3D::DrawMesh(const ComponentMesh *mesh)
 	glBindBuffer(GL_ARRAY_BUFFER, mesh->id_tex_coord);
 	glTexCoordPointer(2, GL_FLOAT, 0, NULL);
 
-	glBindTexture(GL_TEXTURE_2D, 0); // Cleanning bind buffer;
+	//glBindTexture(GL_TEXTURE_2D, 0); // Cleanning bind buffer;
 	//glBindTexture(GL_TEXTURE_2D, checker_id);
-	glBindTexture(GL_TEXTURE_2D, App->tex_loader->lenna_gl);
+	//glBindTexture(GL_TEXTURE_2D, App->tex_loader->lenna_gl);
 	
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_indices);	
 	glDrawElements(GL_TRIANGLES, mesh->num_indices, GL_UNSIGNED_INT, NULL);	
