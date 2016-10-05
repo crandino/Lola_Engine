@@ -6,7 +6,8 @@
 #include "ModuleGeometryLoader.h"
 #include "ModuleTextureLoader.h"
 #include "Globals.h"
-#include "Mesh.h"
+
+#include "ComponentMesh.h"
 
 #include "Glew\include\glew.h"
 #include "SDL\include\SDL_opengl.h"
@@ -150,7 +151,7 @@ UPDATE_STATUS ModuleRenderer3D::Update(float dt)
 {
 	for (int i = 0; i < App->geo_loader->meshes.size(); ++i)
 	{
-		DrawMesh(App->geo_loader->meshes[i]);
+		//DrawMesh(App->geo_loader->meshes[i]);
 	}
 	return UPDATE_CONTINUE;
 }
@@ -326,7 +327,7 @@ void ModuleRenderer3D::DrawDirectMode()
 	glDisableClientState(GL_VERTEX_ARRAY);
 }
 
-bool ModuleRenderer3D::LoadMeshBuffer(const Mesh *mesh)
+bool ModuleRenderer3D::LoadMeshBuffer(const ComponentMesh *mesh)
 {
 	bool ret = true;
 
@@ -385,7 +386,7 @@ bool ModuleRenderer3D::LoadMeshBuffer(const Mesh *mesh)
 	return ret;
 }
 
-void ModuleRenderer3D::DrawMesh(const Mesh *mesh)
+void ModuleRenderer3D::DrawMesh(const ComponentMesh *mesh)
 {
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_NORMAL_ARRAY);

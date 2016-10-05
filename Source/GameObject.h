@@ -10,14 +10,17 @@ class GameObject
 {
 
 private:
-
-	uint						     id;
+	
 	bool						 active;
 	char			 name[SHORT_STRING];
-	std::vector<Component*>  components;
-	std::vector<GameObject*>   children;
+	
+	
 
 public:
+
+	std::vector<Component*>  components;
+	std::vector<GameObject*>   children;
+	uint						     id;
 
 	GameObject(uint id, const char* name, GameObject *parent)
 	{
@@ -26,8 +29,22 @@ public:
 		sprintf_s(this->name, SHORT_STRING, name);
 
 		if (parent != nullptr) 	
-			parent->children.push_back(this);
-	
+			parent->children.push_back(this);	
+	}
+
+	void Enable()
+	{
+		active = true;
+	}
+
+	void Disable()
+	{
+		active = false;
+	}
+
+	bool isActive() const
+	{
+		return active;
 	}
 	
 };

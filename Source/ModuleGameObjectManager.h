@@ -2,6 +2,8 @@
 #define __MODULEGAMEOBJECTMANAGER_H__
 
 #include "Module.h"
+#include <stack>
+#include <vector>
 
 class GameObject;
 
@@ -18,15 +20,15 @@ public:
 	UPDATE_STATUS PostUpdate(float dt);
 	bool CleanUp();
 
-	const GameObject *GetRoot();
-
 private:
 
-	uint				id = 0;
-	GameObject *root = nullptr;
+	uint						id = 0;
+	GameObject					*root = nullptr;
+	std::vector<GameObject*>	list_of_gos;
 
-	GameObject *CreateGameObject(const char *name, GameObject *parent);
-
+	GameObject		*CreateGameObject(const char *name, GameObject *parent);
+	GameObject		*GetGameObject(uint id_to_search);
+	void			ImportModel(const char *file_name);
 };
 
 #endif // !__MODULEGAMEOBJECTMANAGER_H__

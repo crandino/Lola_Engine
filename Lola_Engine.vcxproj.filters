@@ -524,6 +524,9 @@
     <ClInclude Include="Source\ComponentTransform.h">
       <Filter>Source\Components</Filter>
     </ClInclude>
+    <ClInclude Include="Source\ComponentMesh.h">
+      <Filter>Source\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Source\MathGeoLib\Math\float2.inl">

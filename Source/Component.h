@@ -13,15 +13,29 @@ enum COMPONENT_TYPE
 
 class Component
 {
-private:
 
-	bool			active;
-	COMPONENT_TYPE    type;
-	uint				id;
+protected:
+
+	bool					active;
+	COMPONENT_TYPE            type;
+	unsigned int				id;
 
 public:
 
-	COMPONENT_TYPE GetType();
+	Component()
+	{
+		active = true;
+	}
+
+	virtual bool Update()
+	{
+		return true;
+	}
+
+	COMPONENT_TYPE GetType()
+	{
+		return type;
+	}
 
 };
 

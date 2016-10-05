@@ -14,7 +14,7 @@
 #define CHECKERS_HEIGHT 512
 #define CHECKERS_WIDTH 512
 
-struct Mesh;
+class ComponentMesh;
 
 class ModuleRenderer3D : public Module
 {
@@ -33,8 +33,8 @@ public:
 
 	void OnResize(int width, int height);
 
-	bool LoadMeshBuffer(const Mesh *mesh);
-	void DrawMesh(const Mesh *mesh);
+	bool LoadMeshBuffer(const ComponentMesh *mesh);
+	void DrawMesh(const ComponentMesh *mesh);
 
 	void DrawDirectMode();
 

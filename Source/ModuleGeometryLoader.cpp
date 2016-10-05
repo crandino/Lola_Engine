@@ -129,7 +129,7 @@ void ModuleGeometryLoader::LoadGeometry(const char *full_path)
 				}
 			}
 
-			App->renderer3D->LoadMeshBuffer(mesh);
+			//App->renderer3D->LoadMeshBuffer(mesh);
 			meshes.push_back(mesh);
 		}
 
