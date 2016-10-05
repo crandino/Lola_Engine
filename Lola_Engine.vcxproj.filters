@@ -31,6 +31,9 @@
     <Filter Include="3rd Party\MahtGeoLib\src">
       <UniqueIdentifier>{703a1bff-5d5f-4136-b888-e415bb7d9d28}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Components">
+      <UniqueIdentifier>{4a652b3c-a722-483d-8951-a44ab8fdb06c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Color.cpp">
@@ -218,6 +221,9 @@
     </ClCompile>
     <ClCompile Include="Source\ModuleGameObjectManager.cpp">
       <Filter>Source\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameObject.cpp">
+      <Filter>Source\Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -508,6 +514,15 @@
     </ClInclude>
     <ClInclude Include="Source\ModuleGameObjectManager.h">
       <Filter>Source\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameObject.h">
+      <Filter>Source\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Component.h">
+      <Filter>Source\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ComponentTransform.h">
+      <Filter>Source\Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

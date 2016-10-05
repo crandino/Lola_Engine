@@ -3,6 +3,8 @@
 
 #include "Module.h"
 
+class GameObject;
+
 class ModuleGameObjectManager : public Module
 {
 public:
@@ -15,6 +17,16 @@ public:
 	UPDATE_STATUS Update(float dt);
 	UPDATE_STATUS PostUpdate(float dt);
 	bool CleanUp();
+
+	const GameObject *GetRoot();
+
+private:
+
+	uint				id = 0;
+	GameObject *root = nullptr;
+
+	GameObject *CreateGameObject(const char *name, GameObject *parent);
+
 };
 
 #endif // !__MODULEGAMEOBJECTMANAGER_H__
