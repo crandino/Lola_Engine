@@ -59,16 +59,39 @@ GameObject *ModuleGameObjectManager::CreateGameObject(const char *name, GameObje
 {
 	GameObject *new_go = nullptr;
 
-	// With nullptr pointer parent...
+	// With nullptr pointer parent, root will be the parent if it's not the first gameobject on the game.
 	if (parent == nullptr && id != 0)
-		parent = root;
+		parent = root;				
 	
 	new_go = new GameObject(id++, name, parent);
 
 	return new_go;
 }
 
-const GameObject *ModuleGameObjectManager::GetRoot()
+GameObject *ModuleGameObjectManager::GetGameObject(uint id_to_search)
 {
-	return root;
+	std::stack<GameObject*> go_stack;
+	go_stack.push(root);
+	
+	while (!go_stack.empty())
+	{
+		GameObject *top_go = go_stack.top();
+		int num_children = top_go->children.size;
+
+		if (num_children > 0)
+		{
+			for (int i = num_children; i > 0; --i)
+				go_stack.push(top_go->children[i]);
+		}
+		else
+		{
+			if (top_go->id == id_to_search)
+				return top_go;
+			else
+				go_stack.pop();
+		}		
+	}
+
+	return nullptr;
+
 }
