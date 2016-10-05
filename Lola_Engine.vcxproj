@@ -122,6 +122,7 @@
     <ClCompile Include="Source\ModuleCamera3D.cpp" />
     <ClCompile Include="Source\ModuleEditor.cpp" />
     <ClCompile Include="Source\ModuleFileSystem.cpp" />
+    <ClCompile Include="Source\ModuleGameObjectManager.cpp" />
     <ClCompile Include="Source\ModuleGeometryLoader.cpp" />
     <ClCompile Include="Source\ModuleInput.cpp" />
     <ClCompile Include="Source\ModulePhysics3D.cpp" />
@@ -217,6 +218,7 @@
     <ClInclude Include="Source\ModuleCamera3D.h" />
     <ClInclude Include="Source\ModuleEditor.h" />
     <ClInclude Include="Source\ModuleFileSystem.h" />
+    <ClInclude Include="Source\ModuleGameObjectManager.h" />
     <ClInclude Include="Source\ModuleGeometryLoader.h" />
     <ClInclude Include="Source\ModuleInput.h" />
     <ClInclude Include="Source\ModulePhysics3D.h" />

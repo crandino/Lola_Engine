@@ -10,6 +10,7 @@
 #include "ModuleEditor.h"
 #include "ModuleGeometryLoader.h"
 #include "ModuleTextureLoader.h"
+#include "ModuleGameObjectManager.h"
 #include "ModuleRenderer3D.h"
 
 Application::Application()
@@ -24,6 +25,7 @@ Application::Application()
 	renderer3D = new ModuleRenderer3D(this);
 	camera = new ModuleCamera3D(this);
 	physics = new ModulePhysics3D(this);
+	gameobject_manager = new ModuleGameObjectManager(this);
 	editor = new ModuleEditor(this);
 
 	// The order of calls is very important!
@@ -41,6 +43,7 @@ Application::Application()
 	AddModule(file_system);
 	AddModule(geo_loader);
 	AddModule(tex_loader);
+	AddModule(gameobject_manager);
 	
 	// Scenes
 	AddModule(scene_intro);

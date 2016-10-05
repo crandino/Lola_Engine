@@ -41,7 +41,7 @@ UPDATE_STATUS ModuleGeometryLoader::PreUpdate(float dt)
 {
 	if (App->input->GetKey(SDL_SCANCODE_X) == KEY_DOWN)
 	{
-		App->tex_loader->LoadTexture("PAco");
+		App->tex_loader->LoadTexture("Paco");
 		LoadGeometry("Models/tank_bi.fbx");
 	}
 				
