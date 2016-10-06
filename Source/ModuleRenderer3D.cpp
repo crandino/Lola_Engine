@@ -389,14 +389,7 @@ void ModuleRenderer3D::DrawMesh(const ComponentMesh *mesh)
 	// Transformation 
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
-
-	math::float3 &position = mesh->game_object->transform->position;
-	math::float3 &scale = mesh->game_object->transform->scale;
-	math::Quat &rotation = mesh->game_object->transform->rotation;
-	
-	glTranslatef(position.x, position.y, position.z);
-	glScalef(scale.x, scale.y, scale.z);
-	glRotatef(math::RadToDeg(rotation.Angle()), rotation.x, rotation.y, rotation.z);	
+	glMultMatrixf(*mesh->game_object->transform->transform.v);
 
 	// Rendering
 	glEnableClientState(GL_VERTEX_ARRAY);

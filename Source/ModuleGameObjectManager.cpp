@@ -189,8 +189,7 @@ void ModuleGameObjectManager::ImportModel(const char *file_name)
 				else
 				{
 					nodes_stack.pop();
-					go_stack.pop();
-					
+					go_stack.pop();					
 				}
 			}
 		}

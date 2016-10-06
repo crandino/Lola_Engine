@@ -17,6 +17,14 @@ public:
 	ComponentTransform()
 	{
 		type = COMPONENT_TYPE::TRANSFORM;
+		transform.SetIdentity();
+	}
+
+	bool Update()
+	{
+		//SetTransformMatrix();
+		return true;
+
 	}
 
 	void SetComponent(aiVector3D translation, aiVector3D scaling, aiQuaternion rotating)
@@ -30,13 +38,15 @@ public:
 
 	void SetTransformMatrix()
 	{
-		transform = { position.x, scale.x, rotation.x, 0.0f, position.y, scale.y, rotation.y, 0.0f,
-					  position.z, scale.z, rotation.z, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f };
-
-		/*transform = { position.x, position.y, position.z, 0.0f, scale.x, scale.y, scale.z, 0.0f,
-			rotation.x, rotation.y, rotation.z, rotation.w, 0.0f, 0.0f, 0.0f, 1.0f };*/
+		math::float4x4 trans_mat, rot_mat, scale_mat;
+		trans_mat = math::float4x4::Translate(position);
+		math::vec axis(rotation.x, rotation.y, rotation.z);
+		rot_mat = math::float4x4::RotateAxisAngle(axis, rotation.Angle());
+		scale_mat = math::float4x4::Scale(scale).ToFloat4x4();
+		
+		transform = trans_mat * rot_mat * scale_mat * transform;
+		transform = transform.Transposed();
 	}
-
 };
 
 #endif __COMPONENTTRANSFORM_H__

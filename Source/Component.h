@@ -31,10 +31,7 @@ public:
 		active = true;
 	}
 
-	virtual bool Update()
-	{
-		return true;
-	}
+	virtual bool Update() = 0;
 
 	COMPONENT_TYPE &GetType()
 	{

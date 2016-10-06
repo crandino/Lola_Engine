@@ -114,7 +114,6 @@ void ModuleEditor::ShowConfMenu()
 	if(ImGui::CollapsingHeader("Application"))
 	{
 		// App name and organization
-		//const char *name = App->GetAppName();
 		ImGui::InputText("App name", (char*)App->GetAppName(), 128);
 		ImGui::InputText("Organization", (char*)App->GetOrganization(), 128);
 		ImGui::Separator();
@@ -157,6 +156,20 @@ void ModuleEditor::ShowConfMenu()
 		ImGui::LabelText("", "%s", "MathGeoLib Version:"); ImGui::SameLine();
 		ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.5f, 1.0f), "%s", "1.5");
 	}
+	if (ImGui::CollapsingHeader("Rendering"))
+	{
+		ImGui::Columns(4, NULL, true);
+
+		for (int i = 0; i < 4; ++i)
+		{
+			for (int j = 0; j < 4; ++j)
+			{
+				ImGui::Text("%.2f", App->renderer3D->ViewMatrix[i][j]);
+			}
+			ImGui::NextColumn();
+		}		
+	}
+
 	ImGui::End();
 }
 
