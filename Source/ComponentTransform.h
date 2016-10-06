@@ -27,8 +27,14 @@ public:
 
 	}
 
-	void SetComponent(aiVector3D translation, aiVector3D scaling, aiQuaternion rotating)
+	void SetComponent(aiNode *go, aiNode *parent)
 	{
+		aiVector3D translation;
+		aiVector3D scaling;
+		aiQuaternion rotating;
+
+		go->mTransformation.Decompose(scaling, rotating, translation);
+
 		position = { translation.x, translation.y, translation.z };
 		scale = { scaling.x, scaling.y, scaling.z };
 		rotation = { rotating.x, rotating.y, rotating.z, rotating.w };

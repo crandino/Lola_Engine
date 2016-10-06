@@ -48,7 +48,7 @@ bool ModuleGameObjectManager::Init()
 UPDATE_STATUS ModuleGameObjectManager::PreUpdate(float dt)
 {
 	if (App->input->GetKey(SDL_SCANCODE_G) == KEY_DOWN)
-		ImportModel("Models/primitives_with_parent.fbx");
+		ImportModel("Models/primitives_with_parent2.fbx");
 
 	return UPDATE_CONTINUE;
 }
@@ -168,7 +168,8 @@ void ModuleGameObjectManager::ImportModel(const char *file_name)
 
 						// Creating components:
 						aiNode *node_to_add = nodes_stack.top();
-						// MESH
+									
+									// --- MESH ---
 						ComponentMesh *comp_mesh = new ComponentMesh();
 						aiMesh *ai_mesh = scene->mMeshes[*node_to_add->mMeshes];
 						comp_mesh->SetComponent(ai_mesh);
@@ -176,13 +177,9 @@ void ModuleGameObjectManager::ImportModel(const char *file_name)
 						App->renderer3D->LoadMeshBuffer(comp_mesh);
 						new_go->AddComponent(comp_mesh);
 
-						//TRANSFORM
-						aiVector3D translation;
-						aiVector3D scaling;
-						aiQuaternion rotation;
+								  // --- TRANSFORM ---						
 						ComponentTransform *comp_trans = new ComponentTransform();
-						node_to_add->mTransformation.Decompose(scaling, rotation, translation);
-						comp_trans->SetComponent(translation, scaling, rotation);
+						comp_trans->SetComponent(node_to_add, nullptr);
 						new_go->AddComponent(comp_trans);
 					}
 				}
