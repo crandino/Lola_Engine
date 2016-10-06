@@ -58,12 +58,12 @@ UPDATE_STATUS ModuleGameObjectManager::Update(float dt)
 {
 	GameObject *curr_go = nullptr;
 
-	for (int i = 0; i < list_of_gos.size(); ++i)
+	for (uint i = 0; i < list_of_gos.size(); ++i)
 	{
 		curr_go = list_of_gos[i];
 		if (curr_go->isActive())
 		{
-			for (int j = 0; j < curr_go->components.size(); ++j)
+			for (uint j = 0; j < curr_go->components.size(); ++j)
 			{
 				curr_go->components[j]->Update();
 			}
@@ -179,7 +179,7 @@ void ModuleGameObjectManager::ImportModel(const char *file_name)
 
 								  // --- TRANSFORM ---						
 						ComponentTransform *comp_trans = new ComponentTransform();
-						comp_trans->SetComponent(node_to_add, nullptr);
+						comp_trans->SetComponent(node_to_add, curr_node);
 						new_go->AddComponent(comp_trans);
 					}
 				}

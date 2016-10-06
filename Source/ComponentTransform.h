@@ -4,13 +4,15 @@
 #include "Component.h"
 #include "MathGeoLib\MathGeoLib.h"
 
+#include "Assimp/include/scene.h"
+
 class ComponentTransform : public Component
 {
 public:
 
-	math::float3 position;
-	math::float3 scale;
-	math::Quat rotation;
+	math::float3 local_position;
+	math::float3 local_scale;
+	math::Quat local_rotation;
 
 	math::float4x4 transform;
 
@@ -35,23 +37,39 @@ public:
 
 		go->mTransformation.Decompose(scaling, rotating, translation);
 
-		position = { translation.x, translation.y, translation.z };
-		scale = { scaling.x, scaling.y, scaling.z };
-		rotation = { rotating.x, rotating.y, rotating.z, rotating.w };
+		local_position = { translation.x, translation.y, translation.z };
+		local_scale = { scaling.x, scaling.y, scaling.z };
+		local_rotation = { rotating.x, rotating.y, rotating.z, rotating.w };
 
-		SetTransformMatrix();
+		math::float4x4 local_matrix = CalcTransformMatrix(local_position, local_scale, local_rotation);
+
+		math::float3 parent_position;
+		math::float3 parent_scale;
+		math::Quat parent_rotation;
+
+		parent->mTransformation.Decompose(scaling, rotating, translation);
+
+		parent_position = { translation.x, translation.y, translation.z };
+		parent_scale = { scaling.x, scaling.y, scaling.z };
+		parent_rotation = { rotating.x, rotating.y, rotating.z, rotating.w };
+
+		math::float4x4 parent_matrix = CalcTransformMatrix(parent_position, parent_scale, parent_rotation);
+
+		transform = parent_matrix * local_matrix;
+		transform = transform.Transposed();
 	}
 
-	void SetTransformMatrix()
+	math::float4x4 CalcTransformMatrix(math::float3 &pos, math::float3 &scale, math::Quat &rot)
 	{
 		math::float4x4 trans_mat, rot_mat, scale_mat;
-		trans_mat = math::float4x4::Translate(position);
-		math::vec axis(rotation.x, rotation.y, rotation.z);
-		rot_mat = math::float4x4::RotateAxisAngle(axis, rotation.Angle());
+		trans_mat = math::float4x4::Translate(pos);
+		math::vec axis(rot.x, rot.y, rot.z);
+		rot_mat = math::float4x4::RotateAxisAngle(axis, rot.Angle());
 		scale_mat = math::float4x4::Scale(scale).ToFloat4x4();
 		
-		transform = trans_mat * rot_mat * scale_mat * transform;
-		transform = transform.Transposed();
+		math::float4x4 mat = trans_mat * rot_mat * scale_mat;
+		
+		return mat;
 	}
 };
 
