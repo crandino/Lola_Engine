@@ -19,6 +19,11 @@ public:
 	UPDATE_STATUS PostUpdate(float dt);
 	bool CleanUp();
 
+	const GameObject *GetRoot() const
+	{
+		return root;
+	}
+
 private:
 
 	uint						id = 0;

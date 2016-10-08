@@ -4,6 +4,8 @@
 #include "Module.h"
 #include "Globals.h"
 
+class GameObject;
+
 class ModuleEditor : public Module
 {
 	public:
@@ -18,11 +20,14 @@ class ModuleEditor : public Module
 		bool CleanUp();	
 
 	private:
+
+		int node_flags, leaf_flags;
 		
 		//Windows variables
 		bool about_menu = false;
 		bool conf_menu = false;
 		bool console_menu = false;
+		bool hierarchy_menu = false;
 
 		// Windows methods
 		void ShowMenuBar();
@@ -30,6 +35,9 @@ class ModuleEditor : public Module
 		void ShowAboutMenu();
 		void ShowConfMenu();
 		void ShowConsole();
+		void ShowHierarchy();
+
+		void ExpandTree(const GameObject* go_to_expand, const GameObject *go_clicked, int &node_clicked, int selection_mask);
 };
 
 #endif // !__MODULEIMGUI_H__

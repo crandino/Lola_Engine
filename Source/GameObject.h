@@ -48,6 +48,7 @@ public:
 	void Enable()	{ active = true;  }
 	void Disable()  { active = false;  }
 	bool isActive() const { return active; }
+	const char *GetName() const { return name; }
 	
 };
 

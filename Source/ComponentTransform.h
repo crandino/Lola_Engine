@@ -47,13 +47,21 @@ public:
 		math::float3 parent_scale;
 		math::Quat parent_rotation;
 
-		parent->mTransformation.Decompose(scaling, rotating, translation);
+		aiNode *node = go->mParent;
+		math::float4x4 parent_matrix; parent_matrix.SetIdentity();
 
-		parent_position = { translation.x, translation.y, translation.z };
-		parent_scale = { scaling.x, scaling.y, scaling.z };
-		parent_rotation = { rotating.x, rotating.y, rotating.z, rotating.w };
+		while (node != nullptr)
+		{
+			node->mTransformation.Decompose(scaling, rotating, translation);
+			parent_position = { translation.x, translation.y, translation.z };
+			parent_scale = { scaling.x, scaling.y, scaling.z };
+			parent_rotation = { rotating.x, rotating.y, rotating.z, rotating.w };
 
-		math::float4x4 parent_matrix = CalcTransformMatrix(parent_position, parent_scale, parent_rotation);
+			math::float4x4 grand_father_matrix = CalcTransformMatrix(parent_position, parent_scale, parent_rotation);
+			parent_matrix = grand_father_matrix * parent_matrix;
+			node = node->mParent;
+		}
+		//parent->mTransformation.Decompose(scaling, rotating, translation);		
 
 		transform = parent_matrix * local_matrix;
 		transform = transform.Transposed();
@@ -67,7 +75,7 @@ public:
 		rot_mat = math::float4x4::RotateAxisAngle(axis, rot.Angle());
 		scale_mat = math::float4x4::Scale(scale).ToFloat4x4();
 		
-		math::float4x4 mat = trans_mat * rot_mat * scale_mat;
+		math::float4x4 mat = trans_mat * rot_mat *  scale_mat;
 		
 		return mat;
 	}

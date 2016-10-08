@@ -4,6 +4,8 @@
 #include "ModuleWindow.h"
 #include "ModuleInput.h"
 #include "ModuleRenderer3D.h"
+#include "ModuleGameObjectManager.h"
+#include "GameObject.h"
 
 #include "imgui\imgui.h"
 #include "imgui\imgui_impl_sdl_gl3.h"
@@ -29,6 +31,9 @@ bool ModuleEditor::Init()
 		ImGui_ImplSdlGL3_Init(App->window->window);
 	}		
 
+	node_flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick;
+	leaf_flags = node_flags | ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
+
 	return true;
 }
 
@@ -41,6 +46,9 @@ UPDATE_STATUS ModuleEditor::PreUpdate(float dt)
 
 	if (App->input->GetKey(SDL_SCANCODE_0) == KEY_DOWN)
 		console_menu = !console_menu;
+
+	if (App->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN)
+		hierarchy_menu = !hierarchy_menu;
 	
 	return UPDATE_CONTINUE;
 }
@@ -48,11 +56,12 @@ UPDATE_STATUS ModuleEditor::PreUpdate(float dt)
 UPDATE_STATUS ModuleEditor::Update(float dt)
 {
 	ShowMenuBar();
-	//ImGui::ShowTestWindow();
+	ImGui::ShowTestWindow();
 
 	if (about_menu) ShowAboutMenu();
 	if (conf_menu) ShowConfMenu();
 	if (console_menu) ShowConsole();
+	if (hierarchy_menu) ShowHierarchy();
 
 	return UPDATE_CONTINUE;
 }
@@ -176,4 +185,62 @@ void ModuleEditor::ShowConfMenu()
 void ModuleEditor::ShowConsole()
 {
 	App->console->Draw("Console", &console_menu);
+}
+
+void ModuleEditor::ShowHierarchy()
+{
+	ImGui::Begin("Hierarchy", &hierarchy_menu);
+
+	const GameObject *root = App->gameobject_manager->GetRoot();
+	const GameObject *go_clicked = nullptr;
+	int node_clicked = -1;
+	static int selection_mask = (1 << 2);
+
+	ExpandTree(root, go_clicked, node_clicked, selection_mask);
+
+	if (node_clicked != -1)
+	{
+		// Update selection state. Process outside of tree loop to avoid visual inconsistencies during the clicking-frame.
+		if (ImGui::GetIO().KeyCtrl)
+			selection_mask ^= (1 << node_clicked);          // CTRL+click to toggle
+		else if (!(selection_mask & (1 << node_clicked)))   // Depending on selection behavior you want, this commented bit preserve selection when clicking on item that is part of the selection
+			selection_mask = (1 << node_clicked);           // Click to single-select
+	}
+
+	ImGui::End();
+}
+
+void ModuleEditor::ExpandTree(const GameObject* go_to_expand, const GameObject *go_clicked, int &node_clicked, int selection_mask)
+{
+	int num_children = go_to_expand->children.size();
+	for (int i = 0; i < num_children; ++i)
+	{
+		node_flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick | ((selection_mask & (1 << i)) ? ImGuiTreeNodeFlags_Selected : 0 );
+		
+		if (go_to_expand->children[i]->children.size() > 0)
+		{			
+			bool node_open = ImGui::TreeNodeEx((void*)(intptr_t)i, node_flags, go_to_expand->children[i]->GetName());
+			if (ImGui::IsItemClicked())
+			{
+				go_clicked = go_to_expand->children[i];
+				node_clicked = i;
+			}				
+
+			if (node_open)
+			{
+				ExpandTree(go_to_expand->children[i], go_clicked, node_clicked, selection_mask);
+				ImGui::TreePop();
+			}
+		}
+		else
+		{
+			leaf_flags = node_flags | ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
+			ImGui::TreeNodeEx((void*)(intptr_t)i, leaf_flags, go_to_expand->children[i]->GetName());
+			if (ImGui::IsItemClicked())
+			{
+				node_clicked = i;
+				go_clicked = go_to_expand->children[i];
+			}				
+		}
+	}
 }

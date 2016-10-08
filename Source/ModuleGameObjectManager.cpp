@@ -169,7 +169,7 @@ void ModuleGameObjectManager::ImportModel(const char *file_name)
 						// Creating components:
 						aiNode *node_to_add = nodes_stack.top();
 									
-									// --- MESH ---
+								 // --- MESH ---
 						ComponentMesh *comp_mesh = new ComponentMesh();
 						aiMesh *ai_mesh = scene->mMeshes[*node_to_add->mMeshes];
 						comp_mesh->SetComponent(ai_mesh);
