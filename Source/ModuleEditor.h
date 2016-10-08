@@ -22,6 +22,7 @@ class ModuleEditor : public Module
 	private:
 
 		int node_flags, leaf_flags;
+		int item_selected_by_id;
 		
 		//Windows variables
 		bool about_menu = false;
@@ -37,7 +38,7 @@ class ModuleEditor : public Module
 		void ShowConsole();
 		void ShowHierarchy();
 
-		void ExpandTree(const GameObject* go_to_expand, const GameObject *go_clicked, int &node_clicked, int selection_mask);
+		void ExpandTree(const GameObject* go_to_expand, const GameObject *go_clicked, int &node_clicked);
 };
 
 #endif // !__MODULEIMGUI_H__

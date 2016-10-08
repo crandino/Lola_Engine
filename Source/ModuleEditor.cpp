@@ -33,6 +33,7 @@ bool ModuleEditor::Init()
 
 	node_flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick;
 	leaf_flags = node_flags | ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
+	item_selected_by_id = -1;
 
 	return true;
 }
@@ -193,53 +194,55 @@ void ModuleEditor::ShowHierarchy()
 
 	const GameObject *root = App->gameobject_manager->GetRoot();
 	const GameObject *go_clicked = nullptr;
-	int node_clicked = -1;
-	static int selection_mask = (1 << 2);
+	int node_clicked = -2;
 
-	ExpandTree(root, go_clicked, node_clicked, selection_mask);
+	ExpandTree(root, go_clicked, node_clicked);
 
-	if (node_clicked != -1)
-	{
-		// Update selection state. Process outside of tree loop to avoid visual inconsistencies during the clicking-frame.
-		if (ImGui::GetIO().KeyCtrl)
-			selection_mask ^= (1 << node_clicked);          // CTRL+click to toggle
-		else if (!(selection_mask & (1 << node_clicked)))   // Depending on selection behavior you want, this commented bit preserve selection when clicking on item that is part of the selection
-			selection_mask = (1 << node_clicked);           // Click to single-select
-	}
+	//if (node_clicked != -1)
+	//{
+	//	// Update selection state. Process outside of tree loop to avoid visual inconsistencies during the clicking-frame.
+	//	if (ImGui::GetIO().KeyCtrl)
+	//		selection_mask ^= (1 << node_clicked);          // CTRL+click to toggle
+	//	else if (!(selection_mask & (1 << node_clicked)))   // Depending on selection behavior you want, this commented bit preserve selection when clicking on item that is part of the selection
+	//		selection_mask = (1 << node_clicked);           // Click to single-select
+	//}
 
 	ImGui::End();
 }
 
-void ModuleEditor::ExpandTree(const GameObject* go_to_expand, const GameObject *go_clicked, int &node_clicked, int selection_mask)
+void ModuleEditor::ExpandTree(const GameObject* go_to_expand, const GameObject *go_clicked, int &node_clicked)
 {
 	int num_children = go_to_expand->children.size();
+	GameObject *child = nullptr;
+
 	for (int i = 0; i < num_children; ++i)
 	{
-		node_flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick | ((selection_mask & (1 << i)) ? ImGuiTreeNodeFlags_Selected : 0 );
+		child = go_to_expand->children[i];
+		node_flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick | ((child->id == item_selected_by_id) ? ImGuiTreeNodeFlags_Selected : 0 );
 		
-		if (go_to_expand->children[i]->children.size() > 0)
+		if (child->children.size() > 0)
 		{			
-			bool node_open = ImGui::TreeNodeEx((void*)(intptr_t)i, node_flags, go_to_expand->children[i]->GetName());
+			bool node_open = ImGui::TreeNodeEx((void*)(intptr_t)i, node_flags, child->GetName());
 			if (ImGui::IsItemClicked())
 			{
-				go_clicked = go_to_expand->children[i];
-				node_clicked = i;
+				go_clicked = child;
+				item_selected_by_id = child->id;
 			}				
 
 			if (node_open)
 			{
-				ExpandTree(go_to_expand->children[i], go_clicked, node_clicked, selection_mask);
+				ExpandTree(child, go_clicked, node_clicked);
 				ImGui::TreePop();
 			}
 		}
 		else
 		{
 			leaf_flags = node_flags | ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
-			ImGui::TreeNodeEx((void*)(intptr_t)i, leaf_flags, go_to_expand->children[i]->GetName());
+			ImGui::TreeNodeEx((void*)(intptr_t)i, leaf_flags, child->GetName());
 			if (ImGui::IsItemClicked())
-			{
-				node_clicked = i;
-				go_clicked = go_to_expand->children[i];
+			{				
+				go_clicked = child;
+				item_selected_by_id = child->id;
 			}				
 		}
 	}
