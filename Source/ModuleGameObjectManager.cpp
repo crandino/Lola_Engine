@@ -168,19 +168,19 @@ void ModuleGameObjectManager::ImportModel(const char *file_name)
 
 						// Creating components:
 						aiNode *node_to_add = nodes_stack.top();
+
+						// --- TRANSFORM ---						
+						ComponentTransform *comp_trans = new ComponentTransform();
+						comp_trans->SetComponent(node_to_add);
+						new_go->AddComponent(comp_trans);
 									
-								 // --- MESH ---
+						// --- MESH ---
 						ComponentMesh *comp_mesh = new ComponentMesh();
 						aiMesh *ai_mesh = scene->mMeshes[*node_to_add->mMeshes];
 						comp_mesh->SetComponent(ai_mesh);
 
 						App->renderer3D->LoadMeshBuffer(comp_mesh);
-						new_go->AddComponent(comp_mesh);
-
-								  // --- TRANSFORM ---						
-						ComponentTransform *comp_trans = new ComponentTransform();
-						comp_trans->SetComponent(node_to_add, curr_node);
-						new_go->AddComponent(comp_trans);
+						new_go->AddComponent(comp_mesh);								 
 					}
 				}
 				else

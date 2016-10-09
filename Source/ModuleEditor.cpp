@@ -57,12 +57,14 @@ UPDATE_STATUS ModuleEditor::PreUpdate(float dt)
 UPDATE_STATUS ModuleEditor::Update(float dt)
 {
 	ShowMenuBar();
-	ImGui::ShowTestWindow();
+	//ImGui::ShowTestWindow();
 
 	if (about_menu) ShowAboutMenu();
 	if (conf_menu) ShowConfMenu();
 	if (console_menu) ShowConsole();
 	if (hierarchy_menu) ShowHierarchy();
+
+	ShowComponentInfo();
 
 	return UPDATE_CONTINUE;
 }
@@ -191,12 +193,8 @@ void ModuleEditor::ShowConsole()
 void ModuleEditor::ShowHierarchy()
 {
 	ImGui::Begin("Hierarchy", &hierarchy_menu);
-
-	const GameObject *root = App->gameobject_manager->GetRoot();
-	const GameObject *go_clicked = nullptr;
-	int node_clicked = -2;
-
-	ExpandTree(root, go_clicked, node_clicked);
+	
+	ExpandTree(App->gameobject_manager->GetRoot());
 
 	//if (node_clicked != -1)
 	//{
@@ -210,7 +208,7 @@ void ModuleEditor::ShowHierarchy()
 	ImGui::End();
 }
 
-void ModuleEditor::ExpandTree(const GameObject* go_to_expand, const GameObject *go_clicked, int &node_clicked)
+void ModuleEditor::ExpandTree(const GameObject* go_to_expand)
 {
 	int num_children = go_to_expand->children.size();
 	GameObject *child = nullptr;
@@ -225,13 +223,13 @@ void ModuleEditor::ExpandTree(const GameObject* go_to_expand, const GameObject *
 			bool node_open = ImGui::TreeNodeEx((void*)(intptr_t)i, node_flags, child->GetName());
 			if (ImGui::IsItemClicked())
 			{
-				go_clicked = child;
+				go_selected = child;
 				item_selected_by_id = child->id;
 			}				
 
 			if (node_open)
 			{
-				ExpandTree(child, go_clicked, node_clicked);
+				ExpandTree(child);
 				ImGui::TreePop();
 			}
 		}
@@ -241,9 +239,25 @@ void ModuleEditor::ExpandTree(const GameObject* go_to_expand, const GameObject *
 			ImGui::TreeNodeEx((void*)(intptr_t)i, leaf_flags, child->GetName());
 			if (ImGui::IsItemClicked())
 			{				
-				go_clicked = child;
+				go_selected = child;
 				item_selected_by_id = child->id;
 			}				
 		}
 	}
+}
+
+void ModuleEditor::ShowComponentInfo()
+{
+	if (go_selected != nullptr)
+	{
+		ImGui::SetNextWindowSize(ImVec2(550, 680), ImGuiSetCond_FirstUseEver);
+		ImGui::Begin(go_selected->GetName(), nullptr);
+
+		for (int i = 0; i < go_selected->components.size(); ++i)
+		{
+			go_selected->components[i]->ShowEditorInfo();
+		}
+
+		ImGui::End();
+	}	
 }

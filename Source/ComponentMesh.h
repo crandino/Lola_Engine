@@ -35,12 +35,18 @@ public:
 	ComponentMesh()
 	{ 
 		type = COMPONENT_TYPE::MESH;
+		name = GetNameByType(type);
 	}
 
 	bool Update()
 	{
 		App->renderer3D->DrawMesh(this);
 		return true;
+	}
+
+	void ShowEditorInfo()
+	{
+		ImGui::Text(name);
 	}
 
 	void SetComponent(const aiMesh *mesh)

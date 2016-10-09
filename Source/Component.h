@@ -18,6 +18,7 @@ class Component
 
 protected:
 
+	const char				 *name;
 	COMPONENT_TYPE            type;
 	bool					active;		
 	unsigned int				id;
@@ -31,11 +32,30 @@ public:
 		active = true;
 	}
 
-	virtual bool Update() = 0;
+	virtual bool Update() {  return true;	}
+	virtual void ShowEditorInfo() = 0;
 
 	COMPONENT_TYPE &GetType()
 	{
 		return type;
+	}
+
+	const char *GetNameByType(COMPONENT_TYPE type)
+	{
+		const char *name;
+		switch (type)
+		{
+		case(COMPONENT_TYPE::TRANSFORM):
+			name = "Transform";
+			break;
+		case(COMPONENT_TYPE::MESH):
+			name = "Mesh";
+			break;
+		default:
+			name = "Unknown";
+		}
+
+		return name;
 	}
 
 };

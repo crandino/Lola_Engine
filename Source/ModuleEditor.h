@@ -23,12 +23,14 @@ class ModuleEditor : public Module
 
 		int node_flags, leaf_flags;
 		int item_selected_by_id;
+		const GameObject *go_selected = nullptr;
 		
 		//Windows variables
 		bool about_menu = false;
 		bool conf_menu = false;
 		bool console_menu = false;
 		bool hierarchy_menu = false;
+		bool component_menu = false;
 
 		// Windows methods
 		void ShowMenuBar();
@@ -37,8 +39,9 @@ class ModuleEditor : public Module
 		void ShowConfMenu();
 		void ShowConsole();
 		void ShowHierarchy();
+		void ShowComponentInfo();
 
-		void ExpandTree(const GameObject* go_to_expand, const GameObject *go_clicked, int &node_clicked);
+		void ExpandTree(const GameObject* go_to_expand);
 };
 
 #endif // !__MODULEIMGUI_H__
