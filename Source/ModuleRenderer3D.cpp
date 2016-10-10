@@ -8,6 +8,7 @@
 
 #include "ComponentMesh.h"
 #include "ComponentTransform.h"
+#include "ComponentMaterial.h"
 #include "GameObject.h"
 
 #include "Glew\include\glew.h"
@@ -389,13 +390,15 @@ void ModuleRenderer3D::DrawMesh(const ComponentMesh *mesh)
 	// Transformation 
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
-	glMultMatrixf(*mesh->game_object->transform->transform.v);
+	glMultMatrixf(*mesh->game_object->transform->world_transform.v);
 
 	// Rendering
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_NORMAL_ARRAY);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-	//glEnable(GL_TEXTURE_2D);
+
+	// Texturing
+	glEnable(GL_TEXTURE_2D);
 
 	glBindBuffer(GL_ARRAY_BUFFER, mesh->id_vertices);	
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
@@ -406,14 +409,18 @@ void ModuleRenderer3D::DrawMesh(const ComponentMesh *mesh)
 	glBindBuffer(GL_ARRAY_BUFFER, mesh->id_tex_coord);
 	glTexCoordPointer(2, GL_FLOAT, 0, NULL);
 
-	//glBindTexture(GL_TEXTURE_2D, 0); // Cleanning bind buffer;
-	//glBindTexture(GL_TEXTURE_2D, checker_id);
-	//glBindTexture(GL_TEXTURE_2D, App->tex_loader->lenna_gl);
+	ComponentMaterial *mat = (ComponentMaterial*)mesh->game_object->GetComponentByType(COMPONENT_TYPE::MATERIAL);
+	if (mat->tex_buffer != 0)
+	{
+		glBindTexture(GL_TEXTURE_2D, 0); // Cleanning bind buffer;
+		glBindTexture(GL_TEXTURE_2D, mat->tex_buffer);
+	}	
 	
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_indices);	
 	glDrawElements(GL_TRIANGLES, mesh->num_indices, GL_UNSIGNED_INT, NULL);	
 
-	//glDisable(GL_TEXTURE_2D);
+	glDisable(GL_TEXTURE_2D);
+
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_NORMAL_ARRAY);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);

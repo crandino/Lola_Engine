@@ -15,7 +15,7 @@
 Application::Application()
 {
 	window = new ModuleWindow(this, true);
-	tex_loader = new ModuleTextureLoader(this, false);
+	tex_loader = new ModuleTextureLoader(this, true);
 	file_system = new ModuleFileSystem(this, true);
 	input = new ModuleInput(this, true);
 	audio = new ModuleAudio(this, true);

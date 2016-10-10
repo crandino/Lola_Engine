@@ -49,6 +49,17 @@ public:
 	void Disable()  { active = false;  }
 	bool isActive() const { return active; }
 	const char *GetName() const { return name; }
+
+	const Component *GetComponentByType(COMPONENT_TYPE type)
+	{
+		for (uint i = 0; i < components.size(); ++i)
+		{
+			if (components[i]->GetType() == type)
+				return components[i];
+		}
+
+		return nullptr;
+	}
 	
 };
 

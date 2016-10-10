@@ -52,11 +52,14 @@ bool ModuleTextureLoader::CleanUp()
 	return ret;
 }
 
-void ModuleTextureLoader::LoadTexture(const char *full_path)
+void ModuleTextureLoader::LoadTexture(const char *full_path, unsigned int &buffer)
 {
 	ilutRenderer(ILUT_OPENGL);
-	ilGenImages(1, &lenna);
-	ilBindImage(lenna);
-	ilLoadImage("Assets/Textures/Lenna.png");	
-	lenna_gl = ilutGLBindTexImage();
+	ilGenImages(1, &buffer);
+	ilBindImage(buffer);
+	char c[SHORT_STRING];
+	//sprintf_s(c, SHORT_STRING, "C:/Users/Carlos/Documents/GitHub/Lola_Engine/Game/Assets/Models/%s", full_path );
+	sprintf_s(c, SHORT_STRING, "Assets/Models/%s", full_path );
+	ilLoadImage(c);
+	buffer = ilutGLBindTexImage();
 }

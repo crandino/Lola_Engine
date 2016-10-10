@@ -20,7 +20,7 @@ public:
 
 public:
 
-	void LoadTexture(const char *file_name);
+	void LoadTexture(const char *file_name, unsigned int &buffer);
 };
 
 #endif // !__MODULETEXTURELOADER_H__

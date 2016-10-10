@@ -5,6 +5,7 @@ class GameObject;
 
 enum COMPONENT_TYPE
 {
+	UNKNOWN,
 	TRANSFORM,
 	MATERIAL,
 	CAMERA,
@@ -29,6 +30,7 @@ public:
 
 	Component()
 	{
+		type = COMPONENT_TYPE::UNKNOWN;
 		active = true;
 	}
 

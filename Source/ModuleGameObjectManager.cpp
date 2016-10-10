@@ -14,6 +14,7 @@
 
 #include "ComponentMesh.h"
 #include "ComponentTransform.h"
+#include "ComponentMaterial.h"
 
 #include <stack>
 
@@ -48,7 +49,7 @@ bool ModuleGameObjectManager::Init()
 UPDATE_STATUS ModuleGameObjectManager::PreUpdate(float dt)
 {
 	if (App->input->GetKey(SDL_SCANCODE_G) == KEY_DOWN)
-		ImportModel("Models/primitives_with_parent2.fbx");
+		ImportModel("Models/Street environment_V01.fbx");  // primitives_with_parent2.fbx Street environment_V01.fbx
 
 	return UPDATE_CONTINUE;
 }
@@ -157,17 +158,24 @@ void ModuleGameObjectManager::ImportModel(const char *file_name)
 
 				if (num_children > 0)
 				{
-					nodes_stack.pop();
-					go_stack.pop();
+					nodes_stack.pop();  // Node checked is eliminated.
 
 					for (int i = 0; i < num_children; ++i)
 					{
-						GameObject *new_go = CreateGameObject(curr_node->mChildren[i]->mName.C_Str(), parent);
-						go_stack.push(new_go);
-						nodes_stack.push(curr_node->mChildren[i]);
+						aiNode *node_to_add = curr_node->mChildren[i];
 
-						// Creating components:
-						aiNode *node_to_add = nodes_stack.top();
+						if (node_to_add->mNumMeshes == 0)
+						{
+							nodes_stack.push(node_to_add);
+							continue;
+						}							
+
+						nodes_stack.push(node_to_add);
+						GameObject *new_go = CreateGameObject(node_to_add->mName.C_Str(), parent);
+
+						// Replacing parent GameObject
+						go_stack.pop();
+						go_stack.push(new_go);						
 
 						// --- TRANSFORM ---						
 						ComponentTransform *comp_trans = new ComponentTransform();
@@ -180,13 +188,18 @@ void ModuleGameObjectManager::ImportModel(const char *file_name)
 						comp_mesh->SetComponent(ai_mesh);
 
 						App->renderer3D->LoadMeshBuffer(comp_mesh);
-						new_go->AddComponent(comp_mesh);								 
+						new_go->AddComponent(comp_mesh);
+
+						// --- MATERIAL ---
+						ComponentMaterial *comp_mat = new ComponentMaterial();
+						aiMaterial *ai_material = scene->mMaterials[ai_mesh->mMaterialIndex];
+						comp_mat->SetComponent(ai_material);
+						new_go->AddComponent(comp_mat);
 					}
 				}
 				else
 				{
-					nodes_stack.pop();
-					go_stack.pop();					
+					nodes_stack.pop();					
 				}
 			}
 		}
