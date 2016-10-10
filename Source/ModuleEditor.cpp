@@ -58,7 +58,7 @@ UPDATE_STATUS ModuleEditor::PreUpdate(float dt)
 UPDATE_STATUS ModuleEditor::Update(float dt)
 {
 	ShowMenuBar();
-	ImGui::ShowTestWindow();
+	//ImGui::ShowTestWindow();
 
 	if (about_menu) ShowAboutMenu();
 	if (conf_menu) ShowConfMenu();

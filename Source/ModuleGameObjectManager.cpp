@@ -49,7 +49,7 @@ bool ModuleGameObjectManager::Init()
 UPDATE_STATUS ModuleGameObjectManager::PreUpdate(float dt)
 {
 	if (App->input->GetKey(SDL_SCANCODE_G) == KEY_DOWN)
-		ImportModel("Models/Street environment_V01.fbx");  // primitives_with_parent2.fbx Street environment_V01.fbx
+		ImportModel("Models/primitives_with_parent2.fbx");  // primitives_with_parent2.fbx Street environment_V01.fbx
 
 	return UPDATE_CONTINUE;
 }
@@ -168,7 +168,7 @@ void ModuleGameObjectManager::ImportModel(const char *file_name)
 						nodes_stack.push(node_to_add);
 
 						char *go_name = node_to_add->mName.data;
-						for (int i = 0; i < node_to_add->mName.length; ++i)
+						for (uint i = 0; i < node_to_add->mName.length; ++i)
 						{
 							if (go_name[i] == '$')
 							{

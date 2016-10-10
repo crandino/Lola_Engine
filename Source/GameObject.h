@@ -12,8 +12,7 @@ class GameObject
 {
 
 private:	
-	
-	bool						 active;
+
 	char			 name[SHORT_STRING];	
 
 public:
@@ -25,6 +24,7 @@ public:
 	std::vector<Component*>  components;
 	std::vector<GameObject*>   children;
 	uint						     id;
+	bool						 active;
 
 	GameObject(uint id, const char* name, GameObject *parent)
 	{
