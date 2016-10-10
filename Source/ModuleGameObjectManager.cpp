@@ -159,22 +159,25 @@ void ModuleGameObjectManager::ImportModel(const char *file_name)
 				if (num_children > 0)
 				{
 					nodes_stack.pop();  // Node checked is eliminated.
+					go_stack.pop();
 
 					for (int i = 0; i < num_children; ++i)
 					{
-						aiNode *node_to_add = curr_node->mChildren[i];
-
-						if (node_to_add->mNumMeshes == 0)
-						{
-							nodes_stack.push(node_to_add);
-							continue;
-						}							
+						aiNode *node_to_add = curr_node->mChildren[i];												
 
 						nodes_stack.push(node_to_add);
-						GameObject *new_go = CreateGameObject(node_to_add->mName.C_Str(), parent);
 
-						// Replacing parent GameObject
-						go_stack.pop();
+						char *go_name = node_to_add->mName.data;
+						for (int i = 0; i < node_to_add->mName.length; ++i)
+						{
+							if (go_name[i] == '$')
+							{
+								go_name[i-1] = '\0';
+								break;
+							}								
+						}							
+
+						GameObject *new_go = CreateGameObject(go_name, parent);	
 						go_stack.push(new_go);						
 
 						// --- TRANSFORM ---						
@@ -183,22 +186,26 @@ void ModuleGameObjectManager::ImportModel(const char *file_name)
 						new_go->AddComponent(comp_trans);
 									
 						// --- MESH ---
-						ComponentMesh *comp_mesh = new ComponentMesh();
-						aiMesh *ai_mesh = scene->mMeshes[*node_to_add->mMeshes];
-						comp_mesh->SetComponent(ai_mesh);
+						if (node_to_add->mNumMeshes != 0)
+						{
+							ComponentMesh *comp_mesh = new ComponentMesh();
+							aiMesh *ai_mesh = scene->mMeshes[*node_to_add->mMeshes];
+							comp_mesh->SetComponent(ai_mesh);
 
-						App->renderer3D->LoadMeshBuffer(comp_mesh);
-						new_go->AddComponent(comp_mesh);
+							App->renderer3D->LoadMeshBuffer(comp_mesh);
+							new_go->AddComponent(comp_mesh);
+						}						
 
 						// --- MATERIAL ---
-						ComponentMaterial *comp_mat = new ComponentMaterial();
+					/*	ComponentMaterial *comp_mat = new ComponentMaterial();
 						aiMaterial *ai_material = scene->mMaterials[ai_mesh->mMaterialIndex];
 						comp_mat->SetComponent(ai_material);
-						new_go->AddComponent(comp_mat);
+						new_go->AddComponent(comp_mat);*/
 					}
 				}
 				else
 				{
+					go_stack.pop();
 					nodes_stack.pop();					
 				}
 			}

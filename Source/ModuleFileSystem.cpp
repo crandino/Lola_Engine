@@ -47,7 +47,7 @@ bool ModuleFileSystem::Init()
 		AddSearchPath("Assets/Models", "Models");
 	}
 
-	SDL_free(write_dir);
+	SDL_free(write_dir);	
 
 	// Generate IO interfaces
 	CreateAssimpIO();

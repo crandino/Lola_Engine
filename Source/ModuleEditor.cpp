@@ -5,6 +5,7 @@
 #include "ModuleInput.h"
 #include "ModuleRenderer3D.h"
 #include "ModuleGameObjectManager.h"
+
 #include "GameObject.h"
 
 #include "imgui\imgui.h"
@@ -57,7 +58,7 @@ UPDATE_STATUS ModuleEditor::PreUpdate(float dt)
 UPDATE_STATUS ModuleEditor::Update(float dt)
 {
 	ShowMenuBar();
-	//ImGui::ShowTestWindow();
+	ImGui::ShowTestWindow();
 
 	if (about_menu) ShowAboutMenu();
 	if (conf_menu) ShowConfMenu();
@@ -250,13 +251,13 @@ void ModuleEditor::ShowComponentInfo()
 {
 	if (go_selected != nullptr)
 	{
-		ImGui::SetNextWindowSize(ImVec2(550, 680), ImGuiSetCond_FirstUseEver);
-		ImGui::Begin(go_selected->GetName(), nullptr);
+		float width = 350.0f;
+		ImGui::SetNextWindowSizeConstraints(ImVec2(width, 0), ImVec2(width, FLT_MAX));
+		ImGui::SetNextWindowPos(ImVec2(SCREEN_WIDTH - width, 20.0f));
+		ImGui::Begin(go_selected->GetName(), nullptr, ImGuiWindowFlags_ShowBorders);
 
 		for (int i = 0; i < go_selected->components.size(); ++i)
-		{
 			go_selected->components[i]->ShowEditorInfo();
-		}
 
 		ImGui::End();
 	}	

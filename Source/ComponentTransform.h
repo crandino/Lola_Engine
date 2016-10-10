@@ -13,7 +13,9 @@ public:
 
 	math::float3 local_position;
 	math::float3 local_scale;
-	math::Quat local_rotation;
+	math::Quat local_rotation_quat;
+
+	math::float3 local_rotation_euler;
 
 	math::float4x4 world_transform;
 	math::float4x4 local_transform;
@@ -36,12 +38,15 @@ public:
 
 		bool input_changed = false;
 
-		if (ImGui::InputFloat3("Position", &local_position.x, 3, ImGuiInputTextFlags_EnterReturnsTrue))
+		if (ImGui::DragFloat3("Position", &local_position.x, 1.0f, 0.0f, 0.0f, "%.3f"))
 			input_changed = true;
-		if (ImGui::InputFloat3("Scale", &local_scale.x, 3, ImGuiInputTextFlags_EnterReturnsTrue))
+		if (ImGui::DragFloat3("Scale", &local_scale.x, 1.0f, 0.0f, 0.0f, "%.3f"))
 			input_changed = true;
-		if(ImGui::InputFloat4("Rotation", &local_rotation.x, 3, ImGuiInputTextFlags_EnterReturnsTrue))
+		if (ImGui::DragFloat3("Rotation", &local_rotation_euler.x, 1.0f, 0.0f, 0.0f, "%.3f"))
+		{
 			input_changed = true;
+			EulerToQuat();
+		}			
 
 		if (ImGui::TreeNode("Transform matrix"))
 		{
@@ -68,9 +73,11 @@ public:
 
 		local_position = { translation.x, translation.y, translation.z };
 		local_scale = { scaling.x, scaling.y, scaling.z };
-		local_rotation = { rotating.x, rotating.y, rotating.z, rotating.w };
+		local_rotation_quat = { rotating.x, rotating.y, rotating.z, rotating.w };
 
-		local_transform = CalcTransformMatrix(local_position, local_scale, local_rotation);
+		QuatToEuler();
+
+		local_transform = CalcTransformMatrix(local_position, local_scale, local_rotation_quat);
 
 		math::float3 parent_position;
 		math::float3 parent_scale;
@@ -96,7 +103,7 @@ public:
 	void CalcWorldTransformMatrix(math::float4x4 parent_mat)
 	{
 		parent_transform = parent_mat;
-		local_transform = CalcTransformMatrix(local_position, local_scale, local_rotation);
+		local_transform = CalcTransformMatrix(local_position, local_scale, local_rotation_quat);
 		world_transform = parent_transform * local_transform;
 
 		for (uint i = 0; i < game_object->children.size(); ++i)
@@ -116,6 +123,35 @@ public:
 		math::float4x4 mat = trans_mat * rot_mat *  scale_mat;
 		
 		return mat;
+	}
+
+	void QuatToEuler()
+	{
+		math::float3 euler_rad = local_rotation_quat.ToEulerXYZ();
+		local_rotation_euler.x = math::RadToDeg(euler_rad.x);
+		local_rotation_euler.y = math::RadToDeg(euler_rad.y);
+		local_rotation_euler.z = math::RadToDeg(euler_rad.z);
+	}
+
+	void EulerToQuat()
+	{
+		math::float3 euler_quat;
+
+		euler_quat.x = math::DegToRad(local_rotation_euler.x);
+		euler_quat.y = math::DegToRad(local_rotation_euler.y);
+		euler_quat.z = math::DegToRad(local_rotation_euler.z);
+
+		float t0 = math::Cos(euler_quat.x * 0.5f);
+		float t1 = math::Sin(euler_quat.x * 0.5f);
+		float t2 = math::Cos(euler_quat.y * 0.5f);
+		float t3 = math::Sin(euler_quat.y * 0.5f);
+		float t4 = math::Cos(euler_quat.z * 0.5f);
+		float t5 = math::Sin(euler_quat.z * 0.5f);
+
+		local_rotation_quat.w = t0 * t2 * t4 + t1 * t3 * t5;
+		local_rotation_quat.x = t0 * t3 * t4 - t1 * t2 * t5;
+		local_rotation_quat.y = t0 * t2 * t5 + t1 * t3 * t4;
+		local_rotation_quat.z= t1 * t2 * t4 - t0 * t3 * t5;
 	}
 };
 

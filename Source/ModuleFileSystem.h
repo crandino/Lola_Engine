@@ -20,6 +20,7 @@ public:
 	bool AddSearchPath(const char *path_or_zip, const char *mount_point = NULL);
 	bool RemoveAllSearchPaths();
 	bool RemovePath(const char *path_or_zip);
+
 	uint Load(const char* file, char **buffer) const;
 	SDL_RWops *Load(const char* file) const;
 	uint Save(const char *file, const char *buffer, uint size) const;
