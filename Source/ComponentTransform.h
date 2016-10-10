@@ -157,16 +157,16 @@ public:
 
 	void EulerToQuat(math::float3 &euler, math::Quat &out_quat )
 	{
-		out_quat.x = math::DegToRad(euler.x);
-		out_quat.y = math::DegToRad(euler.y);
-		out_quat.z = math::DegToRad(euler.z);
+		euler.x = math::DegToRad(euler.x);
+		euler.y = math::DegToRad(euler.y);
+		euler.z = math::DegToRad(euler.z);
 
-		float t0 = math::Cos(out_quat.z * 0.5f); // Yaw
-		float t1 = math::Sin(out_quat.z * 0.5f);
-		float t2 = math::Cos(out_quat.x * 0.5f); // Roll
-		float t3 = math::Sin(out_quat.x * 0.5f);
-		float t4 = math::Cos(out_quat.y * 0.5f); // Pitch
-		float t5 = math::Sin(out_quat.y * 0.5f);
+		float t0 = math::Cos(euler.z * 0.5f); // Yaw
+		float t1 = math::Sin(euler.z * 0.5f);
+		float t2 = math::Cos(euler.x * 0.5f); // Roll
+		float t3 = math::Sin(euler.x * 0.5f);
+		float t4 = math::Cos(euler.y * 0.5f); // Pitch
+		float t5 = math::Sin(euler.y * 0.5f);
 
 		out_quat.w = t0 * t2 * t4 + t1 * t3 * t5;
 		out_quat.x = t0 * t3 * t4 - t1 * t2 * t5;

@@ -280,7 +280,7 @@
  Q: What is ImTextureID and how do I display an image?
  A: ImTextureID is a void* used to pass renderer-agnostic texture references around until it hits your render function.
     ImGui knows nothing about what those bits represent, it just passes them around. It is up to you to decide what you want the void* to carry!
-    It could be an identifier to your OpenGL texture (cast GLuint to void*), a pointer to your custom engine material (cast MyMaterial* to void*), etc.
+    It could be an identifier to your OpenGL texture (cast GLunsigned intto void*), a pointer to your custom engine material (cast MyMaterial* to void*), etc.
     At the end of the chain, your renderer takes this void* to cast it back into whatever it needs to select a current texture to render.
     Refer to examples applications, where each renderer (in a imgui_impl_xxxx.cpp file) is treating ImTextureID as a different thing.
     (c++ tip: OpenGL uses integers to identify textures. You can safely store an integer into a void*, just cast it to void*, don't take it's address!)

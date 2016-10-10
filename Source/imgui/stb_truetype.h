@@ -245,7 +245,7 @@ unsigned char ttf_buffer[1<<20];
 unsigned char temp_bitmap[512*512];
 
 stbtt_bakedchar cdata[96]; // ASCII 32..126 is 95 glyphs
-GLuint ftex;
+GLunsigned intftex;
 
 void my_stbtt_initfont(void)
 {

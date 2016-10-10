@@ -47,9 +47,9 @@ public:
 
 private:
 
-	uint checker_id;
+	unsigned intchecker_id;
 	unsigned char check_image[CHECKERS_HEIGHT][CHECKERS_WIDTH][4];
-	void GenerateChecker(uint *buffer);
+	void GenerateChecker(unsigned int*buffer);
 };
 
 #endif // !__MODULERENDERER3D_H__
