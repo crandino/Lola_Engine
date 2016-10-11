@@ -46,8 +46,13 @@ public:
 
 	void ShowEditorInfo()
 	{
+		ImGui::TextColored(ImVec4(1.0f, 0.5, 0.0f, 1.0f), "Component: "); ImGui::SameLine();
 		ImGui::Text(name);
-	}
+
+		ImGui::Checkbox("Active", &active);		
+		ImGui::LabelText("", "Number of vertices: %d", num_vertices);
+		ImGui::LabelText("", "Number of indices: %d", num_indices);
+	}		
 
 	void SetComponent(const aiMesh *mesh)
 	{

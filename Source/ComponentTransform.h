@@ -9,14 +9,18 @@
 
 class ComponentTransform : public Component
 {
-public:
+
+private:
 
 	math::float3 local_position;
 	math::float3 local_scale;
 	math::Quat local_rotation_quat;
 
-	math::float3 local_rotation_euler;
+	math::float3 local_rotation_euler_rad;
+	math::float3 local_rotation_euler_deg;
 
+public:
+	
 	math::float4x4 world_transform;
 	math::float4x4 local_transform;
 	math::float4x4 parent_transform;
@@ -42,14 +46,14 @@ public:
 		bool input_changed = false;
 
 		if (ImGui::DragFloat3("Position", &local_position.x, 0.25f, 0.0f, 0.0f, "%.3f"))
-			input_changed = true;
-		if (ImGui::DragFloat3("Scale", &local_scale.x, 0.25f, 0.0f, 0.0f, "%.3f"))
-			input_changed = true;
-		if (ImGui::DragFloat3("Rotation", &local_rotation_euler.x, 0.25f, 0.0f, 0.0f, "%.3f"))
+			input_changed = true;		
+		if (ImGui::DragFloat3("Rotation", &local_rotation_euler_deg.x, 0.25f, 0.0f, 0.0f, "%.3f"))
 		{
 			input_changed = true;
-			EulerToQuat(local_rotation_euler, local_rotation_quat);
+			EulerToQuat(local_rotation_euler_deg, local_rotation_quat);
 		}	
+		if (ImGui::DragFloat3("Scale", &local_scale.x, 0.25f, 0.0f, 0.0f, "%.3f"))
+			input_changed = true;
 
 		if (ImGui::TreeNode("Transform matrix"))
 		{
@@ -78,7 +82,11 @@ public:
 		local_scale = { scaling.x, scaling.y, scaling.z };
 		local_rotation_quat = { rotating.x, rotating.y, rotating.z, rotating.w };
 
-		QuatToEuler(local_rotation_quat, local_rotation_euler);
+		QuatToEuler(local_rotation_quat, local_rotation_euler_rad);
+
+		local_rotation_euler_deg.x = math::RadToDeg(local_rotation_euler_rad.x);
+		local_rotation_euler_deg.y = math::RadToDeg(local_rotation_euler_rad.y);		
+		local_rotation_euler_deg.z = math::RadToDeg(local_rotation_euler_rad.z);
 
 		local_transform = CalcTransformMatrix(local_position, local_scale, local_rotation_quat);
 
@@ -109,7 +117,7 @@ public:
 		local_transform = CalcTransformMatrix(local_position, local_scale, local_rotation_quat);
 		world_transform = parent_transform * local_transform;
 
-		QuatToEuler(local_rotation_quat, local_rotation_euler);
+		QuatToEuler(local_rotation_quat, local_rotation_euler_rad);
 
 		for (uint i = 0; i < game_object->children.size(); ++i)
 			game_object->children[i]->transform->CalcWorldTransformMatrix(world_transform);	
@@ -119,14 +127,7 @@ public:
 
 	math::float4x4 CalcTransformMatrix(math::float3 &pos, math::float3 &scale, math::Quat &rot)
 	{
-		math::float4x4 trans_mat, rot_mat, scale_mat;
-		trans_mat = math::float4x4::Translate(pos);		
-		math::vec axis(rot.x, rot.y, rot.z);
-		rot_mat = math::float4x4::RotateAxisAngle(axis.Normalized(), rot.Angle());
-		scale_mat = math::float4x4::Scale(scale).ToFloat4x4();
-		
-		math::float4x4 mat = trans_mat * rot_mat *  scale_mat;
-		
+		math::float4x4 mat = math::float4x4::FromTRS(pos, rot, scale);		
 		return mat;
 	}
 
@@ -146,32 +147,28 @@ public:
 		out_euler.x = math::Atan2(t3, t4);		// Roll
 		out_euler.z = math::Atan2(t1, t0);		// Yaw
 
-		out_euler.y = math::RadToDeg(out_euler.y);		
-		out_euler.x = math::RadToDeg(out_euler.x);
-		out_euler.z = math::RadToDeg(out_euler.z);	
-
-		/*Roll  rotation about the X - axis
-		Pitch  rotation about the Y - axis
-		Yaw rotation about the Z - axis*/
+		//Roll  rotation about the X - axis
+		//Pitch  rotation about the Y - axis
+		//Yaw rotation about the Z - axis*/
 	}
 
 	void EulerToQuat(math::float3 &euler, math::Quat &out_quat )
 	{
-		euler.x = math::DegToRad(euler.x);
-		euler.y = math::DegToRad(euler.y);
-		euler.z = math::DegToRad(euler.z);
+		local_rotation_euler_rad.x = math::DegToRad(euler.x);
+		local_rotation_euler_rad.y = math::DegToRad(euler.y);
+		local_rotation_euler_rad.z = math::DegToRad(euler.z);
 
-		float t0 = math::Cos(euler.z * 0.5f); // Yaw
-		float t1 = math::Sin(euler.z * 0.5f);
-		float t2 = math::Cos(euler.x * 0.5f); // Roll
-		float t3 = math::Sin(euler.x * 0.5f);
-		float t4 = math::Cos(euler.y * 0.5f); // Pitch
-		float t5 = math::Sin(euler.y * 0.5f);
+		float t0 = math::Cos(local_rotation_euler_rad.z * 0.5f); // Yaw
+		float t1 = math::Sin(local_rotation_euler_rad.z * 0.5f);
+		float t2 = math::Cos(local_rotation_euler_rad.x * 0.5f); // Roll
+		float t3 = math::Sin(local_rotation_euler_rad.x * 0.5f);
+		float t4 = math::Cos(local_rotation_euler_rad.y * 0.5f); // Pitch
+		float t5 = math::Sin(local_rotation_euler_rad.y * 0.5f);
 
 		out_quat.w = t0 * t2 * t4 + t1 * t3 * t5;
 		out_quat.x = t0 * t3 * t4 - t1 * t2 * t5;
 		out_quat.y = t0 * t2 * t5 + t1 * t3 * t4;
-		out_quat.z= t1 * t2 * t4 - t0 * t3 * t5;
+		out_quat.z = t1 * t2 * t4 - t0 * t3 * t5;
 
 		out_quat.Normalize();
 	}

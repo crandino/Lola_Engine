@@ -34,6 +34,9 @@
     <Filter Include="Source\Components">
       <UniqueIdentifier>{4a652b3c-a722-483d-8951-a44ab8fdb06c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Importers">
+      <UniqueIdentifier>{fd528fed-81a4-427b-9349-2b42c30069fd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Color.cpp">
@@ -516,6 +519,15 @@
       <Filter>Source\Components</Filter>
     </ClInclude>
     <ClInclude Include="Source\ComponentMaterial.h">
+      <Filter>Source\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Importer.h">
+      <Filter>Importers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\MeshImporter.h">
+      <Filter>Importers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Mesh.h">
       <Filter>Source\Components</Filter>
     </ClInclude>
   </ItemGroup>

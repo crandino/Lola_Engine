@@ -152,6 +152,7 @@
     <ClInclude Include="Source\imgui\stb_rect_pack.h" />
     <ClInclude Include="Source\imgui\stb_textedit.h" />
     <ClInclude Include="Source\imgui\stb_truetype.h" />
+    <ClInclude Include="Source\Importer.h" />
     <ClInclude Include="Source\Light.h" />
     <ClInclude Include="Source\MathGeoLib\Algorithm\GJK.h" />
     <ClInclude Include="Source\MathGeoLib\Algorithm\Random\LCG.h" />
@@ -216,6 +217,8 @@
     <ClInclude Include="Source\MathGeoLib\Math\sse_mathfun.h" />
     <ClInclude Include="Source\MathGeoLib\Math\TransformOps.h" />
     <ClInclude Include="Source\MathGeoLib\Time\Clock.h" />
+    <ClInclude Include="Source\Mesh.h" />
+    <ClInclude Include="Source\MeshImporter.h" />
     <ClInclude Include="Source\Module.h" />
     <ClInclude Include="Source\ModuleAudio.h" />
     <ClInclude Include="Source\ModuleCamera3D.h" />

@@ -47,7 +47,7 @@ public:
 
 private:
 
-	unsigned intchecker_id;
+	unsigned int checker_id;
 	unsigned char check_image[CHECKERS_HEIGHT][CHECKERS_WIDTH][4];
 	void GenerateChecker(unsigned int*buffer);
 };

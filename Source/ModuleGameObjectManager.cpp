@@ -49,7 +49,7 @@ bool ModuleGameObjectManager::Init()
 UPDATE_STATUS ModuleGameObjectManager::PreUpdate(float dt)
 {
 	if (App->input->GetKey(SDL_SCANCODE_G) == KEY_DOWN)
-		ImportModel("Models/Street environment_V01.fbx");  // primitives_with_parent2.fbx Street environment_V01.fbx
+		ImportModel("Models/primitives_with_parent2.fbx");  // primitives_with_parent2.fbx Street environment_V01.fbx
 
 	return UPDATE_CONTINUE;
 }
@@ -185,8 +185,7 @@ void ModuleGameObjectManager::ImportModel(const char *file_name)
 						comp_trans->SetComponent(node_to_add);
 						new_go->AddComponent(comp_trans);
 									
-						// --- MESH ---
-						
+						// --- MESH ---						
 						if (node_to_add->mNumMeshes != 0)
 						{
 							ComponentMesh *comp_mesh = new ComponentMesh();
@@ -197,10 +196,10 @@ void ModuleGameObjectManager::ImportModel(const char *file_name)
 							new_go->AddComponent(comp_mesh);
 
 							// --- MATERIAL ---
-							ComponentMaterial *comp_mat = new ComponentMaterial();
+							/*ComponentMaterial *comp_mat = new ComponentMaterial();
 							aiMaterial *ai_material = scene->mMaterials[ai_mesh->mMaterialIndex];
 							comp_mat->SetComponent(ai_material);
-							new_go->AddComponent(comp_mat);
+							new_go->AddComponent(comp_mat);*/
 						}					
 					}
 				}
