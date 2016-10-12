@@ -1,9 +1,12 @@
-#pragma once
+#ifndef __MOUDLESCENEINTRO_H__
+#define __MODULESCENEINTRO_H__
+
 #include "Module.h"
 #include "Globals.h"
 
 class ModuleSceneIntro : public Module
 {
+
 public:
 
 	ModuleSceneIntro(Application* app, bool start_enabled = true);
@@ -14,3 +17,5 @@ public:
 	bool CleanUp();
 
 };
+
+#endif //! __MODULESCENEINTRO_H__

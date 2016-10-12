@@ -63,7 +63,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -125,7 +125,6 @@
     <ClCompile Include="Source\ModuleFileSystem.cpp" />
     <ClCompile Include="Source\ModuleGameObjectManager.cpp" />
     <ClCompile Include="Source\ModuleInput.cpp" />
-    <ClCompile Include="Source\ModulePhysics3D.cpp" />
     <ClCompile Include="Source\ModuleRenderer3D.cpp" />
     <ClCompile Include="Source\ModuleSceneIntro.cpp" />
     <ClCompile Include="Source\ModuleTextureLoader.cpp" />
@@ -227,9 +226,7 @@
     <ClInclude Include="Source\ModuleFileSystem.h" />
     <ClInclude Include="Source\ModuleGameObjectManager.h" />
     <ClInclude Include="Source\ModuleInput.h" />
-    <ClInclude Include="Source\ModulePhysics3D.h" />
     <ClInclude Include="Source\ModuleRenderer3D.h" />
-    <ClInclude Include="Source\ModuleSceneIntro.h" />
     <ClInclude Include="Source\ModuleTextureLoader.h" />
     <ClInclude Include="Source\ModuleWindow.h" />
     <ClInclude Include="Source\Performance.h" />

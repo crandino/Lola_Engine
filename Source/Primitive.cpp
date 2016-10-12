@@ -3,9 +3,9 @@
 #include <gl/GL.h>
 #include <gl/GLU.h>
 #include "Primitive.h"
-#include "glut/glut.h"
+//#include "glut/glut.h"
 
-#pragma comment (lib, "Source/glut/glut32.lib")
+//#pragma comment (lib, "Source/glut/glut32.lib")
 
 // ------------------------------------------------------------
 Primitive::Primitive() : transform(math::float4x4().identity), color(White), wire(false), axis(false), type(PrimitiveTypes::Primitive_Point)
@@ -158,20 +158,20 @@ void Cube::InnerRender() const
 }
 
 // SPHERE ============================================
-Sphere::Sphere() : Primitive(), radius(1.0f)
-{
-	type = PrimitiveTypes::Primitive_Sphere;
-}
-
-Sphere::Sphere(float radius) : Primitive(), radius(radius)
-{
-	type = PrimitiveTypes::Primitive_Sphere;
-}
-
-void Sphere::InnerRender() const
-{
-	glutSolidSphere(radius, 25, 25);
-}
+//Sphere::Sphere() : Primitive(), radius(1.0f)
+//{
+//	type = PrimitiveTypes::Primitive_Sphere;
+//}
+//
+//Sphere::Sphere(float radius) : Primitive(), radius(radius)
+//{
+//	type = PrimitiveTypes::Primitive_Sphere;
+//}
+//
+//void Sphere::InnerRender() const
+//{
+//	glutSolidSphere(radius, 25, 25);
+//}
 
 
 // CYLINDER ============================================

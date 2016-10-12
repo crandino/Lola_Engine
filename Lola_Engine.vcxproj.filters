@@ -51,9 +51,6 @@
     <ClCompile Include="Source\PhysBody3D.cpp">
       <Filter>Source\Helpers</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Primitive.cpp">
-      <Filter>Source\Helpers</Filter>
-    </ClCompile>
     <ClCompile Include="Source\log.cpp">
       <Filter>Source\Tools</Filter>
     </ClCompile>
@@ -88,9 +85,6 @@
       <Filter>Source\Modules</Filter>
     </ClCompile>
     <ClCompile Include="Source\ModuleInput.cpp">
-      <Filter>Source\Modules</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ModulePhysics3D.cpp">
       <Filter>Source\Modules</Filter>
     </ClCompile>
     <ClCompile Include="Source\ModuleRenderer3D.cpp">
@@ -222,6 +216,9 @@
     <ClCompile Include="Source\ModuleGameObjectManager.cpp">
       <Filter>Source\Modules</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Primitive.cpp">
+      <Filter>Source\Helpers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Color.h">
@@ -237,9 +234,6 @@
       <Filter>Source\Helpers</Filter>
     </ClInclude>
     <ClInclude Include="Source\PhysBody3D.h">
-      <Filter>Source\Helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Primitive.h">
       <Filter>Source\Helpers</Filter>
     </ClInclude>
     <ClInclude Include="Source\Timer.h">
@@ -296,17 +290,11 @@
     <ClInclude Include="Source\ModuleInput.h">
       <Filter>Source\Modules</Filter>
     </ClInclude>
-    <ClInclude Include="Source\ModulePhysics3D.h">
-      <Filter>Source\Modules</Filter>
-    </ClInclude>
     <ClInclude Include="Source\ModuleRenderer3D.h">
       <Filter>Source\Modules</Filter>
     </ClInclude>
     <ClInclude Include="Source\ModuleWindow.h">
       <Filter>Source\Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ModuleSceneIntro.h">
-      <Filter>Source\Modules\Game</Filter>
     </ClInclude>
     <ClInclude Include="Source\MathGeoLib\Math\assume.h">
       <Filter>3rd Party\MahtGeoLib\src</Filter>
@@ -529,6 +517,9 @@
     </ClInclude>
     <ClInclude Include="Source\Mesh.h">
       <Filter>Source\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Primitive.h">
+      <Filter>Source\Helpers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

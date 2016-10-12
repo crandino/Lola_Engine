@@ -50,15 +50,15 @@ public:
 };
 
 // ============================================
-class Sphere : public Primitive
-{
-public:
-	Sphere();
-	Sphere(float radius);
-	void InnerRender() const;
-public:
-	float radius;
-};
+//class Sphere : public Primitive
+//{
+//public:
+//	Sphere();
+//	Sphere(float radius);
+//	void InnerRender() const;
+//public:
+//	float radius;
+//};
 
 // ============================================
 class Cylinder : public Primitive

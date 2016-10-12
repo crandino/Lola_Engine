@@ -37,7 +37,7 @@ public:
 	ModuleSceneIntro		*scene_intro = nullptr;
 	ModuleRenderer3D		*renderer3D = nullptr;
 	ModuleCamera3D			*camera = nullptr;
-	ModulePhysics3D			*physics = nullptr;
+	//ModulePhysics3D			*physics = nullptr;
 	ModuleGameObjectManager *gameobject_manager = nullptr;
 	ModuleEditor			*editor = nullptr;
 
