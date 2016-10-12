@@ -42,9 +42,6 @@
     <ClCompile Include="Source\Color.cpp">
       <Filter>Source\Containers</Filter>
     </ClCompile>
-    <ClCompile Include="Source\glmath.cpp">
-      <Filter>Source\Containers</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Light.cpp">
       <Filter>Source\Helpers</Filter>
     </ClCompile>
@@ -237,9 +234,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Color.h">
-      <Filter>Source\Containers</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\glmath.h">
       <Filter>Source\Containers</Filter>
     </ClInclude>
     <ClInclude Include="Source\Point2D.h">

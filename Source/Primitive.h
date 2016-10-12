@@ -1,7 +1,6 @@
 #ifndef __PRIMITIVE_H__
 #define __PRIMITIVE_H__
 
-//#include "glmath.h"
 #include "MathGeoLib\MathGeoLib.h"
 #include "Color.h"
 

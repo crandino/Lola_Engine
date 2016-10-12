@@ -1,7 +1,6 @@
 
 #pragma once
 #include "Color.h"
-//#include "glmath.h"
 #include "MathGeoLib\MathGeoLib.h"
 
 struct Light
