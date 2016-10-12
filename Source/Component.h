@@ -29,6 +29,7 @@ public:
 	GameObject *game_object = nullptr;
 
 	Component();
+	virtual ~Component();
 
 	virtual bool Update();
 	virtual void ShowEditorInfo() = 0;

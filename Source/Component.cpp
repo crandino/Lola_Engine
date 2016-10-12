@@ -6,6 +6,9 @@ Component::Component()
 	active = true;
 }
 
+Component::~Component()
+{ }
+
 bool Component::Update()
 { 
 	return true;

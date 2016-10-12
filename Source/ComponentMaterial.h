@@ -3,48 +3,22 @@
 
 #include "Component.h"
 
-#include "ModuleTextureLoader.h"
-
-#include "Assimp\include\Material.h"
+struct aiMaterial;
 
 class ComponentMaterial : public Component
 {
-
 public:
 
 	unsigned int tex_buffer;
 
-	ComponentMaterial()
-	{
-		type = COMPONENT_TYPE::MATERIAL;
-		name = GetNameByType(type);
-	}
+	ComponentMaterial();
 
-	bool Update()
-	{
-		return true;
-	}
+	bool Update();
 
-	void ShowEditorInfo()
-	{
-		//ImGui::Text(name);
-	}
+	void SetComponent(aiMaterial *ai_material);
 
-	void SetComponent(aiMaterial *ai_material)
-	{
-		uint numTextures = ai_material->GetTextureCount(aiTextureType_DIFFUSE);
-		if (numTextures != 0)
-		{
-			aiString path;
-			ai_material->GetTexture(aiTextureType_DIFFUSE, 0, &path);
-
-			App->tex_loader->LoadTexture(path.C_Str(), tex_buffer);
-		}
-		else
-			tex_buffer = 0;
-		
-		
-	}
+	void ShowEditorInfo();
+	
 };
 
 #endif __COMPONENTMATERIAL_H__
