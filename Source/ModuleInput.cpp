@@ -3,6 +3,7 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleRenderer3D.h"
+#include "ModuleGameObjectManager.h"
 
 #include "Imgui\imgui_impl_sdl_gl3.h"
 
@@ -108,6 +109,15 @@ UPDATE_STATUS ModuleInput::PreUpdate(float dt)
 
 			mouse_x_motion = e.motion.xrel / SCREEN_SIZE;
 			mouse_y_motion = e.motion.yrel / SCREEN_SIZE;
+			break;
+
+			case SDL_DROPFILE:
+			{
+				char *dropped_filedir = e.drop.file;
+				// Shows directory of dropped file
+				App->gameobject_manager->ImportModel(dropped_filedir, false);
+				SDL_free(dropped_filedir);    // Free dropped_filedir memory
+			}				
 			break;
 
 			case SDL_QUIT:

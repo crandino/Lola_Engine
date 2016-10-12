@@ -19,10 +19,8 @@ public:
 	UPDATE_STATUS PostUpdate(float dt);
 	bool CleanUp();
 
-	const GameObject *GetRoot() const
-	{
-		return root;
-	}
+	void ImportModel(const char *file_name, bool use_fs = true);
+	const GameObject *GetRoot() const;
 
 private:
 
@@ -32,7 +30,6 @@ private:
 
 	GameObject		*CreateGameObject(const char *name, GameObject *parent);
 	GameObject		*GetGameObject(uint id_to_search);
-	void			ImportModel(const char *file_name);
 };
 
 #endif // !__MODULEGAMEOBJECTMANAGER_H__

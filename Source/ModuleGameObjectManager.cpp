@@ -99,6 +99,11 @@ bool ModuleGameObjectManager::CleanUp()
 	return ret;
 }
 
+const GameObject *ModuleGameObjectManager::GetRoot() const
+{
+	return root;
+}
+
 GameObject *ModuleGameObjectManager::CreateGameObject(const char *name, GameObject *parent)
 {
 	GameObject *new_go = nullptr;
@@ -140,9 +145,14 @@ GameObject *ModuleGameObjectManager::GetGameObject(uint id_to_search)
 	return nullptr;
 }
 
-void ModuleGameObjectManager::ImportModel(const char *file_name)
+void ModuleGameObjectManager::ImportModel(const char *file_name, bool use_fs)
 {
-	const aiScene* scene = aiImportFileEx(file_name, aiProcessPreset_TargetRealtime_MaxQuality, App->file_system->GetAssimpIO());
+	const aiScene* scene;
+
+	if (use_fs)
+		scene = aiImportFileEx(file_name, aiProcessPreset_TargetRealtime_MaxQuality, App->file_system->GetAssimpIO());
+	else
+		scene = aiImportFile(file_name, aiProcessPreset_TargetRealtime_MaxQuality);
 
 	if (scene != nullptr)
 	{
