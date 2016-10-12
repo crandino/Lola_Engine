@@ -4,11 +4,17 @@
 #include "ModuleTextureLoader.h"
 
 #include "Assimp\include\material.h"
+#include "imgui\imgui.h"
 
-ComponentMaterial::ComponentMaterial()
+ComponentMaterial::ComponentMaterial() : Component()
 {
 	type = COMPONENT_TYPE::MATERIAL;
 	name = GetNameByType(type);
+}
+
+ComponentMaterial::~ComponentMaterial()
+{
+	RELEASE_ARRAY(texture);
 }
 
 bool ComponentMaterial::Update()
@@ -24,7 +30,7 @@ void ComponentMaterial::SetComponent(aiMaterial *ai_material)
 		aiString path;
 		ai_material->GetTexture(aiTextureType_DIFFUSE, 0, &path);
 
-		App->tex_loader->LoadTexture(path.C_Str(), tex_buffer);
+		App->tex_loader->LoadTexture(path.C_Str(), tex_buffer, this);
 	}
 	else
 		tex_buffer = 0;
@@ -32,7 +38,16 @@ void ComponentMaterial::SetComponent(aiMaterial *ai_material)
 
 void ComponentMaterial::ShowEditorInfo()
 {
-	//ImGui::Text(name);
+	ImGui::TextColored(ImVec4(1.0f, 0.5, 0.0f, 1.0f), "Component: "); ImGui::SameLine();
+	ImGui::Text(name);
+
+	ImGui::Checkbox("Active##Mat", &active);
+
+	ImTextureID image = texture;
+	ImGui::Image(image, ImVec2(50, 50), ImVec2(0, 0), ImVec2(1, 1));
+	ImGui::Text("%s%s", "Path: ", tex_path);
+
+	ImGui::Separator();
 }
 
 

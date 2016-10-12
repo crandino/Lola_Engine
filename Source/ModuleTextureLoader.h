@@ -3,6 +3,8 @@
 
 #include "Module.h"
 
+class ComponentMaterial;
+
 class ModuleTextureLoader : public Module
 {
 public:
@@ -20,7 +22,7 @@ public:
 
 public:
 
-	void LoadTexture(const char *file_name, unsigned int &buffer);
+	void LoadTexture(const char *file_name, unsigned int &buffer, ComponentMaterial *comp_mat);
 };
 
 #endif // !__MODULETEXTURELOADER_H__

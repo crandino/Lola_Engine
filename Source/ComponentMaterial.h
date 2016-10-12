@@ -2,16 +2,21 @@
 #define __COMPONENTMATERIAL_H__
 
 #include "Component.h"
+#include "Globals.h"
 
 struct aiMaterial;
 
 class ComponentMaterial : public Component
 {
-public:
 
+public:
+	
+	char tex_path[SHORT_STRING];
+	char *texture;
 	unsigned int tex_buffer;
 
 	ComponentMaterial();
+	~ComponentMaterial();
 
 	bool Update();
 

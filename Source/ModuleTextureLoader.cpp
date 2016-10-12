@@ -3,6 +3,8 @@
 #include "Application.h"
 #include "ModuleFileSystem.h"
 
+#include "ComponentMaterial.h"
+
 #include "Devil\include\il.h"
 #include "Devil\include\ilu.h"
 #include "Devil\include\ilut.h"
@@ -55,17 +57,15 @@ bool ModuleTextureLoader::CleanUp()
 	return ret;
 }
 
-void ModuleTextureLoader::LoadTexture(const char *full_path, unsigned int &buffer)
+void ModuleTextureLoader::LoadTexture(const char *full_path, unsigned int &buffer, ComponentMaterial *comp_mat)
 {
 	ilutRenderer(ILUT_OPENGL);
 	ilGenImages(1, &buffer);
 	ilBindImage(buffer);
 
-	char c[SHORT_STRING];
-	sprintf_s(c, SHORT_STRING, "%s%s", "Textures/", App->file_system->GetFileFromDirPath(full_path));
-	char *buf;
-	uint size = App->file_system->Load(c, &buf);
+	sprintf_s(comp_mat->tex_path, SHORT_STRING, "%s%s", "Textures/", App->file_system->GetFileFromDirPath(full_path));
+	uint size = App->file_system->Load(comp_mat->tex_path, &comp_mat->texture);
 
-	ilLoadL(IL_TYPE_UNKNOWN, buf, size);
+	ilLoadL(IL_TYPE_UNKNOWN, comp_mat->texture, size);
 	buffer = ilutGLBindTexImage();
 }

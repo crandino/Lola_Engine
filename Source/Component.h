@@ -21,10 +21,12 @@ protected:
 
 	const char				 *name;
 	COMPONENT_TYPE            type;
-	bool					active;		
+	
 	unsigned int				id;
 
 public:
+
+	bool					active;
 
 	GameObject *game_object = nullptr;
 

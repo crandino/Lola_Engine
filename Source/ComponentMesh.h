@@ -12,6 +12,8 @@ class ComponentMesh : public Component
 
 public:
 
+	bool wire = false;
+
 	// Vertices
 	unsigned int id_vertices = 0; // id in VRAM
 	unsigned int num_vertices = 0;

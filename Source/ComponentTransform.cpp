@@ -5,7 +5,7 @@
 #include "Assimp\include\scene.h"
 #include "imgui\imgui.h"
 
-ComponentTransform::ComponentTransform()
+ComponentTransform::ComponentTransform() : Component()
 {
 	world_transform.SetIdentity();
 	local_transform.SetIdentity();
@@ -17,6 +17,7 @@ ComponentTransform::ComponentTransform()
 
 void ComponentTransform::ShowEditorInfo()
 {
+
 	ImGui::TextColored(ImVec4(1.0f, 0.5, 0.0f, 1.0f), "Component: "); ImGui::SameLine();
 	ImGui::Text(name);
 

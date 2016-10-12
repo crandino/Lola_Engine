@@ -34,7 +34,7 @@ public:
 	void OnResize(int width, int height);
 
 	bool LoadMeshBuffer(const ComponentMesh *mesh);
-	void DrawMesh(GameObject *go);
+	void ShowGameObject(GameObject *go);
 
 	void DrawDirectMode();
 

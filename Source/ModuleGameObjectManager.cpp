@@ -65,7 +65,7 @@ UPDATE_STATUS ModuleGameObjectManager::Update(float dt)
 		if (curr_go->IsActive())
 		{
 			if(curr_go->GetComponentByType(COMPONENT_TYPE::MESH))
-				App->renderer3D->DrawMesh(curr_go);
+				App->renderer3D->ShowGameObject(curr_go);
 
 			/*for (uint j = 0; j < curr_go->components.size(); ++j)
 			{

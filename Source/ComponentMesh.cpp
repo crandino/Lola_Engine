@@ -5,7 +5,7 @@
 #include "Assimp\include\mesh.h"
 #include "imgui\imgui.h"
 
-ComponentMesh::ComponentMesh()
+ComponentMesh::ComponentMesh() : Component()
 {
 	type = COMPONENT_TYPE::MESH;
 	name = GetNameByType(type);
@@ -71,7 +71,12 @@ void ComponentMesh::ShowEditorInfo()
 	ImGui::TextColored(ImVec4(1.0f, 0.5, 0.0f, 1.0f), "Component: "); ImGui::SameLine();
 	ImGui::Text(name);
 
-	ImGui::Checkbox("Active", &active);
-	ImGui::LabelText("", "Number of vertices: %d", num_vertices);
-	ImGui::LabelText("", "Number of indices: %d", num_indices);
+	ImGui::Checkbox("Active##Mesh", &active);
+	ImGui::Checkbox("Wireframe##Mesh", &wire);
+	ImGui::Text("Number of vertices: %d", num_vertices);
+	ImGui::Text("Number of normals: %d", num_normals);
+	ImGui::Text("Number of texture coordinates: %d", num_tex_coord);
+	ImGui::Text("Number of indices: %d", num_indices);
+
+	ImGui::Separator();
 }

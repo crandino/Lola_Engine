@@ -267,8 +267,8 @@ void ModuleEditor::ShowComponentInfo()
 			go_selected->ChangeActiveState(&go_selected->active);
 		ImGui::Separator();
 
-		for (int i = 0; i < go_selected->components.size(); ++i)
-			go_selected->components[i]->ShowEditorInfo();
+		for (uint i = 0; i < go_selected->components.size(); ++i)
+			go_selected->components[i]->ShowEditorInfo();			
 
 		ImGui::End();
 	}	

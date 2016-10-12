@@ -30,6 +30,9 @@ const char *Component::GetNameByType(COMPONENT_TYPE type)
 	case(COMPONENT_TYPE::MESH):
 		name = "Mesh";
 		break;
+	case(COMPONENT_TYPE::MATERIAL):
+		name = "Material";
+		break;
 	default:
 		name = "Unknown";
 	}
