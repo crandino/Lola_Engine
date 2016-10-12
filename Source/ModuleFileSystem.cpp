@@ -52,6 +52,7 @@ bool ModuleFileSystem::Init()
 
 	// Generate IO interfaces
 	CreateAssimpIO();
+	SetDevilIO();
 	
 	return ret;
 }
@@ -312,15 +313,102 @@ aiFileIO * ModuleFileSystem::GetAssimpIO()
 // DEVIL IO
 // -----------------------------------------------------
 
-unsigned int ModuleFileSystem::DevilOpen(char *file_name, char **buf)
+//fOpenProc
+//This function will open a file and by the char* parameter it receives and return an ILHANDLE to the file stream.
+ILHANDLE DevilOpen2(char *file_name)
 {
-	return Load(file_name, buf);
+	PHYSFS_file *file_handle = PHYSFS_openRead(file_name);
+	if (file_handle == NULL)
+		DEBUG("Nein!");
+		
+	return (PHYSFS_File*)file_handle;
 }
 
-//void DevilClose(char *file_name)
+//fCloseProc:
+//This function closes the ILHANDLE file stream passed as its parameter.
+void DevilClose(ILHANDLE file_handle)
+{
+	if (file_handle)
+	{
+		if (PHYSFS_close((PHYSFS_File*)file_handle) == 0)
+			DEBUG("File handler is not closed properly. Error: %s", PHYSFS_getLastError());
+	}	
+}
+
+//fEofProc
+//Pointer to a function that returns IL_TRUE if the end of file is reached
+ILboolean DevilEof(ILHANDLE file_handler)
+{
+	if(file_handler)
+		return (ILboolean) ( PHYSFS_tell((PHYSFS_File*)file_handler) == PHYSFS_fileLength((PHYSFS_File*)file_handler) );
+	return IL_FALSE;
+}
+
+//fGetcProc:
+//This function gets exactly one character from the ILHANDLE passed as its parameter.
+//char *DevilGet(ILHANDLE)
 //{
-//	return (ILHANDLE)PHYSFS_openRead(file_name);
+//
 //}
 
 
+//fReadProc:
+//This function retrieves a specified number of bytes from the file handle passed to it.It s parameters are(in order) :
+//void*, ILint, ILint, ILHANDLE.
+//The void* is the buffer that receives the bytes from the file.The first ILint is the size of the data type.
+//The second ILint is the number of the data types to retrieve.You can just multiply the ILints together to determine
+//the number of bytes to retrieve.The ILHANDLE is the file stream to get the data from.
+
+//fSeekProc:
+//This function skips around in the file stream(setting the file pointer to a different position). It is the equivalent of fseek.
+//The parameters are : ILHANDLE, ILint, ILint.The ILHANDLE is the file stream to seek in.The first ILint is the number of bytes
+//to skip.The second ILint is the mode to skip with.It uses the C stdio #define's for this: SEEK_SET, SEEK_CUR, SEEK_END. You may
+//need to #define these in your application if they are not already there (e.g. Visual Basic and Delphi users).
+int DevilSeek(ILHANDLE file_handler, ILint pos, ILint mode)
+{
+	int res = 0;
+
+	if (file_handler)
+	{
+		switch (mode)
+		{
+		case SEEK_SET:
+			res = PHYSFS_seek((PHYSFS_File*)file_handler, pos);
+			break;
+		case SEEK_CUR:
+			res = PHYSFS_seek((PHYSFS_File*)file_handler, PHYSFS_tell((PHYSFS_File*)file_handler) + pos);
+			break;
+		case SEEK_END:
+			res = PHYSFS_seek((PHYSFS_File*)file_handler, PHYSFS_fileLength((PHYSFS_File*)file_handler) + pos);
+			break;
+		}
+	}
+
+	if (res == 0)
+		DEBUG("File System error while SEEK via assimp: %s", PHYSFS_getLastError());
+
+	return res;	
+}
+//fTellProc:
+//This function reports the current position of the file stream's file pointer. It is similar to ftell. 
+//The only parameter passed to this function is the ILHANDLE to determine the file pointer from
+size_t DevilTell(ILHANDLE file_handler)
+{
+	PHYSFS_sint64 ret = -1;
+	if (file_handler)
+	{
+		ret = PHYSFS_tell((PHYSFS_File*)file_handler);
+		if (ret == -1)
+			DEBUG("File System error while TELL via assimp: %s", PHYSFS_getLastError());
+	}	
+
+	return (size_t)ret;
+}
+
+void ModuleFileSystem::SetDevilIO()
+{
+	ilSetRead((fOpenRProc)DevilOpen2, (fCloseRProc)DevilClose, (fEofProc)DevilEof,
+		(fGetcProc)DevilSeek, (fReadProc)DevilSeek, (fSeekRProc)DevilSeek, (fTellRProc)DevilTell);
+	
+}
 

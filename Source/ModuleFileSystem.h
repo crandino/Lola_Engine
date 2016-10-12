@@ -33,14 +33,11 @@ public:
 
 	aiFileIO * ModuleFileSystem::GetAssimpIO();
 
-	uint DevilOpen(char *file_name, char **buf);
-
 private:
 
-	ILHANDLE *DevilIO = nullptr;
 	aiFileIO *AssimpIO = nullptr;	
 	void ModuleFileSystem::CreateAssimpIO();
-	void ModuleFileSystem::CreateDevilIO();
+	void ModuleFileSystem::SetDevilIO();
 	
 };
 

@@ -74,7 +74,7 @@ void ModuleTextureLoader::LoadTexture(const char *full_path, unsigned int &buffe
 	char c[SHORT_STRING];
 	sprintf_s(c, SHORT_STRING, "%s%s", "Textures/", cursor);
 	char *buf;
-	uint size = App->file_system->DevilOpen(c, &buf);
+	uint size = App->file_system->Load(c, &buf);
 
 	//sprintf_s(c, SHORT_STRING, "C:/Users/Carlos/Documents/GitHub/Lola_Engine/Game/Assets/Models/%s", full_path );
 	//sprintf_s(c, SHORT_STRING, "Assets/Models/%s", full_path );
