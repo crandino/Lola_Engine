@@ -23,7 +23,7 @@ class ModuleEditor : public Module
 
 		int node_flags, leaf_flags;
 		int item_selected_by_id;
-		const GameObject *go_selected = nullptr;
+		GameObject *go_selected = nullptr;
 		
 		//Windows variables
 		bool about_menu = false;

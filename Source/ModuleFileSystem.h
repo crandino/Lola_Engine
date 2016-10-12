@@ -2,7 +2,9 @@
 #define __MODULEFILESYSTEM_H__
 
 #include "Module.h"
+
 #include "Assimp\include\cfileio.h"
+#include "Devil\include\il.h"
 
 struct SDL_RWops;
 int close_sdl_rwops(SDL_RWops *rw);
@@ -31,10 +33,14 @@ public:
 
 	aiFileIO * ModuleFileSystem::GetAssimpIO();
 
+	uint DevilOpen(char *file_name, char **buf);
+
 private:
 
-	aiFileIO* AssimpIO = nullptr;	
+	ILHANDLE *DevilIO = nullptr;
+	aiFileIO *AssimpIO = nullptr;	
 	void ModuleFileSystem::CreateAssimpIO();
+	void ModuleFileSystem::CreateDevilIO();
 	
 };
 

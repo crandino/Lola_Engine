@@ -45,6 +45,7 @@ bool ModuleFileSystem::Init()
 		DEBUG("%s %s", "Write directory is ", write_dir);
 		AddSearchPath(write_dir, GetSaveDirectory());
 		AddSearchPath("Assets/Models", "Models");
+		AddSearchPath("Assets/Textures", "Textures");
 	}
 
 	SDL_free(write_dir);	
@@ -306,3 +307,20 @@ aiFileIO * ModuleFileSystem::GetAssimpIO()
 {
 	return AssimpIO;
 }
+
+// -----------------------------------------------------
+// DEVIL IO
+// -----------------------------------------------------
+
+unsigned int ModuleFileSystem::DevilOpen(char *file_name, char **buf)
+{
+	return Load(file_name, buf);
+}
+
+//void DevilClose(char *file_name)
+//{
+//	return (ILHANDLE)PHYSFS_openRead(file_name);
+//}
+
+
+

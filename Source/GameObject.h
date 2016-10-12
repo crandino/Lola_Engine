@@ -20,15 +20,16 @@ public:
 	// Unique components
 	ComponentTransform		 *transform = nullptr;
 
-
 	std::vector<Component*>  components;
 	std::vector<GameObject*>   children;
 	uint						     id;
 	bool						 active;
+	bool					   selected;
 
 	GameObject(uint id, const char* name, GameObject *parent)
 	{
 		active = true;
+		selected = false;
 		this->id = id;
 		sprintf_s(this->name, SHORT_STRING, name);
 

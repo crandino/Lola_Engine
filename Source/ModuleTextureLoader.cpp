@@ -1,5 +1,8 @@
 #include "ModuleTextureLoader.h"
 
+#include "Application.h"
+#include "ModuleFileSystem.h"
+
 #include "Devil\include\il.h"
 #include "Devil\include\ilu.h"
 #include "Devil\include\ilut.h"
@@ -57,9 +60,25 @@ void ModuleTextureLoader::LoadTexture(const char *full_path, unsigned int &buffe
 	ilutRenderer(ILUT_OPENGL);
 	ilGenImages(1, &buffer);
 	ilBindImage(buffer);
+
+	char *cursor = nullptr;
+
+	while (*(full_path++) != '\0')
+	{
+		if (*full_path == '\\')
+			cursor = (char*)full_path;
+	}
+
+	cursor++;
+
 	char c[SHORT_STRING];
+	sprintf_s(c, SHORT_STRING, "%s%s", "Textures/", cursor);
+	char *buf;
+	uint size = App->file_system->DevilOpen(c, &buf);
+
 	//sprintf_s(c, SHORT_STRING, "C:/Users/Carlos/Documents/GitHub/Lola_Engine/Game/Assets/Models/%s", full_path );
-	sprintf_s(c, SHORT_STRING, "Assets/Models/%s", full_path );
-	ilLoadImage(c);
+	//sprintf_s(c, SHORT_STRING, "Assets/Models/%s", full_path );
+	//ilLoadImage(c);
+	ilLoadL(IL_TYPE_UNKNOWN, buf, size);
 	buffer = ilutGLBindTexImage();
 }

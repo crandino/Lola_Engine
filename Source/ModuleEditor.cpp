@@ -224,7 +224,10 @@ void ModuleEditor::ExpandTree(const GameObject* go_to_expand)
 			bool node_open = ImGui::TreeNodeEx((void*)(intptr_t)i, node_flags, child->GetName());
 			if (ImGui::IsItemClicked())
 			{
+				if(go_selected)
+					go_selected->selected = false;
 				go_selected = child;
+				go_selected->selected = true;
 				item_selected_by_id = child->id;
 			}				
 
@@ -239,8 +242,11 @@ void ModuleEditor::ExpandTree(const GameObject* go_to_expand)
 			leaf_flags = node_flags | ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
 			ImGui::TreeNodeEx((void*)(intptr_t)i, leaf_flags, child->GetName());
 			if (ImGui::IsItemClicked())
-			{				
+			{		
+				if (go_selected)
+					go_selected->selected = false;
 				go_selected = child;
+				go_selected->selected = true;
 				item_selected_by_id = child->id;
 			}				
 		}

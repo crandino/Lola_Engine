@@ -38,12 +38,6 @@ public:
 		name = GetNameByType(type);
 	}
 
-	bool Update()
-	{
-		App->renderer3D->DrawMesh(this);
-		return true;
-	}
-
 	void ShowEditorInfo()
 	{
 		ImGui::TextColored(ImVec4(1.0f, 0.5, 0.0f, 1.0f), "Component: "); ImGui::SameLine();

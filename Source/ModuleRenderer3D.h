@@ -14,6 +14,7 @@
 #define CHECKERS_WIDTH 512
 
 class ComponentMesh;
+class GameObject;
 
 class ModuleRenderer3D : public Module
 {
@@ -33,7 +34,7 @@ public:
 	void OnResize(int width, int height);
 
 	bool LoadMeshBuffer(const ComponentMesh *mesh);
-	void DrawMesh(const ComponentMesh *mesh);
+	void DrawMesh(GameObject *go);
 
 	void DrawDirectMode();
 

@@ -64,10 +64,13 @@ UPDATE_STATUS ModuleGameObjectManager::Update(float dt)
 		curr_go = list_of_gos[i];
 		if (curr_go->isActive())
 		{
-			for (uint j = 0; j < curr_go->components.size(); ++j)
+			if(curr_go->GetComponentByType(COMPONENT_TYPE::MESH))
+				App->renderer3D->DrawMesh(curr_go);
+
+			/*for (uint j = 0; j < curr_go->components.size(); ++j)
 			{
 				curr_go->components[j]->Update();
-			}
+			}*/
 		}
 	}
 
@@ -196,10 +199,10 @@ void ModuleGameObjectManager::ImportModel(const char *file_name)
 							new_go->AddComponent(comp_mesh);
 
 							// --- MATERIAL ---
-							/*ComponentMaterial *comp_mat = new ComponentMaterial();
+							ComponentMaterial *comp_mat = new ComponentMaterial();
 							aiMaterial *ai_material = scene->mMaterials[ai_mesh->mMaterialIndex];
 							comp_mat->SetComponent(ai_material);
-							new_go->AddComponent(comp_mat);*/
+							new_go->AddComponent(comp_mat);
 						}					
 					}
 				}
