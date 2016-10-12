@@ -201,6 +201,27 @@ const char *ModuleFileSystem::GetSaveDirectory() const
 	return "save/";
 }
 
+const char *ModuleFileSystem::GetFileFromDirPath(const char *path) const
+{
+	char *file = '\0';  // Empty file string 
+
+	if (path != nullptr)
+	{
+		while (*(path++) != '\0')
+		{
+			if (*path == '\\')
+				file = (char*)path;
+		}
+
+		if ((path++) != '\0')
+			++file;
+		else
+			file = '\0';
+	};
+
+	return file;
+}
+
 // -----------------------------------------------------
 // ASSIMP IO
 // -----------------------------------------------------

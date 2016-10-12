@@ -27,6 +27,7 @@ public:
 	SDL_RWops *Load(const char* file) const;
 	uint Save(const char *file, const char *buffer, uint size) const;
 
+	const char *GetFileFromDirPath(const char *path) const;
 	const char *GetSaveDirectory() const;
 	bool IsDirectory(const char *dir) const;
 	bool Exists(const char *file) const;
@@ -37,8 +38,7 @@ private:
 
 	aiFileIO *AssimpIO = nullptr;	
 	void ModuleFileSystem::CreateAssimpIO();
-	void ModuleFileSystem::SetDevilIO();
-	
+	void ModuleFileSystem::SetDevilIO();	
 };
 
 

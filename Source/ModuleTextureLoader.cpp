@@ -61,24 +61,11 @@ void ModuleTextureLoader::LoadTexture(const char *full_path, unsigned int &buffe
 	ilGenImages(1, &buffer);
 	ilBindImage(buffer);
 
-	char *cursor = nullptr;
-
-	while (*(full_path++) != '\0')
-	{
-		if (*full_path == '\\')
-			cursor = (char*)full_path;
-	}
-
-	cursor++;
-
 	char c[SHORT_STRING];
-	sprintf_s(c, SHORT_STRING, "%s%s", "Textures/", cursor);
+	sprintf_s(c, SHORT_STRING, "%s%s", "Textures/", App->file_system->GetFileFromDirPath(full_path));
 	char *buf;
 	uint size = App->file_system->Load(c, &buf);
 
-	//sprintf_s(c, SHORT_STRING, "C:/Users/Carlos/Documents/GitHub/Lola_Engine/Game/Assets/Models/%s", full_path );
-	//sprintf_s(c, SHORT_STRING, "Assets/Models/%s", full_path );
-	//ilLoadImage(c);
 	ilLoadL(IL_TYPE_UNKNOWN, buf, size);
 	buffer = ilutGLBindTexImage();
 }
