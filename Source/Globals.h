@@ -29,6 +29,26 @@ enum UPDATE_STATUS
 	UPDATE_ERROR
 };
 
+// Deletes a buffer
+#define RELEASE( x )\
+    {\
+       if( x != nullptr )\
+       {\
+         delete x;\
+	     x = nullptr;\
+       }\
+    }
+
+// Deletes an array of buffers
+#define RELEASE_ARRAY( x )\
+	{\
+       if( x != nullptr )\
+       {\
+           delete[] x;\
+	       x = nullptr;\
+		 }\
+	 }
+
 // Configuration -----------
 #define SCREEN_WIDTH 1200
 #define SCREEN_HEIGHT 800

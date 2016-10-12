@@ -62,7 +62,7 @@ UPDATE_STATUS ModuleGameObjectManager::Update(float dt)
 	for (uint i = 0; i < list_of_gos.size(); ++i)
 	{
 		curr_go = list_of_gos[i];
-		if (curr_go->isActive())
+		if (curr_go->IsActive())
 		{
 			if(curr_go->GetComponentByType(COMPONENT_TYPE::MESH))
 				App->renderer3D->DrawMesh(curr_go);
@@ -87,6 +87,11 @@ UPDATE_STATUS ModuleGameObjectManager::PostUpdate(float dt)
 bool ModuleGameObjectManager::CleanUp()
 {
 	bool ret = true;
+
+	for (uint i = 0; i < list_of_gos.size(); ++i)
+		RELEASE(list_of_gos[i]);
+
+	list_of_gos.clear();
 
 	// detach log stream
 	aiDetachAllLogStreams();

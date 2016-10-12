@@ -28,37 +28,13 @@ public:
 
 	GameObject *game_object = nullptr;
 
-	Component()
-	{
-		type = COMPONENT_TYPE::UNKNOWN;
-		active = true;
-	}
+	Component();
 
-	virtual bool Update() {  return true;	}
+	virtual bool Update();
 	virtual void ShowEditorInfo() = 0;
 
-	COMPONENT_TYPE &GetType()
-	{
-		return type;
-	}
-
-	const char *GetNameByType(COMPONENT_TYPE type)
-	{
-		const char *name;
-		switch (type)
-		{
-		case(COMPONENT_TYPE::TRANSFORM):
-			name = "Transform";
-			break;
-		case(COMPONENT_TYPE::MESH):
-			name = "Mesh";
-			break;
-		default:
-			name = "Unknown";
-		}
-
-		return name;
-	}
+	COMPONENT_TYPE &GetType();
+	const char *GetNameByType(COMPONENT_TYPE type);
 
 };
 

@@ -219,6 +219,15 @@
     <ClCompile Include="Source\Primitive.cpp">
       <Filter>Source\Helpers</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Component.cpp">
+      <Filter>Source\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameObject.cpp">
+      <Filter>Source\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ComponentTransform.cpp">
+      <Filter>Source\Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Color.h">
