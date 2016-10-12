@@ -409,19 +409,20 @@ void ModuleRenderer3D::ShowGameObject(GameObject *go)
 		glNormalPointer(GL_FLOAT, 0, NULL);
 
 		glBindBuffer(GL_ARRAY_BUFFER, mesh->id_tex_coord);
-		glTexCoordPointer(2, GL_FLOAT, 0, NULL);
-
-		if (mat != nullptr && mat->active)
-		{
-			glEnable(GL_TEXTURE_2D);
-			glBindTexture(GL_TEXTURE_2D, 0); // Cleanning bind buffer;
-			glBindTexture(GL_TEXTURE_2D, mat->tex_buffer);
-		}
+		glTexCoordPointer(2, GL_FLOAT, 0, NULL);		
 
 		if (mesh->wire)
 			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		else
+		{
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+			if (mat != nullptr && mat->active)
+			{
+				glEnable(GL_TEXTURE_2D);
+				glBindTexture(GL_TEXTURE_2D, 0); // Cleanning bind buffer;
+				glBindTexture(GL_TEXTURE_2D, mat->tex_buffer);
+			}
+		}			
 
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_indices);
 		glDrawElements(GL_TRIANGLES, mesh->num_indices, GL_UNSIGNED_INT, NULL);

@@ -12,7 +12,6 @@ class ComponentMaterial : public Component
 public:
 	
 	char tex_path[SHORT_STRING];
-	char *texture;
 	unsigned int tex_buffer;
 
 	ComponentMaterial();

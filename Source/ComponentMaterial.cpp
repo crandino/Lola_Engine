@@ -13,9 +13,7 @@ ComponentMaterial::ComponentMaterial() : Component()
 }
 
 ComponentMaterial::~ComponentMaterial()
-{
-	RELEASE_ARRAY(texture);
-}
+{ }
 
 bool ComponentMaterial::Update()
 {
@@ -43,8 +41,7 @@ void ComponentMaterial::ShowEditorInfo()
 
 	ImGui::Checkbox("Active##Mat", &active);
 
-	ImTextureID image = texture;
-	ImGui::Image(image, ImVec2(50, 50), ImVec2(0, 0), ImVec2(1, 1));
+	ImGui::Image((void*)tex_buffer, ImVec2(200, 200), ImVec2(0, 0), ImVec2(1, 1), ImVec4(1,1,1,1), ImVec4(0.0f, 0.5f, 0.5f, 1.0f));
 	ImGui::Text("%s%s", "Path: ", tex_path);
 
 	ImGui::Separator();
