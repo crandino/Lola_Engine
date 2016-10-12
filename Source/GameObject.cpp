@@ -42,6 +42,18 @@ const Component *GameObject::GetComponentByType(COMPONENT_TYPE type)
 	return nullptr;
 }
 
+void GameObject::ChangeActiveState(bool *state, GameObject *go)
+{
+	if (go == nullptr)
+		go = this;
+
+	go->active = *state;
+
+	for (uint i = 0; i < go->children.size(); ++i)
+		ChangeActiveState(state, go->children[i]);
+
+}
+
 void GameObject::Enable() { active = true; }
 void GameObject::Disable() { active = false; }
 bool GameObject::IsActive() const { return active; }

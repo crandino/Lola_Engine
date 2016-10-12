@@ -32,6 +32,8 @@ public:
 
 	const Component *GetComponentByType(COMPONENT_TYPE type);
 	void AddComponent(Component *comp);
+
+	void ChangeActiveState(bool *state, GameObject *go = nullptr);
 	
 	void Enable();
 	void Disable();

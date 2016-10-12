@@ -263,6 +263,10 @@ void ModuleEditor::ShowComponentInfo()
 		ImGui::SetNextWindowPos(ImVec2(SCREEN_WIDTH - width, 20.0f));
 		ImGui::Begin(go_selected->GetName(), nullptr, ImGuiWindowFlags_ShowBorders);
 
+		if (ImGui::Checkbox("Active", &go_selected->active))
+			go_selected->ChangeActiveState(&go_selected->active);
+		ImGui::Separator();
+
 		for (int i = 0; i < go_selected->components.size(); ++i)
 			go_selected->components[i]->ShowEditorInfo();
 

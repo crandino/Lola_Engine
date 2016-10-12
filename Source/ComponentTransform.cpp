@@ -17,9 +17,6 @@ ComponentTransform::ComponentTransform()
 
 void ComponentTransform::ShowEditorInfo()
 {
-	ImGui::Checkbox("Active", &game_object->active);
-	ImGui::Separator();
-
 	ImGui::TextColored(ImVec4(1.0f, 0.5, 0.0f, 1.0f), "Component: "); ImGui::SameLine();
 	ImGui::Text(name);
 
