@@ -1,8 +1,6 @@
----------------------------------
----------- LOLA Engine ----------
----------------------------------
+<h1>LOLA Engine<h1>
 
-3D Engine created and developed by Carlos Randino (@crandino on GitHub) on CITM (Terrassa)
+3D Engine created and developed by Carlos Randino (@crandino on GitHub) on CITM (Terrassa).
 Link to Git: https://github.com/crandino/Lola_Engine
 
 Instructions:
