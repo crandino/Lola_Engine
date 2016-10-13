@@ -52,14 +52,16 @@ bool ModuleFileSystem::Init()
 
 	// Generate IO interfaces
 	CreateAssimpIO();
-	SetDevilIO();
+	//SetDevilIO();
 	
 	return ret;
 }
 
 bool ModuleFileSystem::CleanUp()
 {
-	RemoveAllSearchPaths();
+	//RemoveAllSearchPaths();
+	RELEASE(AssimpIO);
+
 	return true;
 }
 
@@ -82,7 +84,7 @@ bool ModuleFileSystem::RemoveAllSearchPaths()
 	bool ret = false;
 
 	char **paths;
-	for (paths = PHYSFS_getSearchPath(); *paths != NULL; paths++)
+	for (paths = PHYSFS_getSearchPath(); *paths != NULL; ++paths)
 	{
 		PHYSFS_removeFromSearchPath(*paths);
 	}
@@ -90,7 +92,7 @@ bool ModuleFileSystem::RemoveAllSearchPaths()
 	if (*(paths = PHYSFS_getSearchPath()) == NULL)
 		ret = true;
 
-	PHYSFS_freeList(paths);
+	PHYSFS_freeList(paths);	
 
 	return ret;
 }

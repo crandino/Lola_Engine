@@ -221,8 +221,9 @@ void ModuleEditor::ExpandTree(const GameObject* go_to_expand)
 		node_flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick | ((child->id == item_selected_by_id) ? ImGuiTreeNodeFlags_Selected : 0 );
 		
 		if (child->children.size() > 0)
-		{			
+		{	
 			bool node_open = ImGui::TreeNodeEx((void*)(intptr_t)i, node_flags, child->GetName());
+			
 			if (ImGui::IsItemClicked())
 				ChangeSelectedGameObject(child);				
 
