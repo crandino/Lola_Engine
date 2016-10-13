@@ -42,6 +42,7 @@ class ModuleEditor : public Module
 		void ShowComponentInfo();
 
 		void ExpandTree(const GameObject* go_to_expand);
+		void ChangeSelectedGameObject(GameObject *new_go);
 };
 
 #endif // !__MODULEIMGUI_H__

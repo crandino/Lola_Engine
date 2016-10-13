@@ -114,7 +114,6 @@ UPDATE_STATUS ModuleInput::PreUpdate(float dt)
 			case SDL_DROPFILE:
 			{
 				char *dropped_filedir = e.drop.file;
-				// Shows directory of dropped file
 				App->gameobject_manager->ImportModel(dropped_filedir, false);
 				SDL_free(dropped_filedir);    // Free dropped_filedir memory
 			}				

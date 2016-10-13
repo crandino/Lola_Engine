@@ -32,6 +32,13 @@ void ComponentMaterial::SetComponent(aiMaterial *ai_material)
 	}
 	else
 		tex_buffer = 0;
+
+	ai_material->Get(AI_MATKEY_COLOR_DIFFUSE, color_diffuse);
+	ai_material->Get(AI_MATKEY_COLOR_SPECULAR, color_specular);
+	ai_material->Get(AI_MATKEY_COLOR_AMBIENT, color_ambient);
+	ai_material->Get(AI_MATKEY_COLOR_EMISSIVE, color_emissive);
+	ai_material->Get(AI_MATKEY_COLOR_TRANSPARENT, color_transparent);
+	ai_material->Get(AI_MATKEY_OPACITY, opacity);
 }
 
 void ComponentMaterial::ShowEditorInfo()
@@ -40,9 +47,11 @@ void ComponentMaterial::ShowEditorInfo()
 	ImGui::Text(name);
 
 	ImGui::Checkbox("Active##Mat", &active);
-
-	ImGui::Image((void*)tex_buffer, ImVec2(200, 200), ImVec2(0, 0), ImVec2(1, 1), ImVec4(1,1,1,1), ImVec4(0.0f, 0.5f, 0.5f, 1.0f));
-	ImGui::Text("%s%s", "Path: ", tex_path);
+	if (tex_buffer != 0)
+	{
+		ImGui::Image((void*)tex_buffer, ImVec2(200, 200), ImVec2(0, 0), ImVec2(1, 1), ImVec4(1, 1, 1, 1), ImVec4(0.0f, 0.5f, 0.5f, 1.0f));
+		ImGui::Text("%s%s", "Path: ", tex_path);
+	}	
 
 	ImGui::Separator();
 }

@@ -4,6 +4,8 @@
 #include "Component.h"
 #include "Globals.h"
 
+#include "Assimp\include\types.h"
+
 struct aiMaterial;
 
 class ComponentMaterial : public Component
@@ -13,6 +15,13 @@ public:
 	
 	char tex_path[SHORT_STRING];
 	unsigned int tex_buffer;
+
+	aiColor3D color_diffuse;
+	aiColor3D color_specular;
+	aiColor3D color_ambient;
+	aiColor3D color_emissive;
+	aiColor3D color_transparent;
+	float opacity;
 
 	ComponentMaterial();
 	~ComponentMaterial();

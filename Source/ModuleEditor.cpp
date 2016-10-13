@@ -59,7 +59,7 @@ UPDATE_STATUS ModuleEditor::PreUpdate(float dt)
 UPDATE_STATUS ModuleEditor::Update(float dt)
 {
 	ShowMenuBar();
-	//ImGui::ShowTestWindow();
+	ImGui::ShowTestWindow();
 
 	if (about_menu) ShowAboutMenu();
 	if (conf_menu) ShowConfMenu();
@@ -224,13 +224,7 @@ void ModuleEditor::ExpandTree(const GameObject* go_to_expand)
 		{			
 			bool node_open = ImGui::TreeNodeEx((void*)(intptr_t)i, node_flags, child->GetName());
 			if (ImGui::IsItemClicked())
-			{
-				if(go_selected)
-					go_selected->selected = false;
-				go_selected = child;
-				go_selected->selected = true;
-				item_selected_by_id = child->id;
-			}				
+				ChangeSelectedGameObject(child);				
 
 			if (node_open)
 			{
@@ -242,14 +236,8 @@ void ModuleEditor::ExpandTree(const GameObject* go_to_expand)
 		{
 			leaf_flags = node_flags | ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
 			ImGui::TreeNodeEx((void*)(intptr_t)i, leaf_flags, child->GetName());
-			if (ImGui::IsItemClicked())
-			{		
-				if (go_selected)
-					go_selected->selected = false;
-				go_selected = child;
-				go_selected->selected = true;
-				item_selected_by_id = child->id;
-			}				
+			if (ImGui::IsItemClicked())	
+				ChangeSelectedGameObject(child);			
 		}
 	}
 }
@@ -272,4 +260,14 @@ void ModuleEditor::ShowComponentInfo()
 
 		ImGui::End();
 	}	
+}
+
+void ModuleEditor::ChangeSelectedGameObject(GameObject *new_go)
+{
+	if (go_selected)
+		go_selected->selected = false;
+
+	go_selected = new_go;
+	go_selected->selected = true;
+	item_selected_by_id = new_go->id;
 }

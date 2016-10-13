@@ -208,7 +208,7 @@ void ModuleGameObjectManager::ImportModel(const char *file_name, bool use_fs)
 						{
 							ComponentMesh *comp_mesh = new ComponentMesh();
 							aiMesh *ai_mesh = scene->mMeshes[*node_to_add->mMeshes];
-							comp_mesh->SetComponent(ai_mesh);
+							comp_mesh->SetComponent(ai_mesh);							
 
 							App->renderer3D->LoadMeshBuffer(comp_mesh);
 							new_go->AddComponent(comp_mesh);

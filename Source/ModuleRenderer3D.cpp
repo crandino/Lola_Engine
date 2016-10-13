@@ -421,16 +421,12 @@ void ModuleRenderer3D::ShowGameObject(GameObject *go)
 				glEnable(GL_TEXTURE_2D);
 				glBindTexture(GL_TEXTURE_2D, 0); // Cleanning bind buffer;
 				glBindTexture(GL_TEXTURE_2D, mat->tex_buffer);
+				glColor3f(mat->color_diffuse.r, mat->color_diffuse.g, mat->color_diffuse.b);					
 			}
 		}			
 
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_indices);
-		glDrawElements(GL_TRIANGLES, mesh->num_indices, GL_UNSIGNED_INT, NULL);
-
-		/*if (go->selected)
-		{
-		glDrawElements(GL_LINES, mesh->num_indices, GL_UNSIGNED_INT, NULL);
-		}*/
+		glDrawElements(GL_TRIANGLES, mesh->num_indices, GL_UNSIGNED_INT, NULL);	
 
 		glDisable(GL_TEXTURE_2D);
 
