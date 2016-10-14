@@ -4,7 +4,6 @@
 #include "ModuleFileSystem.h"
 #include "ModuleRenderer3D.h"
 #include "ModuleInput.h"
-#include "ModuleEditor.h"
 
 #include "GameObject.h"
 
@@ -60,11 +59,11 @@ UPDATE_STATUS ModuleGameObjectManager::Update(float dt)
 {
 	GameObject *curr_go = nullptr;
 
-	if (App->input->GetKey(SDL_SCANCODE_DELETE))
+	/*if (App->input->GetKey(SDL_SCANCODE_DELETE))
 	{
 		if (DeleteGameObject(App->editor->go_selected))
 			App->editor->go_selected = nullptr;
-	}
+	}*/
 		
 
 	for (uint i = 0; i < list_of_gos.size(); ++i)

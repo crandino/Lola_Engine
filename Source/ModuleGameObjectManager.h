@@ -21,6 +21,7 @@ public:
 
 	void ImportModel(const char *file_name, bool use_fs = true);
 	const GameObject *GetRoot() const;
+	bool DeleteGameObject(const GameObject *go_to_delete);
 
 private:
 
@@ -31,7 +32,6 @@ private:
 	GameObject		*CreateGameObject(const char *name, GameObject *parent);
 	GameObject		*GetGameObject(uint id_to_search);
 
-	bool DeleteGameObject(const GameObject *go_to_delete);
 	bool DeleteGameObject(unsigned int id_to_delete);
 	bool DeleteChildrenGameObject(const GameObject *go_to_delete);
 	bool RemoveChildFromChildren(const GameObject *go_to_delete);

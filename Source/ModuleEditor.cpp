@@ -20,9 +20,7 @@ ModuleEditor::ModuleEditor(Application* app, bool start_enabled) : Module(app, s
 
 // Destructor
 ModuleEditor::~ModuleEditor()
-{
-
-}
+{ }
 
 bool ModuleEditor::Init()
 {	
@@ -44,14 +42,17 @@ UPDATE_STATUS ModuleEditor::PreUpdate(float dt)
 {
 	ImGui_ImplSdlGL3_NewFrame(App->window->window);
 
-	if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN)
 		conf_menu = !conf_menu;
 
-	if (App->input->GetKey(SDL_SCANCODE_0) == KEY_DOWN)
-		console_menu = !console_menu;
+	/*if (App->input->GetKey(SDL_SCANCODE_0) == KEY_DOWN)
+		console_menu = !console_menu;*/
 
-	if (App->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
 		hierarchy_menu = !hierarchy_menu;
+
+	if (App->input->GetKey(SDL_SCANCODE_DELETE) == KEY_DOWN && go_selected)
+		warning_alert = true;
 	
 	return UPDATE_CONTINUE;
 }
@@ -59,12 +60,13 @@ UPDATE_STATUS ModuleEditor::PreUpdate(float dt)
 UPDATE_STATUS ModuleEditor::Update(float dt)
 {
 	ShowMenuBar();
-	//ImGui::ShowTestWindow();
+	ImGui::ShowTestWindow();
 
 	if (about_menu) ShowAboutMenu();
 	if (conf_menu) ShowConfMenu();
 	if (console_menu) ShowConsole();
 	if (hierarchy_menu) ShowHierarchy();
+	if (warning_alert) ShowWarning();
 
 	ShowComponentInfo();
 
@@ -261,6 +263,39 @@ void ModuleEditor::ShowComponentInfo()
 
 		ImGui::End();
 	}	
+}
+
+void ModuleEditor::ShowWarning()
+{
+	ImGuiWindowFlags window_flags = (ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize |
+									 ImGuiWindowFlags_NoResize | ImGuiWindowFlags_ShowBorders);
+	ImGui::SetNextWindowPos(ImVec2(SCREEN_WIDTH / 2.0f, SCREEN_HEIGHT / 2.0f), ImGuiSetCond_FirstUseEver);
+	ImGui::Begin("Warning", nullptr, window_flags);
+	ImGui::Text("%s%s%s", "Are you sure you wanna delete ", go_selected->GetName(), " ?");
+
+	ImVec2 button_size = ImVec2(80.0f, 20.0f);
+	ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.0f, 0.5f, 0.0f, 0.75f));
+	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.0f, 0.75f, 0.0f, 0.75f));
+	ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.0f, 0.75f, 0.0f, 0.9f));
+	if (ImGui::Button("Yes", button_size))
+	{
+		if (App->gameobject_manager->DeleteGameObject(go_selected))
+			go_selected = nullptr;
+		warning_alert = false;
+	}
+		
+	ImGui::PopStyleColor(3);
+
+	ImGui::SameLine(0.0f, 100.0f);
+
+	ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.5f, 0.0f, 0.0f, 0.75f));
+	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.75f, 0.0f, 0.0f, 0.75f));
+	ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.75f, 0.0f, 0.0f, 0.9f));
+	if (ImGui::Button("No", button_size))
+		warning_alert = false;
+	ImGui::PopStyleColor(3);
+
+	ImGui::End();
 }
 
 void ModuleEditor::ChangeSelectedGameObject(GameObject *new_go)
