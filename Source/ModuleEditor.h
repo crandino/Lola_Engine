@@ -10,6 +10,8 @@ class ModuleEditor : public Module
 {
 	public:
 
+		GameObject *go_selected = nullptr;
+
 		ModuleEditor(Application* app, bool start_enabled = true);
 		~ModuleEditor();
 
@@ -19,11 +21,12 @@ class ModuleEditor : public Module
 		UPDATE_STATUS PostUpdate(float dt);
 		bool CleanUp();	
 
+
+
 	private:
 
 		int node_flags, leaf_flags;
-		int item_selected_by_id;
-		GameObject *go_selected = nullptr;
+		int item_selected_by_id;		
 		
 		//Windows variables
 		bool about_menu = false;

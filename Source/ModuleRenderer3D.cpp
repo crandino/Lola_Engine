@@ -428,6 +428,15 @@ void ModuleRenderer3D::ShowGameObject(GameObject *go)
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_indices);
 		glDrawElements(GL_TRIANGLES, mesh->num_indices, GL_UNSIGNED_INT, NULL);	
 
+		if (go->selected)
+		{
+			glLineWidth(1.5f);
+			glColor3f(255.0f, 255.0f, 0.0f);
+			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+			glDrawElements(GL_TRIANGLES, mesh->num_indices, GL_UNSIGNED_INT, NULL);
+			glColor3f(0.0f, 0.0f, 0.0f);
+		}
+		
 		glDisable(GL_TEXTURE_2D);
 
 		glDisableClientState(GL_VERTEX_ARRAY);

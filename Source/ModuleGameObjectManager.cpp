@@ -4,6 +4,7 @@
 #include "ModuleFileSystem.h"
 #include "ModuleRenderer3D.h"
 #include "ModuleInput.h"
+#include "ModuleEditor.h"
 
 #include "GameObject.h"
 
@@ -58,6 +59,13 @@ UPDATE_STATUS ModuleGameObjectManager::PreUpdate(float dt)
 UPDATE_STATUS ModuleGameObjectManager::Update(float dt)
 {
 	GameObject *curr_go = nullptr;
+
+	if (App->input->GetKey(SDL_SCANCODE_DELETE))
+	{
+		if (DeleteGameObject(App->editor->go_selected))
+			App->editor->go_selected = nullptr;
+	}
+		
 
 	for (uint i = 0; i < list_of_gos.size(); ++i)
 	{
@@ -120,29 +128,98 @@ GameObject *ModuleGameObjectManager::CreateGameObject(const char *name, GameObje
 
 GameObject *ModuleGameObjectManager::GetGameObject(uint id_to_search)
 {
-	std::stack<GameObject*> go_stack;
-	go_stack.push(root);
-	
-	while (!go_stack.empty())
-	{
-		GameObject *top_go = go_stack.top();
-		int num_children = top_go->children.size();
+	GameObject *go = nullptr;
 
-		if (num_children > 0)
-		{
-			for (int i = num_children; i > 0; --i)
-				go_stack.push(top_go->children[i]);
-		}
-		else
-		{
-			if (top_go->id == id_to_search)
-				return top_go;
-			else
-				go_stack.pop();
-		}		
+	for (uint i = 0; i < list_of_gos.size(); ++i)
+	{
+		if (list_of_gos[i]->id == id_to_search)
+			return list_of_gos[i];
 	}
 
 	return nullptr;
+}
+
+bool ModuleGameObjectManager::DeleteGameObject(const GameObject *go_to_delete)
+{
+	bool ret = false;
+
+	if (go_to_delete != nullptr)
+	{
+		std::vector<GameObject*>::iterator it_gos = list_of_gos.begin();
+		
+		for (;it_gos != list_of_gos.end();)
+		{
+			if ((*it_gos) == go_to_delete)
+			{	
+				for (uint i = 0; i < (*it_gos)->children.size(); ++i)
+					DeleteChildrenGameObject((*it_gos)->children[i]);
+
+				RemoveChildFromChildren(go_to_delete);
+				it_gos = list_of_gos.erase(it_gos);
+				RELEASE(go_to_delete);	
+				ret = true;
+			}
+			else
+				++it_gos;
+		}
+	}	
+
+	return ret;
+}
+
+bool ModuleGameObjectManager::DeleteChildrenGameObject(const GameObject *go_to_delete)
+{
+	bool ret = false;
+
+	if (go_to_delete != nullptr)
+	{
+		std::vector<GameObject*>::iterator it_gos = list_of_gos.begin();
+
+		for (;it_gos != list_of_gos.end();)
+		{
+			if ((*it_gos) == go_to_delete)
+			{
+				for (uint i = 0; i < (*it_gos)->children.size(); ++i)
+					DeleteChildrenGameObject((*it_gos)->children[i]);
+
+				it_gos = list_of_gos.erase(it_gos);
+				RELEASE(go_to_delete);
+				ret = true;
+			}
+			else
+				++it_gos;
+		}
+	}
+
+	return ret;
+}
+
+bool ModuleGameObjectManager::DeleteGameObject(unsigned int id_to_delete)
+{
+	return DeleteGameObject(GetGameObject(id_to_delete));
+}
+
+bool ModuleGameObjectManager::RemoveChildFromChildren(const GameObject *go_child_to_remove)
+{
+	if (go_child_to_remove)
+	{
+		std::vector<GameObject*>::iterator it_gos = list_of_gos.begin();
+		std::vector<GameObject*>::iterator it_child;
+
+		for (; it_gos != list_of_gos.end(); ++it_gos)
+		{
+			for(it_child = (*it_gos)->children.begin(); it_child != (*it_gos)->children.end(); ++it_child)
+			{
+				if ((*it_child) == go_child_to_remove)
+				{
+					(*it_gos)->children.erase(it_child);
+					return true;
+				}				
+			}
+		}
+	}
+	return false;
+	
 }
 
 void ModuleGameObjectManager::ImportModel(const char *file_name, bool use_fs)
