@@ -34,7 +34,7 @@ bool ModuleGameObjectManager::Init()
 {
 	bool ret = true;
 
-	// First gameobject of the scene
+	// First gameobject of the scene (id = 0)
 	root = CreateGameObject("Root", nullptr);
 
 	// Stream log messages to Debug window
@@ -59,13 +59,6 @@ UPDATE_STATUS ModuleGameObjectManager::Update(float dt)
 {
 	GameObject *curr_go = nullptr;
 
-	/*if (App->input->GetKey(SDL_SCANCODE_DELETE))
-	{
-		if (DeleteGameObject(App->editor->go_selected))
-			App->editor->go_selected = nullptr;
-	}*/
-		
-
 	for (uint i = 0; i < list_of_gos.size(); ++i)
 	{
 		curr_go = list_of_gos[i];
@@ -73,11 +66,6 @@ UPDATE_STATUS ModuleGameObjectManager::Update(float dt)
 		{
 			if(curr_go->GetComponentByType(COMPONENT_TYPE::MESH))
 				App->renderer3D->ShowGameObject(curr_go);
-
-			/*for (uint j = 0; j < curr_go->components.size(); ++j)
-			{
-				curr_go->components[j]->Update();
-			}*/
 		}
 	}
 
@@ -116,16 +104,16 @@ GameObject *ModuleGameObjectManager::CreateGameObject(const char *name, GameObje
 	GameObject *new_go = nullptr;
 
 	// With nullptr pointer parent, root will be the parent if it's not the first gameobject on the game.
-	if (parent == nullptr && id != 0)
+	if (parent == nullptr && id_to_assign != 0)
 		parent = root;				
 	
-	new_go = new GameObject(id++, name, parent);
+	new_go = new GameObject(id_to_assign++, name, parent);
 	list_of_gos.push_back(new_go);
 
 	return new_go;
 }
 
-GameObject *ModuleGameObjectManager::GetGameObject(uint id_to_search)
+GameObject *ModuleGameObjectManager::GetGameObject(uint id_to_search) const
 {
 	GameObject *go = nullptr;
 
@@ -221,6 +209,8 @@ bool ModuleGameObjectManager::RemoveChildFromChildren(const GameObject *go_child
 	
 }
 
+/* ImportModel seperates each FBX sections into different GameObject components (transform, mesh, material,...).
+A GameObject is created for every individual mesh available on the FBX */
 void ModuleGameObjectManager::ImportModel(const char *file_name, bool use_fs)
 {
 	const aiScene* scene;
@@ -260,8 +250,10 @@ void ModuleGameObjectManager::ImportModel(const char *file_name, bool use_fs)
 						aiNode *node_to_add = curr_node->mChildren[i];												
 
 						nodes_stack.push(node_to_add);
-
 						char *go_name = node_to_add->mName.data;
+
+						// I don't like! This part eliminates the strange names on Ricard's FBX,
+						// but it is exclusive for his FBX, so a better and generic option has to be implemented.						
 						for (uint i = 0; i < node_to_add->mName.length; ++i)
 						{
 							if (go_name[i] == '$')

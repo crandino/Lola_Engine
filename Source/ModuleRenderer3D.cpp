@@ -396,7 +396,7 @@ void ModuleRenderer3D::ShowGameObject(GameObject *go)
 	glMultMatrixf(*go->transform->world_transform.v);
 
 	// Rendering
-	if (mesh != nullptr && mesh->active)
+	if (mesh != nullptr && mesh->IsActive())
 	{
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glEnableClientState(GL_NORMAL_ARRAY);
@@ -416,7 +416,7 @@ void ModuleRenderer3D::ShowGameObject(GameObject *go)
 		else
 		{
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-			if (mat != nullptr && mat->active)
+			if (mat != nullptr && mat->IsActive())
 			{
 				glEnable(GL_TEXTURE_2D);
 				glBindTexture(GL_TEXTURE_2D, 0); // Cleanning bind buffer;

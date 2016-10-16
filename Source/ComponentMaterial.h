@@ -13,7 +13,7 @@ class ComponentMaterial : public Component
 
 public:
 	
-	char tex_path[SHORT_STRING];
+	char tex_path[SHORT_STRING];	// Virtual system texture path
 	unsigned int tex_buffer;
 
 	aiColor3D color_diffuse;

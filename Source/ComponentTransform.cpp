@@ -54,6 +54,7 @@ void ComponentTransform::SetComponent(aiNode *go)
 	aiVector3D scaling;
 	aiQuaternion rotating;
 
+	// Creating local matrix transformation
 	go->mTransformation.Decompose(scaling, rotating, translation);
 
 	local_position = { translation.x, translation.y, translation.z };
@@ -62,12 +63,14 @@ void ComponentTransform::SetComponent(aiNode *go)
 
 	QuatToEuler(local_rotation_quat, local_rotation_euler_rad);
 
+		// Inspector will show Euler representation on degrees to be more understandable.
 	local_rotation_euler_deg.x = math::RadToDeg(local_rotation_euler_rad.x);
 	local_rotation_euler_deg.y = math::RadToDeg(local_rotation_euler_rad.y);
 	local_rotation_euler_deg.z = math::RadToDeg(local_rotation_euler_rad.z);
 
 	local_transform = CalcTransformMatrix(local_position, local_scale, local_rotation_quat);
 
+	// Creating parent matrix transformation. All parent transformations of this GameObject will be combined into one
 	math::float3 parent_position;
 	math::float3 parent_scale;
 	math::Quat parent_rotation;
@@ -85,10 +88,13 @@ void ComponentTransform::SetComponent(aiNode *go)
 		node = node->mParent;
 	}
 
+	// Finally, we calculate and transpose the world matrix transformation.
 	world_transform = parent_transform * local_transform;
 	world_transform = world_transform.Transposed();
 }
 
+// CalcWorldTransformMatrix recalculates both parent and local transformation for the current gameobject. Besides, the method recursively
+// recalculates the world matrix transformation for all its children.
 void ComponentTransform::CalcWorldTransformMatrix(math::float4x4 parent_mat)
 {
 	parent_transform = parent_mat;
@@ -111,6 +117,9 @@ math::float4x4 ComponentTransform::CalcTransformMatrix(math::float3 &pos, math::
 
 void ComponentTransform::QuatToEuler(math::Quat &quat, math::float3 &out_euler)
 {
+	// I cannot properly implement MathGeoLib methods in order to make that transformation, 
+	// (Quat->Euler, Euler->Quat), so basic theory has been used.
+
 	float ysqr = quat.y * quat.y;
 	float t0 = -2.0f * (ysqr + quat.z * quat.z) + 1.0f;
 	float t1 = +2.0f * (quat.x * quat.y + quat.w * quat.z);
@@ -125,9 +134,9 @@ void ComponentTransform::QuatToEuler(math::Quat &quat, math::float3 &out_euler)
 	out_euler.x = math::Atan2(t3, t4);		// Roll
 	out_euler.z = math::Atan2(t1, t0);		// Yaw
 
-											//Roll  rotation about the X - axis
-											//Pitch  rotation about the Y - axis
-											//Yaw rotation about the Z - axis*/
+	//Roll  rotation about the X - axis
+	//Pitch  rotation about the Y - axis
+	//Yaw rotation about the Z - axis*/
 }
 
 void ComponentTransform::EulerToQuat(math::float3 &euler, math::Quat &out_quat)

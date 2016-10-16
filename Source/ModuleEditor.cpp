@@ -116,10 +116,11 @@ void ModuleEditor::ShowMenuFile()
 void ModuleEditor::ShowAboutMenu()
 {
 	ImGui::Begin("About", &about_menu, ImGuiWindowFlags_AlwaysAutoResize);
-	ImGui::Text("dear imgui, %s", ImGui::GetVersion());
+	ImGui::Text("LOLA Engine");
 	ImGui::Separator();
-	ImGui::Text("By Omar Cornut and all github contributors.");
-	ImGui::Text("ImGui is licensed under the MIT License, see LICENSE for more information.");
+	ImGui::Text("3D Engine created and developed by Carlos Randino (crandino on GitHub) in VideoGame");
+	ImGui::Text("Engines Subject on CITM (Terrassa). This engine is hosted on a GitHub repository");
+	ImGui::Text("(available on Help/GitHub Wiki menu). LOLA Engine is under a MIT License.");
 	ImGui::End();
 }
 
@@ -212,39 +213,6 @@ void ModuleEditor::ShowHierarchy()
 	ImGui::End();
 }
 
-void ModuleEditor::ExpandTree(const GameObject* go_to_expand)
-{
-	int num_children = go_to_expand->children.size();
-	GameObject *child = nullptr;
-
-	for (int i = 0; i < num_children; ++i)
-	{
-		child = go_to_expand->children[i];
-		node_flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick | ((child->id == item_selected_by_id) ? ImGuiTreeNodeFlags_Selected : 0 );
-		
-		if (child->children.size() > 0)
-		{	
-			bool node_open = ImGui::TreeNodeEx((void*)(intptr_t)i, node_flags, child->GetName());
-			
-			if (ImGui::IsItemClicked())
-				ChangeSelectedGameObject(child);				
-
-			if (node_open)
-			{
-				ExpandTree(child);
-				ImGui::TreePop();
-			}
-		}
-		else
-		{
-			leaf_flags = node_flags | ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
-			ImGui::TreeNodeEx((void*)(intptr_t)i, leaf_flags, child->GetName());
-			if (ImGui::IsItemClicked())	
-				ChangeSelectedGameObject(child);			
-		}
-	}
-}
-
 void ModuleEditor::ShowComponentInfo()
 {
 	if (go_selected != nullptr)
@@ -296,6 +264,40 @@ void ModuleEditor::ShowWarning()
 	ImGui::PopStyleColor(3);
 
 	ImGui::End();
+}
+
+// Expand Tree recursively shows all GameObjects on the Hierarchy Window
+void ModuleEditor::ExpandTree(const GameObject* go_to_expand)
+{
+	int num_children = go_to_expand->children.size();
+	GameObject *child = nullptr;
+
+	for (int i = 0; i < num_children; ++i)
+	{
+		child = go_to_expand->children[i];
+		node_flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick | ((child->id == item_selected_by_id) ? ImGuiTreeNodeFlags_Selected : 0);
+
+		if (child->children.size() > 0)
+		{
+			bool node_open = ImGui::TreeNodeEx((void*)(intptr_t)i, node_flags, child->GetName());
+
+			if (ImGui::IsItemClicked())
+				ChangeSelectedGameObject(child);
+
+			if (node_open)
+			{
+				ExpandTree(child);
+				ImGui::TreePop();
+			}
+		}
+		else
+		{
+			leaf_flags = node_flags | ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
+			ImGui::TreeNodeEx((void*)(intptr_t)i, leaf_flags, child->GetName());
+			if (ImGui::IsItemClicked())
+				ChangeSelectedGameObject(child);
+		}
+	}
 }
 
 void ModuleEditor::ChangeSelectedGameObject(GameObject *new_go)

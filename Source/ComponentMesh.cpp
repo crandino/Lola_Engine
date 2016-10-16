@@ -7,6 +7,7 @@
 
 ComponentMesh::ComponentMesh() : Component()
 {
+	wire = false;
 	type = COMPONENT_TYPE::MESH;
 	name = GetNameByType(type);
 }
@@ -22,6 +23,7 @@ ComponentMesh::~ComponentMesh()
 void ComponentMesh::SetComponent(const aiMesh *mesh)
 {
 	DEBUG("Creating new mesh %s", mesh->mName);
+
 	// Copying vertices...
 	num_vertices = mesh->mNumVertices;
 	vertices = new math::float3[num_vertices];

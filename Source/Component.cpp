@@ -39,3 +39,8 @@ const char *Component::GetNameByType(COMPONENT_TYPE type)
 
 	return name;
 }
+
+bool Component::IsActive() const
+{
+	return active;
+}

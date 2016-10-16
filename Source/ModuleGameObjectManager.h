@@ -25,12 +25,12 @@ public:
 
 private:
 
-	uint						id = 0;
-	GameObject					*root = nullptr;
-	std::vector<GameObject*>	list_of_gos;
+	uint						    id_to_assign = 0;
+	GameObject					    *root = nullptr;
+	std::vector<GameObject*>	    list_of_gos;
 
 	GameObject		*CreateGameObject(const char *name, GameObject *parent);
-	GameObject		*GetGameObject(uint id_to_search);
+	GameObject		*GetGameObject(uint id_to_search) const;
 
 	bool DeleteGameObject(unsigned int id_to_delete);
 	bool DeleteChildrenGameObject(const GameObject *go_to_delete);

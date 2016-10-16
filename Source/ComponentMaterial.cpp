@@ -23,8 +23,10 @@ bool ComponentMaterial::Update()
 void ComponentMaterial::SetComponent(aiMaterial *ai_material)
 {
 	unsigned int numTextures = ai_material->GetTextureCount(aiTextureType_DIFFUSE);
+
 	if (numTextures != 0)
 	{
+		// Loading texture to tex_buffer
 		aiString path;
 		ai_material->GetTexture(aiTextureType_DIFFUSE, 0, &path);
 
@@ -49,6 +51,7 @@ void ComponentMaterial::ShowEditorInfo()
 	ImGui::Checkbox("Active##Mat", &active);
 	if (tex_buffer != 0)
 	{
+		// Showing texture image on a 200x200 frame
 		ImGui::Image((void*)tex_buffer, ImVec2(200, 200), ImVec2(0, 0), ImVec2(1, 1), ImVec4(1, 1, 1, 1), ImVec4(0.0f, 0.5f, 0.5f, 1.0f));
 		ImGui::Text("%s%s", "Path: ", tex_path);
 	}	

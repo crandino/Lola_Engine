@@ -8,10 +8,7 @@ enum COMPONENT_TYPE
 	UNKNOWN,
 	TRANSFORM,
 	MATERIAL,
-	CAMERA,
-	MESH,
-	AUDIO,
-	ANIMATION	
+	MESH	
 };
 
 class Component
@@ -21,13 +18,11 @@ protected:
 
 	const char				 *name;
 	COMPONENT_TYPE            type;
-	
-	unsigned int				id;
+	bool					active;
+	unsigned int				id;		// They are not used right now!
 
 public:
-
-	bool					active;
-
+	
 	GameObject *game_object = nullptr;
 
 	Component();
@@ -38,6 +33,7 @@ public:
 
 	COMPONENT_TYPE &GetType();
 	const char *GetNameByType(COMPONENT_TYPE type);
+	bool IsActive() const;
 
 };
 

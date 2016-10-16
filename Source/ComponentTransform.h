@@ -11,15 +11,15 @@ class ComponentTransform : public Component
 
 private:
 
-	math::float3 local_position;
-	math::float3 local_scale;
-	math::Quat local_rotation_quat;
+	math::float3 local_position;				// Position representation;
+	math::float3 local_scale;					// Scale representation;
+	math::Quat local_rotation_quat;				// Rotation representation (quaternion);
 
-	math::float3 local_rotation_euler_rad;
-	math::float3 local_rotation_euler_deg;
+	math::float3 local_rotation_euler_rad;		// Euler representation on rad.
+	math::float3 local_rotation_euler_deg;		// Euler representation on degrees.
 
-	math::float4x4 local_transform;
-	math::float4x4 parent_transform;
+	math::float4x4 local_transform;				// Its local matrix transformation;
+	math::float4x4 parent_transform;			// Combined parent matrix transformation;
 
 public:
 	
