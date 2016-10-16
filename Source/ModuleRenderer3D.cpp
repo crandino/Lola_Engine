@@ -434,7 +434,7 @@ void ModuleRenderer3D::ShowGameObject(GameObject *go)
 			glColor3f(255.0f, 255.0f, 0.0f);
 			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 			glDrawElements(GL_TRIANGLES, mesh->num_indices, GL_UNSIGNED_INT, NULL);
-			//glColor3f(0.0f, 0.0f, 0.0f);
+			glColor3f(0.0f, 0.0f, 0.0f);
 		}
 		
 		glDisable(GL_TEXTURE_2D);
