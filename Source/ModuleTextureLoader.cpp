@@ -65,9 +65,11 @@ void ModuleTextureLoader::LoadTexture(const char *full_path, unsigned int &buffe
 
 	sprintf_s(comp_mat->tex_path, SHORT_STRING, "%s%s", "Textures/", App->file_system->GetFileFromDirPath(full_path));
 
-	char *tmp;
-	uint size = App->file_system->Load(comp_mat->tex_path, &tmp);
-	ilLoadL(IL_TYPE_UNKNOWN, tmp, size);
+	char *lump;
+	uint size = App->file_system->Load(comp_mat->tex_path, &lump);
+	ilLoadL(IL_TYPE_UNKNOWN, lump, size);
+	
+	sprintf_s(comp_mat->tex_path, SHORT_STRING, "%s/%s", App->file_system->GetRealDirectory(comp_mat->tex_path), App->file_system->GetFileFromDirPath(full_path));
 
 	buffer = ilutGLBindTexImage();
 }

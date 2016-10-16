@@ -420,8 +420,8 @@ void ModuleRenderer3D::ShowGameObject(GameObject *go)
 			{
 				glEnable(GL_TEXTURE_2D);
 				glBindTexture(GL_TEXTURE_2D, 0); // Cleanning bind buffer;
-				glBindTexture(GL_TEXTURE_2D, mat->tex_buffer);
-				glColor3f(mat->color_diffuse.r, mat->color_diffuse.g, mat->color_diffuse.b);					
+				glBindTexture(GL_TEXTURE_2D, mat->tex_buffer);		
+				glColor3f(mat->color_diffuse.r, mat->color_diffuse.g, mat->color_diffuse.b);
 			}
 		}			
 
@@ -434,7 +434,7 @@ void ModuleRenderer3D::ShowGameObject(GameObject *go)
 			glColor3f(255.0f, 255.0f, 0.0f);
 			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 			glDrawElements(GL_TRIANGLES, mesh->num_indices, GL_UNSIGNED_INT, NULL);
-			glColor3f(0.0f, 0.0f, 0.0f);
+			//glColor3f(0.0f, 0.0f, 0.0f);
 		}
 		
 		glDisable(GL_TEXTURE_2D);

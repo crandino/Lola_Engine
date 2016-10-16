@@ -29,6 +29,7 @@ public:
 
 	const char *GetFileFromDirPath(const char *path) const;
 	const char *GetSaveDirectory() const;
+	const char *GetRealDirectory(const char* file) const;
 	bool IsDirectory(const char *dir) const;
 	bool Exists(const char *file) const;
 

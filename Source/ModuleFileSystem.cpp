@@ -219,10 +219,16 @@ const char *ModuleFileSystem::GetFileFromDirPath(const char *path) const
 			++file;
 		else
 			file = '\0';
-	};
+	};	
 
 	return file;
 }
+
+const char *ModuleFileSystem::GetRealDirectory(const char *file) const
+{
+	return PHYSFS_getRealDir(file);
+}
+
 
 // -----------------------------------------------------
 // ASSIMP IO
