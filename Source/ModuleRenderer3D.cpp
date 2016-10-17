@@ -382,6 +382,53 @@ bool ModuleRenderer3D::LoadMeshBuffer(const ComponentMesh *mesh)
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint)*mesh->num_indices, mesh->indices, GL_STATIC_DRAW);
 	}
 
+	// Bounding box
+	glGenBuffers(1, (GLuint*) &(mesh->bounding_box_id));
+	if (mesh->bounding_box_id == 0)
+	{
+		DEBUG("[error] Bounding box buffer has not been binded!");
+		ret = false;
+	}
+	else
+	{
+		glBindBuffer(GL_ARRAY_BUFFER, mesh->bounding_box_id);
+		math::vec corners[8];
+		math::vec vertexs[24];
+		mesh->bounding_box.GetCornerPoints(corners);
+
+		// Front
+		vertexs[0] = corners[0];
+		vertexs[1] = corners[1];
+		vertexs[2] = corners[1];
+		vertexs[3] = corners[3];
+		vertexs[4] = corners[3];
+		vertexs[5] = corners[2];
+		vertexs[6] = corners[2];
+		vertexs[7] = corners[0];
+
+		// Back
+		vertexs[8] = corners[4];
+		vertexs[9] = corners[5];
+		vertexs[10] = corners[5];
+		vertexs[11] = corners[7];
+		vertexs[12] = corners[7];
+		vertexs[13] = corners[6];
+		vertexs[14] = corners[6];
+		vertexs[15] = corners[4];
+
+		// The rest...
+		vertexs[16] = corners[1];
+		vertexs[17] = corners[5];
+		vertexs[18] = corners[2];
+		vertexs[19] = corners[6];
+		vertexs[20] = corners[0];
+		vertexs[21] = corners[4];
+		vertexs[22] = corners[3];
+		vertexs[23] = corners[7];		
+
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 24 * 3, vertexs, GL_STATIC_DRAW);
+	}
+
 	return ret;
 }
 
@@ -390,14 +437,14 @@ void ModuleRenderer3D::ShowGameObject(GameObject *go)
 	const ComponentMesh *mesh = (ComponentMesh*)go->GetComponentByType(COMPONENT_TYPE::MESH);
 	const ComponentMaterial *mat = (ComponentMaterial*)mesh->game_object->GetComponentByType(COMPONENT_TYPE::MATERIAL);
 
-	// Transformation 
-	glMatrixMode(GL_MODELVIEW);
-	glPushMatrix();
-	glMultMatrixf(*go->transform->world_transform.v);
-
 	// Rendering
 	if (mesh != nullptr && mesh->IsActive())
 	{
+		// Transformation 
+		glMatrixMode(GL_MODELVIEW);
+		glPushMatrix();
+		glMultMatrixf(*go->transform->world_transform.v);
+
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glEnableClientState(GL_NORMAL_ARRAY);
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
@@ -427,14 +474,29 @@ void ModuleRenderer3D::ShowGameObject(GameObject *go)
 
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_indices);
 		glDrawElements(GL_TRIANGLES, mesh->num_indices, GL_UNSIGNED_INT, NULL);
+		glColor3f(1.0f, 1.0f, 1.0f);
 
+		// Is this GO selected?
 		if (go->selected)
 		{
 			glLineWidth(1.5f);
 			glColor3f(255.0f, 255.0f, 0.0f);
 			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 			glDrawElements(GL_TRIANGLES, mesh->num_indices, GL_UNSIGNED_INT, NULL);
-			glColor3f(0.0f, 0.0f, 0.0f);
+			glColor3f(1.0f, 1.0f, 1.0f);
+		}
+
+		glPopMatrix();
+
+		// Drawing AABB 
+		if (mesh->bounding_box.IsFinite())
+		{
+			glLineWidth(2.0f);
+			glColor3f(0.0f, 255.0f, 0.0f);
+			glBindBuffer(GL_ARRAY_BUFFER, mesh->bounding_box_id);
+			glVertexPointer(3, GL_FLOAT, 0, NULL);
+			glDrawArrays(GL_LINES, 0, 24 * 3);
+			glColor3f(1.0f, 1.0f, 1.0f);
 		}
 		
 		glDisable(GL_TEXTURE_2D);
@@ -444,6 +506,6 @@ void ModuleRenderer3D::ShowGameObject(GameObject *go)
 		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 	}	
 
-	glPopMatrix();
+	
 }
 

@@ -1,6 +1,8 @@
 #include "ComponentMesh.h"
 
 #include "Globals.h"
+#include "GameObject.h"
+#include "ComponentTransform.h"
 
 #include "Assimp\include\mesh.h"
 #include "imgui\imgui.h"
@@ -66,6 +68,11 @@ void ComponentMesh::SetComponent(const aiMesh *mesh)
 			}
 		}
 	}
+
+	// Calcultating AABB
+	bounding_box.SetNegativeInfinity();
+	bounding_box.Enclose((math::float3*) vertices, num_vertices);
+
 }
 
 void ComponentMesh::ShowEditorInfo()

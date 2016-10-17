@@ -12,6 +12,8 @@ class ComponentMesh : public Component
 
 public:
 
+	math::AABB bounding_box;
+	unsigned int bounding_box_id;
 	bool wire = false;
 
 	// Vertices

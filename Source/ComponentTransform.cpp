@@ -17,7 +17,6 @@ ComponentTransform::ComponentTransform() : Component()
 
 void ComponentTransform::ShowEditorInfo()
 {
-
 	ImGui::TextColored(ImVec4(1.0f, 0.5, 0.0f, 1.0f), "Component: "); ImGui::SameLine();
 	ImGui::Text(name);
 
@@ -45,7 +44,10 @@ void ComponentTransform::ShowEditorInfo()
 	ImGui::Separator();
 
 	if (input_changed)
+	{
 		CalcWorldTransformMatrix(parent_transform);
+	}		
+		
 }
 
 void ComponentTransform::SetComponent(aiNode *go)

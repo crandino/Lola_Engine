@@ -48,8 +48,8 @@ bool ModuleGameObjectManager::Init()
 // PreUpdate: clear buffer
 UPDATE_STATUS ModuleGameObjectManager::PreUpdate(float dt)
 {
-	//if (App->input->GetKey(SDL_SCANCODE_G) == KEY_DOWN)
-	//	ImportModel("Models/primitives_with_parent2.fbx");  // primitives_with_parent2.fbx Street environment_V01.fbx
+	if (App->input->GetKey(SDL_SCANCODE_G) == KEY_DOWN)
+		ImportModel("Models/primitives_with_parent.fbx");  // primitives_with_parent2.fbx Street environment_V01.fbx
 
 	return UPDATE_CONTINUE;
 }
