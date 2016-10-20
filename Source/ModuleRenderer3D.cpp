@@ -11,10 +11,7 @@
 #include "ComponentMaterial.h"
 #include "GameObject.h"
 
-#include "Glew\include\glew.h"
-#include "SDL\include\SDL_opengl.h"
-#include <gl/GL.h>
-#include <gl/GLU.h>
+#include "openGL.h"
 
 #include "Devil\include\ilut.h"
 
@@ -477,35 +474,30 @@ void ModuleRenderer3D::ShowGameObject(GameObject *go)
 		glColor3f(1.0f, 1.0f, 1.0f);
 
 		// Is this GO selected?
-		if (go->selected)
+		/*if (go->selected)
 		{
 			glLineWidth(1.5f);
 			glColor3f(255.0f, 255.0f, 0.0f);
 			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 			glDrawElements(GL_TRIANGLES, mesh->num_indices, GL_UNSIGNED_INT, NULL);
 			glColor3f(1.0f, 1.0f, 1.0f);
-		}
+			glLineWidth(1.0f);
+		}*/
 
 		glPopMatrix();
 
 		// Drawing AABB 
 		if (mesh->bounding_box.IsFinite())
 		{
-			glLineWidth(2.0f);
-			glColor3f(0.0f, 255.0f, 0.0f);
-			glBindBuffer(GL_ARRAY_BUFFER, mesh->bounding_box_id);
-			glVertexPointer(3, GL_FLOAT, 0, NULL);
-			glDrawArrays(GL_LINES, 0, 24 * 3);
-			glColor3f(1.0f, 1.0f, 1.0f);
+			debug.DrawAABB(mesh->bounding_box);
+			debug.DrawOBB(mesh->test);
 		}
+			
 		
 		glDisable(GL_TEXTURE_2D);
 
 		glDisableClientState(GL_VERTEX_ARRAY);
 		glDisableClientState(GL_NORMAL_ARRAY);
 		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-	}	
-
-	
+	}		
 }
-

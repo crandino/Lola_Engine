@@ -79,6 +79,7 @@
     <ClCompile Include="Source\ComponentMaterial.cpp" />
     <ClCompile Include="Source\ComponentMesh.cpp" />
     <ClCompile Include="Source\ComponentTransform.cpp" />
+    <ClCompile Include="Source\DrawDebug.cpp" />
     <ClCompile Include="Source\GameObject.cpp" />
     <ClCompile Include="Source\imgui\imgui.cpp" />
     <ClCompile Include="Source\imgui\imgui_demo.cpp" />
@@ -146,6 +147,7 @@
     <ClInclude Include="Source\ComponentMesh.h" />
     <ClInclude Include="Source\ComponentTransform.h" />
     <ClInclude Include="Source\Console.h" />
+    <ClInclude Include="Source\DrawDebug.h" />
     <ClInclude Include="Source\GameObject.h" />
     <ClInclude Include="Source\Globals.h" />
     <ClInclude Include="Source\imgui\imconfig.h" />
@@ -232,6 +234,7 @@
     <ClInclude Include="Source\ModuleRenderer3D.h" />
     <ClInclude Include="Source\ModuleTextureLoader.h" />
     <ClInclude Include="Source\ModuleWindow.h" />
+    <ClInclude Include="Source\openGL.h" />
     <ClInclude Include="Source\Performance.h" />
     <ClInclude Include="Source\PerfTimer.h" />
     <ClInclude Include="Source\PhysBody3D.h" />

@@ -231,6 +231,9 @@
     <ClCompile Include="Source\ComponentMaterial.cpp">
       <Filter>Source\Components</Filter>
     </ClCompile>
+    <ClCompile Include="Source\DrawDebug.cpp">
+      <Filter>Source\Helpers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Color.h">
@@ -528,6 +531,12 @@
       <Filter>Source\Components</Filter>
     </ClInclude>
     <ClInclude Include="Source\Primitive.h">
+      <Filter>Source\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DrawDebug.h">
+      <Filter>Source\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\openGL.h">
       <Filter>Source\Helpers</Filter>
     </ClInclude>
   </ItemGroup>

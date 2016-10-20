@@ -1,6 +1,7 @@
 #include "ComponentTransform.h"
 
 #include "GameObject.h"
+#include "ComponentMesh.h"
 
 #include "Assimp\include\scene.h"
 #include "imgui\imgui.h"
@@ -23,14 +24,16 @@ void ComponentTransform::ShowEditorInfo()
 	bool input_changed = false;
 
 	if (ImGui::DragFloat3("Position", &local_position.x, 0.25f, 0.0f, 0.0f, "%.3f"))
-		input_changed = true;
+		input_changed = true;	
+		
 	if (ImGui::DragFloat3("Rotation", &local_rotation_euler_deg.x, 0.25f, 0.0f, 0.0f, "%.3f"))
 	{
 		input_changed = true;
 		EulerToQuat(local_rotation_euler_deg, local_rotation_quat);
 	}
+
 	if (ImGui::DragFloat3("Scale", &local_scale.x, 0.25f, 0.0f, 0.0f, "%.3f"))
-		input_changed = true;
+		input_changed = true;		
 
 	if (ImGui::TreeNode("Transform matrix"))
 	{
@@ -44,10 +47,7 @@ void ComponentTransform::ShowEditorInfo()
 	ImGui::Separator();
 
 	if (input_changed)
-	{
-		CalcWorldTransformMatrix(parent_transform);
-	}		
-		
+		CalcWorldTransformMatrix(parent_transform);			
 }
 
 void ComponentTransform::SetComponent(aiNode *go)
@@ -65,7 +65,7 @@ void ComponentTransform::SetComponent(aiNode *go)
 
 	QuatToEuler(local_rotation_quat, local_rotation_euler_rad);
 
-		// Inspector will show Euler representation on degrees to be more understandable.
+	// Inspector will show Euler representation on degrees to be more understandable.
 	local_rotation_euler_deg.x = math::RadToDeg(local_rotation_euler_rad.x);
 	local_rotation_euler_deg.y = math::RadToDeg(local_rotation_euler_rad.y);
 	local_rotation_euler_deg.z = math::RadToDeg(local_rotation_euler_rad.z);
@@ -109,6 +109,9 @@ void ComponentTransform::CalcWorldTransformMatrix(math::float4x4 parent_mat)
 		game_object->children[i]->transform->CalcWorldTransformMatrix(world_transform);
 
 	world_transform = world_transform.Transposed();
+	/*((ComponentMesh*)game_object->GetComponentByType(COMPONENT_TYPE::MESH))->TranslateAABB();
+	((ComponentMesh*)game_object->GetComponentByType(COMPONENT_TYPE::MESH))->ScaleAABB();*/
+	((ComponentMesh*)game_object->GetComponentByType(COMPONENT_TYPE::MESH))->UpdateTransformAABB();
 }
 
 math::float4x4 ComponentTransform::CalcTransformMatrix(math::float3 &pos, math::float3 &scale, math::Quat &rot)

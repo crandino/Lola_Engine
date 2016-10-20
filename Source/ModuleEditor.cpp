@@ -45,8 +45,8 @@ UPDATE_STATUS ModuleEditor::PreUpdate(float dt)
 	if (App->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN)
 		conf_menu = !conf_menu;
 
-	/*if (App->input->GetKey(SDL_SCANCODE_0) == KEY_DOWN)
-		console_menu = !console_menu;*/
+	if (App->input->GetKey(SDL_SCANCODE_0) == KEY_DOWN)
+		console_menu = !console_menu;
 
 	if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
 		hierarchy_menu = !hierarchy_menu;

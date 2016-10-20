@@ -13,7 +13,7 @@ private:
 
 	math::float3 local_position;				// Position representation;
 	math::float3 local_scale;					// Scale representation;
-	math::Quat local_rotation_quat;				// Rotation representation (quaternion);
+	
 
 	math::float3 local_rotation_euler_rad;		// Euler representation on rad.
 	math::float3 local_rotation_euler_deg;		// Euler representation on degrees.
@@ -23,6 +23,7 @@ private:
 
 public:
 	
+	math::Quat local_rotation_quat;				// Rotation representation (quaternion);
 	math::float4x4 world_transform;	
 
 	ComponentTransform();
@@ -35,6 +36,7 @@ public:
 
 	void QuatToEuler(math::Quat &quat, math::float3 &out_euler);
 	void EulerToQuat(math::float3 &euler, math::Quat &out_quat);
+	
 
 };
 

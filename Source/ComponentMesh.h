@@ -13,6 +13,7 @@ class ComponentMesh : public Component
 public:
 
 	math::AABB bounding_box;
+	math::OBB test;
 	unsigned int bounding_box_id;
 	bool wire = false;
 
@@ -41,7 +42,18 @@ public:
 
 	void SetComponent(const aiMesh *mesh);
 
-	void ShowEditorInfo();	
+	void TranslateAABB();
+	void RotateAABB();
+	void ScaleAABB();
+
+	void ShowEditorInfo();
+
+	void UpdateTransformAABB();
+
+private:
+
+	math::float4x4 transform_aabb;
+	math::Quat quat_aabb;
 };
 
 #endif __COMPONENTMESH_H__

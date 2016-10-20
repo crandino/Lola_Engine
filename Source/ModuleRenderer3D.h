@@ -9,6 +9,8 @@
 #include "MathGeoLib\MathGeoLib.h"
 #include "SDL\include\SDL_video.h"
 
+#include "DrawDebug.h"
+
 #define MAX_LIGHTS 8
 #define CHECKERS_HEIGHT 512
 #define CHECKERS_WIDTH 512
@@ -47,6 +49,8 @@ public:
 	math::float4x4 ModelMatrix, ViewMatrix, ProjectionMatrix;
 
 private:
+
+	DrawDebug debug;
 
 	unsigned int checker_id;
 	unsigned char check_image[CHECKERS_HEIGHT][CHECKERS_WIDTH][4];
