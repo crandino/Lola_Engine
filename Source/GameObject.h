@@ -32,7 +32,7 @@ public:
 	~GameObject();
 
 	const Component *GetComponentByType(COMPONENT_TYPE type);
-	void AddComponent(Component *comp);
+	const Component *AddComponent(COMPONENT_TYPE type);
 
 	void ChangeActiveState(bool *state, GameObject *go = nullptr);
 	

@@ -75,9 +75,6 @@
     <ClCompile Include="Source\ModuleAudio.cpp">
       <Filter>Source\Modules</Filter>
     </ClCompile>
-    <ClCompile Include="Source\ModuleCamera3D.cpp">
-      <Filter>Source\Modules</Filter>
-    </ClCompile>
     <ClCompile Include="Source\ModuleEditor.cpp">
       <Filter>Source\Modules</Filter>
     </ClCompile>
@@ -234,6 +231,12 @@
     <ClCompile Include="Source\DrawDebug.cpp">
       <Filter>Source\Helpers</Filter>
     </ClCompile>
+    <ClCompile Include="Source\ModuleCameraEditor.cpp">
+      <Filter>Source\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ComponentCamera.cpp">
+      <Filter>Source\Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Color.h">
@@ -291,9 +294,6 @@
       <Filter>Source\Modules</Filter>
     </ClInclude>
     <ClInclude Include="Source\ModuleAudio.h">
-      <Filter>Source\Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ModuleCamera3D.h">
       <Filter>Source\Modules</Filter>
     </ClInclude>
     <ClInclude Include="Source\ModuleEditor.h">
@@ -538,6 +538,12 @@
     </ClInclude>
     <ClInclude Include="Source\openGL.h">
       <Filter>Source\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ModuleCameraEditor.h">
+      <Filter>Source\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ComponentCamera.h">
+      <Filter>Source\Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

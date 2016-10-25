@@ -5,7 +5,7 @@
 #include "ModuleAudio.h"
 #include "ModuleSceneIntro.h"
 #include "ModuleFileSystem.h"
-#include "ModuleCamera3D.h"
+#include "ModuleCameraEditor.h"
 //#include "ModulePhysics3D.h"
 #include "ModuleEditor.h"
 #include "ModuleTextureLoader.h"
@@ -21,7 +21,7 @@ Application::Application()
 	audio = new ModuleAudio(this, true);
 	scene_intro = new ModuleSceneIntro(this, true);
 	renderer3D = new ModuleRenderer3D(this, true);
-	camera = new ModuleCamera3D(this, true);
+	camera = new ModuleCameraEditor(this, true);
 	//physics = new ModulePhysics3D(this, true);
 	gameobject_manager = new ModuleGameObjectManager(this, true);
 	editor = new ModuleEditor(this, true);
@@ -31,8 +31,7 @@ Application::Application()
 	// They will CleanUp() in reverse order
 
 	// Main Modules
-	AddModule(window);	
-	AddModule(camera);
+	AddModule(window);		
 	AddModule(input);
 	AddModule(audio);
 	//AddModule(physics);
@@ -43,6 +42,7 @@ Application::Application()
 	AddModule(gameobject_manager);
 	
 	// Scenes
+	AddModule(camera);
 	AddModule(scene_intro);
 	AddModule(editor);
 

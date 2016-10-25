@@ -1,6 +1,9 @@
 #include "GameObject.h"
 
 #include "Component.h"
+#include "ComponentTransform.h"
+#include "ComponentMesh.h"
+#include "ComponentMaterial.h"
 
 GameObject::GameObject(uint id, const char* name, GameObject *parent)
 {
@@ -22,13 +25,28 @@ GameObject::~GameObject()
 	children.clear();
 }
 
-void GameObject::AddComponent(Component *comp)
+const Component* GameObject::AddComponent(COMPONENT_TYPE type)
 {
+	Component *comp = nullptr;
+
+	switch (type)
+	{
+	case(COMPONENT_TYPE::TRANSFORM):
+		comp = new ComponentTransform();
+		if(transform == nullptr)
+			transform = (ComponentTransform*)comp;
+		break;
+	case(COMPONENT_TYPE::MESH):
+		comp = new ComponentMesh();
+		break;
+	case(COMPONENT_TYPE::MATERIAL):
+		comp = new ComponentMaterial();
+		break;
+	}
+
 	comp->game_object = this;
 	components.push_back(comp);
-
-	if (comp->GetType() == COMPONENT_TYPE::TRANSFORM && transform == nullptr)
-		transform = (ComponentTransform*)comp;
+	return comp;
 }
 
 const Component *GameObject::GetComponentByType(COMPONENT_TYPE type)

@@ -1,14 +1,18 @@
-#include "ModuleCamera3D.h"
+#include "ModuleCameraEditor.h"
 
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleInput.h"
+#include "ModuleGameObjectManager.h"
 
-#include "PhysBody3D.h"
+#include "GameObject.h"
+#include "ComponentTransform.h"
+
+//#include "PhysBody3D.h"
 
 #include "MathGeoLib\MathGeoLib.h"
 
-ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled) : Module(app, start_enabled)
+ModuleCameraEditor::ModuleCameraEditor(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
 	name.assign("Camera3D");
 
@@ -18,15 +22,21 @@ ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled) : Module(ap
 	Y.Set(0.0f, 1.0f, 0.0f);
 	Z.Set(0.0f, 0.0f, 1.0f);
 
-	Position.Set(1.0f, 0.0f, 4.0f);
-	Reference.Set(0.0f, 0.0f, 0.0f);
+	Position.Set(0.0f, 2.0f, 5.0f);
+	Reference.Set(0.0f, 2.0f, 5.0f);
 }
 
-ModuleCamera3D::~ModuleCamera3D()
+ModuleCameraEditor::~ModuleCameraEditor()
 {}
 
-// -----------------------------------------------------------------
-bool ModuleCamera3D::Start()
+
+bool ModuleCameraEditor::Init()
+{
+	CreateEditorCamera();
+	return true;
+}
+
+bool ModuleCameraEditor::Start()
 {
 	DEBUG("Setting up the camera");
 	bool ret = true;
@@ -35,7 +45,7 @@ bool ModuleCamera3D::Start()
 }
 
 // -----------------------------------------------------------------
-bool ModuleCamera3D::CleanUp()
+bool ModuleCameraEditor::CleanUp()
 {
 	DEBUG("Cleaning camera");
 
@@ -43,7 +53,7 @@ bool ModuleCamera3D::CleanUp()
 }
 
 // -----------------------------------------------------------------
-UPDATE_STATUS ModuleCamera3D::Update(float dt)
+UPDATE_STATUS ModuleCameraEditor::Update(float dt)
 {
 	// Implement a debug camera with keys and mouse
 	// Now we can make this movememnt frame rate independant!
@@ -117,12 +127,14 @@ UPDATE_STATUS ModuleCamera3D::Update(float dt)
 
 	// Recalculate matrix -------------
 	CalculateViewMatrix();
+
+	DEBUG("%f %f %f", Z.x, Z.y, Z.z);
 	
 	return UPDATE_CONTINUE;
 }
 
 // -----------------------------------------------------------------
-void ModuleCamera3D::Look(const math::vec &Position, const math::vec &Reference, bool RotateAroundReference)
+void ModuleCameraEditor::Look(const math::vec &Position, const math::vec &Reference, bool RotateAroundReference)
 {
 	this->Position = Position;
 	this->Reference = Reference;
@@ -141,7 +153,7 @@ void ModuleCamera3D::Look(const math::vec &Position, const math::vec &Reference,
 }
 
 // -----------------------------------------------------------------
-void ModuleCamera3D::LookAt( const math::vec &Spot)
+void ModuleCameraEditor::LookAt( const math::vec &Spot)
 {
 	Reference = Spot;
 
@@ -154,7 +166,7 @@ void ModuleCamera3D::LookAt( const math::vec &Spot)
 
 
 // -----------------------------------------------------------------
-void ModuleCamera3D::Move(const math::vec &Movement)
+void ModuleCameraEditor::Move(const math::vec &Movement)
 {
 	Position += Movement;
 	Reference += Movement;
@@ -163,13 +175,13 @@ void ModuleCamera3D::Move(const math::vec &Movement)
 }
 
 // -----------------------------------------------------------------
-float* ModuleCamera3D::GetViewMatrix()
+float* ModuleCameraEditor::GetViewMatrix()
 {
 	return *ViewMatrix.v;
 }
 
 // -----------------------------------------------------------------
-void ModuleCamera3D::CalculateViewMatrix()
+void ModuleCameraEditor::CalculateViewMatrix()
 {
 	// With glmath.h
 	ViewMatrix = math::float4x4(X.x, Y.x, Z.x, 0.0f, X.y, Y.y, Z.y, 0.0f, X.z, Y.z, Z.z, 0.0f, -math::Dot(X, Position), -math::Dot(Y, Position), -math::Dot(Z, Position), 1.0f);
@@ -181,4 +193,11 @@ void ModuleCamera3D::CalculateViewMatrix()
 		0.0f, 0.0f, 0.0f, 1.0f);*/
 	
 	ViewMatrixInverse = ViewMatrix.Inverted();
+}
+
+void ModuleCameraEditor::CreateEditorCamera()
+{
+	main_camera = App->gameobject_manager->CreateGameObject("Main_camera", nullptr);
+	ComponentTransform *comp_trans = new ComponentTransform();
+	main_camera->AddComponent(COMPONENT_TYPE::TRANSFORM);
 }

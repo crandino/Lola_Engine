@@ -1,16 +1,19 @@
-#ifndef __MODULECAMERA3D_H__
-#define __MODULECAMERA3D_H__
+#ifndef __ModuleCameraEditor_H__
+#define __ModuleCameraEditor_H__
 
 #include "Module.h"
 #include "Globals.h"
 #include "MathGeoLib\MathGeoLib.h"
 
-class ModuleCamera3D : public Module
+class GameObject;
+
+class ModuleCameraEditor : public Module
 {
 public:
-	ModuleCamera3D(Application* app, bool start_enabled = true);
-	~ModuleCamera3D();
+	ModuleCameraEditor(Application* app, bool start_enabled = true);
+	~ModuleCameraEditor();
 
+	bool Init();
 	bool Start();
 	UPDATE_STATUS Update(float dt);
 	bool CleanUp();
@@ -22,7 +25,9 @@ public:
 
 private:
 
+	GameObject *main_camera;
 	void CalculateViewMatrix();
+	void CreateEditorCamera();
 
 public:
 	
@@ -33,4 +38,4 @@ private:
 	math::float4x4 ViewMatrix, ViewMatrixInverse;
 };
 
-#endif // !__MODULECAMERA3D_H__
+#endif // !__ModuleCameraEditor_H__

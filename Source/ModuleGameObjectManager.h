@@ -21,6 +21,8 @@ public:
 
 	void ImportModel(const char *file_name, bool use_fs = true);
 	const GameObject *GetRoot() const;
+
+	GameObject *CreateGameObject(const char *name, GameObject *parent);
 	bool DeleteGameObject(const GameObject *go_to_delete);
 
 private:
@@ -29,7 +31,7 @@ private:
 	GameObject					    *root = nullptr;
 	std::vector<GameObject*>	    list_of_gos;
 
-	GameObject		*CreateGameObject(const char *name, GameObject *parent);
+	
 	GameObject		*GetGameObject(uint id_to_search) const;
 
 	bool DeleteGameObject(unsigned int id_to_delete);

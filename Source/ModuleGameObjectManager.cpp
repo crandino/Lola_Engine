@@ -271,25 +271,23 @@ void ModuleGameObjectManager::ImportModel(const char *file_name, bool use_fs)
 						go_stack.push(new_go);						
 
 						// --- TRANSFORM ---						
-						ComponentTransform *comp_trans = new ComponentTransform();
-						new_go->AddComponent(comp_trans);
+						ComponentTransform *comp_trans = (ComponentTransform*)new_go->AddComponent(COMPONENT_TYPE::TRANSFORM);
 						comp_trans->SetComponent(node_to_add);						
 									
 						// --- MESH ---						
 						if (node_to_add->mNumMeshes != 0)
 						{
-							ComponentMesh *comp_mesh = new ComponentMesh();
 							aiMesh *ai_mesh = scene->mMeshes[*node_to_add->mMeshes];
-							new_go->AddComponent(comp_mesh);
+							ComponentMesh *comp_mesh  = (ComponentMesh*)new_go->AddComponent(COMPONENT_TYPE::MESH);
 							comp_mesh->SetComponent(ai_mesh);							
 
 							App->renderer3D->LoadMeshBuffer(comp_mesh);							
 
 							// --- MATERIAL ---
-							ComponentMaterial *comp_mat = new ComponentMaterial();
 							aiMaterial *ai_material = scene->mMaterials[ai_mesh->mMaterialIndex];
+							ComponentMaterial *comp_mat = (ComponentMaterial*)new_go->AddComponent(COMPONENT_TYPE::MATERIAL);							
 							comp_mat->SetComponent(ai_material);
-							new_go->AddComponent(comp_mat);
+							
 						}					
 					}
 				}

@@ -8,7 +8,8 @@ enum COMPONENT_TYPE
 	UNKNOWN,
 	TRANSFORM,
 	MATERIAL,
-	MESH	
+	MESH,
+	CAMERA
 };
 
 class Component

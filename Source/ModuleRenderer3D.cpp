@@ -1,7 +1,7 @@
 #include "ModuleRenderer3D.h"
 
 #include "Application.h"
-#include "ModuleCamera3D.h"
+#include "ModuleCameraEditor.h"
 #include "ModuleWindow.h"
 #include "ModuleTextureLoader.h"
 #include "Globals.h"
