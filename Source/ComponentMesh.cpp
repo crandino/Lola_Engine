@@ -73,19 +73,19 @@ void ComponentMesh::SetComponent(const aiMesh *mesh)
 		}
 	}
 
-	transform_aabb.SetIdentity();
-	quat_aabb = quat_aabb.identity;
+	//transform_aabb.SetIdentity();
+	//quat_aabb = quat_aabb.identity;
 
-	// Calcultating AABB	
-	bounding_box.SetNegativeInfinity();
-	bounding_box.Enclose((math::float3*) vertices, num_vertices);
-	test = bounding_box.ToOBB();
+	//// Calcultating AABB	
+	//bounding_box.SetNegativeInfinity();
+	//bounding_box.Enclose((math::float3*) vertices, num_vertices);
+	//test = bounding_box.ToOBB();
 	
 	/*ScaleAABB();
 	RotateAABB();
 	TranslateAABB();	*/
 	
-	UpdateTransformAABB();
+	//UpdateTransformAABB();
 	//UpdateTransformAABB();
 }
 

@@ -6,6 +6,8 @@
 #include "Assimp\include\scene.h"
 #include "imgui\imgui.h"
 
+#include <stack>
+
 ComponentTransform::ComponentTransform() : Component()
 {
 	world_transform.SetIdentity();
@@ -54,7 +56,7 @@ void ComponentTransform::ShowEditorInfo()
 	ImGui::Separator();
 
 	if (input_changed)
-		CalcWorldTransformMatrix(parent_transform);			
+		RecalcTransformations();
 }
 
 void ComponentTransform::SetComponent(aiNode *go)
@@ -70,19 +72,17 @@ void ComponentTransform::SetComponent(aiNode *go)
 	local_scale = { scaling.x, scaling.y, scaling.z };
 	local_rotation_quat = { rotating.x, rotating.y, rotating.z, rotating.w };
 
+	// Creating parent matrix transformation. All parent transformations of this GameObject will be combined into one
+	math::float3 parent_position;
+	math::float3 parent_scale;
+	math::Quat parent_rotation;
+
 	QuatToEuler(local_rotation_quat, local_rotation_euler_rad);
 
 	// Inspector will show Euler representation on degrees to be more understandable.
 	local_rotation_euler_deg.x = math::RadToDeg(local_rotation_euler_rad.x);
 	local_rotation_euler_deg.y = math::RadToDeg(local_rotation_euler_rad.y);
 	local_rotation_euler_deg.z = math::RadToDeg(local_rotation_euler_rad.z);
-
-	local_transform = CalcTransformMatrix(local_position, local_scale, local_rotation_quat);
-
-	// Creating parent matrix transformation. All parent transformations of this GameObject will be combined into one
-	math::float3 parent_position;
-	math::float3 parent_scale;
-	math::Quat parent_rotation;
 
 	aiNode *node = go->mParent;
 	while (node != nullptr)
@@ -97,31 +97,47 @@ void ComponentTransform::SetComponent(aiNode *go)
 		node = node->mParent;
 	}
 
-	// Finally, we calculate and transpose the world matrix transformation.
-	world_transform = parent_transform * local_transform;
-	world_transform = world_transform.Transposed();
+	CalcWorldTransformMatrix(parent_transform);
 }
 
 // CalcWorldTransformMatrix recalculates both parent and local transformation for the current gameobject. Besides, the method recursively
 // recalculates the world matrix transformation for all its children.
-void ComponentTransform::CalcWorldTransformMatrix(math::float4x4 parent_mat)
+void ComponentTransform::RecalcTransformations()
 {
-	parent_transform = parent_mat;
-	local_transform = CalcTransformMatrix(local_position, local_scale, local_rotation_quat);
-	world_transform = parent_transform * local_transform;
+	CalcWorldTransformMatrix(parent_transform);
 
-	QuatToEuler(local_rotation_quat, local_rotation_euler_rad);
+	std::stack<GameObject*> go_stack;
+	GameObject *go = game_object;
 
-	for (uint i = 0; i < game_object->children.size(); ++i)
-		game_object->children[i]->transform->CalcWorldTransformMatrix(world_transform);
+	while (go != nullptr)
+	{
+		math::float4x4 parent_matrix_transformation = go->transform->world_transform;
 
-	world_transform = world_transform.Transposed();
-	/*((ComponentMesh*)game_object->GetComponentByType(COMPONENT_TYPE::MESH))->TranslateAABB();
-	((ComponentMesh*)game_object->GetComponentByType(COMPONENT_TYPE::MESH))->ScaleAABB();*/
-	((ComponentMesh*)game_object->GetComponentByType(COMPONENT_TYPE::MESH))->UpdateTransformAABB();
+		for (uint i = 0; i < go->children.size(); ++i)
+			go_stack.push(go->children[i]);
+
+		if (go_stack.empty())
+			go = nullptr;
+		else
+		{
+			go = go_stack.top();
+			go_stack.pop();
+			go->transform->CalcWorldTransformMatrix(parent_matrix_transformation);
+		}
+	}
+	
 }
 
-math::float4x4 ComponentTransform::CalcTransformMatrix(math::float3 &pos, math::float3 &scale, math::Quat &rot)
+void ComponentTransform::CalcWorldTransformMatrix(const math::float4x4 &parent_mat)
+{
+	local_transform = CalcTransformMatrix(local_position, local_scale, local_rotation_quat);
+
+	parent_transform = parent_mat;
+	world_transform = parent_transform * local_transform;
+	//world_transform = world_transform.Transposed();
+}
+
+math::float4x4 ComponentTransform::CalcTransformMatrix(const math::float3 &pos, const math::float3 &scale, const math::Quat &rot)
 {
 	math::float4x4 mat = math::float4x4::FromTRS(pos, rot, scale);
 	return mat;

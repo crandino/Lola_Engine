@@ -16,7 +16,7 @@ ModuleCameraEditor::ModuleCameraEditor(Application* app, bool start_enabled) : M
 {
 	name.assign("Camera3D");
 
-	CalculateViewMatrix();
+	//CalculateViewMatrix();
 
 	X.Set(1.0f, 0.0f, 0.0f);
 	Y.Set(0.0f, 1.0f, 0.0f);
@@ -127,8 +127,6 @@ UPDATE_STATUS ModuleCameraEditor::Update(float dt)
 
 	// Recalculate matrix -------------
 	CalculateViewMatrix();
-
-	DEBUG("%f %f %f", Z.x, Z.y, Z.z);
 	
 	return UPDATE_CONTINUE;
 }
@@ -181,18 +179,27 @@ float* ModuleCameraEditor::GetViewMatrix()
 }
 
 // -----------------------------------------------------------------
+//void ModuleCameraEditor::CalculateViewMatrix()
+//{
+//	// With glmath.h
+//	ViewMatrix = math::float4x4(X.x, Y.x, Z.x, 0.0f, X.y, Y.y, Z.y, 0.0f, X.z, Y.z, Z.z, 0.0f, -math::Dot(X, Position), -math::Dot(Y, Position), -math::Dot(Z, Position), 1.0f);
+//
+//	// The code below introduce values on a row-format. But doesn't work.
+//	/*ViewMatrix = math::float4x4(X.x, X.y, X.z, -X.Dot(Position),
+//		Y.x, Y.y, Y.z, -Y.Dot(Position),
+//		Z.x, Z.y, Z.z, -Z.Dot(Position),
+//		0.0f, 0.0f, 0.0f, 1.0f);*/
+//	
+//	ViewMatrixInverse = ViewMatrix.Inverted();
+//}
+
 void ModuleCameraEditor::CalculateViewMatrix()
 {
 	// With glmath.h
 	ViewMatrix = math::float4x4(X.x, Y.x, Z.x, 0.0f, X.y, Y.y, Z.y, 0.0f, X.z, Y.z, Z.z, 0.0f, -math::Dot(X, Position), -math::Dot(Y, Position), -math::Dot(Z, Position), 1.0f);
+	//ViewMatrix = main_camera->transform->world_transform;
 
-	// The code below introduce values on a row-format. But doesn't work.
-	/*ViewMatrix = math::float4x4(X.x, X.y, X.z, -X.Dot(Position),
-		Y.x, Y.y, Y.z, -Y.Dot(Position),
-		Z.x, Z.y, Z.z, -Z.Dot(Position),
-		0.0f, 0.0f, 0.0f, 1.0f);*/
-	
-	ViewMatrixInverse = ViewMatrix.Inverted();
+	//ViewMatrixInverse = ViewMatrix.Inverted();
 }
 
 void ModuleCameraEditor::CreateEditorCamera()

@@ -393,7 +393,7 @@ void ModuleRenderer3D::ShowGameObject(GameObject *go)
 		// Transformation 
 		glMatrixMode(GL_MODELVIEW);
 		glPushMatrix();
-		glMultMatrixf(*go->transform->world_transform.v);
+		glMultMatrixf(*go->transform->world_transform.Transposed().v);
 
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glEnableClientState(GL_NORMAL_ARRAY);
