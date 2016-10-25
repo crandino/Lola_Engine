@@ -14,7 +14,7 @@ public:
 
 	math::AABB bounding_box;
 	math::OBB test;
-	unsigned int bounding_box_id;
+
 	bool wire = false;
 
 	// Vertices

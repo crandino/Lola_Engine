@@ -12,6 +12,13 @@ ComponentTransform::ComponentTransform() : Component()
 	local_transform.SetIdentity();
 	parent_transform.SetIdentity();
 
+	local_position.Set(0.0f, 0.0f, 0.0f);
+	local_scale.Set(1.0f, 1.0f, 1.0f);
+
+	local_rotation_euler_rad.Set(0.0f, 0.0f, 0.0f);
+	local_rotation_euler_deg.Set(0.0f, 0.0f, 0.0f);
+	local_rotation_quat.Set(0.0f, 0.0f, 0.0f, 1.0f);
+
 	type = COMPONENT_TYPE::TRANSFORM;
 	name = GetNameByType(type);
 }

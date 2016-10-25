@@ -10,6 +10,10 @@
 ComponentMesh::ComponentMesh() : Component()
 {
 	wire = false;
+
+	bounding_box.SetNegativeInfinity();
+	test.SetNegativeInfinity();
+
 	type = COMPONENT_TYPE::MESH;
 	name = GetNameByType(type);
 }
