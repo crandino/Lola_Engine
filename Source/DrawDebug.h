@@ -8,14 +8,16 @@ class DrawDebug
 private:
 
 	math::float3 *edges;
+	math::vec *corners;
 
 public:
 
 	DrawDebug();
 	~DrawDebug();
 
-	void DrawAABB(const math::AABB &bbox);
-	void DrawOBB(const math::OBB &bbox);
+	void DrawAABB(const math::AABB &bbox) const;
+	void DrawOBB(const math::OBB &bbox) const;
+	void DrawFrustum(const math::Frustum &frustrum) const;
 };
 
 #endif // __DRAWDEBUG_H__

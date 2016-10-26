@@ -20,7 +20,8 @@ private:
 public:
 
 	// Unique components
-	ComponentTransform		 *transform = nullptr;
+	ComponentTransform				*transform = nullptr;
+	bool							 transform_applied = false;
 
 	std::vector<Component*>			 components;
 	std::vector<GameObject*>         children;

@@ -56,9 +56,6 @@ bool ModuleCameraEditor::CleanUp()
 // -----------------------------------------------------------------
 UPDATE_STATUS ModuleCameraEditor::Update(float dt)
 {
-	/*if (App->input->GetMouseButton(SDL_SCANCODE_C == KEY_DOWN))
-		CreateEditorCamera();*/
-
 	// Implement a debug camera with keys and mouse
 	// Now we can make this movememnt frame rate independant!
 

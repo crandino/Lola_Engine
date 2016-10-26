@@ -3,6 +3,7 @@
 
 #include "Component.h"
 #include "Globals.h"
+#include "Color.h"
 
 #include "Assimp\include\types.h"
 
@@ -16,11 +17,11 @@ public:
 	char tex_path[SHORT_STRING];	// Virtual system texture path
 	unsigned int tex_buffer;
 
-	aiColor3D color_diffuse;
-	aiColor3D color_specular;
-	aiColor3D color_ambient;
-	aiColor3D color_emissive;
-	aiColor3D color_transparent;
+	Color color_diffuse;
+	Color color_specular;
+	Color color_ambient;
+	Color color_emissive;
+	Color color_transparent;
 	float opacity;
 
 	ComponentMaterial();

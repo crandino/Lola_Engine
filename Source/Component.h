@@ -30,7 +30,7 @@ public:
 	virtual ~Component();
 
 	virtual bool Update();
-	virtual void ShowEditorInfo() = 0;
+	virtual void ShowEditorInfo();
 
 	COMPONENT_TYPE &GetType();
 	const char *GetNameByType(COMPONENT_TYPE type);

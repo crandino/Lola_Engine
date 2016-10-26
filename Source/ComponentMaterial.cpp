@@ -8,6 +8,16 @@
 
 ComponentMaterial::ComponentMaterial() : Component()
 {
+	color_diffuse.Set(0.0f, 0.0f, 0.0f);
+	color_specular.Set(0.0f, 0.0f, 0.0f);
+	color_ambient.Set(0.0f, 0.0f, 0.0f);
+	color_emissive.Set(0.0f, 0.0f, 0.0f);
+	color_transparent.Set(0.0f, 0.0f, 0.0f);
+
+	sprintf_s(tex_path, "%s", '\0');
+	tex_buffer = 0;
+	opacity = 1.0f;
+
 	type = COMPONENT_TYPE::MATERIAL;
 	name = GetNameByType(type);
 }
@@ -35,12 +45,20 @@ void ComponentMaterial::SetComponent(aiMaterial *ai_material)
 	else
 		tex_buffer = 0;
 
-	ai_material->Get(AI_MATKEY_COLOR_DIFFUSE, color_diffuse);
-	ai_material->Get(AI_MATKEY_COLOR_SPECULAR, color_specular);
-	ai_material->Get(AI_MATKEY_COLOR_AMBIENT, color_ambient);
-	ai_material->Get(AI_MATKEY_COLOR_EMISSIVE, color_emissive);
-	ai_material->Get(AI_MATKEY_COLOR_TRANSPARENT, color_transparent);
+	aiColor3D color;
+
+	ai_material->Get(AI_MATKEY_COLOR_DIFFUSE, color);
+	color_diffuse.Set(color.r, color.g, color.b);
+	ai_material->Get(AI_MATKEY_COLOR_SPECULAR, color);
+	color_specular.Set(color.r, color.g, color.b);
+	ai_material->Get(AI_MATKEY_COLOR_AMBIENT, color);
+	color_ambient.Set(color.r, color.g, color.b);
+	ai_material->Get(AI_MATKEY_COLOR_EMISSIVE, color);
+	color_emissive.Set(color.r, color.g, color.b);
+	ai_material->Get(AI_MATKEY_COLOR_TRANSPARENT, color);
+	color_transparent.Set(color.r, color.g, color.b);
 	ai_material->Get(AI_MATKEY_OPACITY, opacity);
+
 }
 
 void ComponentMaterial::ShowEditorInfo()

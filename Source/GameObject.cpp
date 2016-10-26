@@ -4,6 +4,7 @@
 #include "ComponentTransform.h"
 #include "ComponentMesh.h"
 #include "ComponentMaterial.h"
+#include "ComponentCamera.h"
 
 GameObject::GameObject(uint id, const char* name, GameObject *parent)
 {
@@ -41,6 +42,9 @@ const Component* GameObject::AddComponent(COMPONENT_TYPE type)
 		break;
 	case(COMPONENT_TYPE::MATERIAL):
 		comp = new ComponentMaterial();
+		break;
+	case(COMPONENT_TYPE::CAMERA):
+		comp = new ComponentCamera();
 		break;
 	}
 

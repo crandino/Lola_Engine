@@ -14,6 +14,9 @@ bool Component::Update()
 	return true;
 }
 
+void Component::ShowEditorInfo()
+{ }
+
 COMPONENT_TYPE &Component::GetType()
 {
 	return type;
@@ -32,6 +35,9 @@ const char *Component::GetNameByType(COMPONENT_TYPE type)
 		break;
 	case(COMPONENT_TYPE::MATERIAL):
 		name = "Material";
+		break;
+	case(COMPONENT_TYPE::CAMERA):
+		name = "Camera";
 		break;
 	default:
 		name = "Unknown";

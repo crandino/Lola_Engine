@@ -68,8 +68,13 @@ UPDATE_STATUS ModuleGameObjectManager::Update(float dt)
 		curr_go = list_of_gos[i];
 		if (curr_go->IsActive())
 		{
-			if(curr_go->GetComponentByType(COMPONENT_TYPE::MESH))
-				App->renderer3D->ShowGameObject(curr_go);
+			//if(curr_go->GetComponentByType(COMPONENT_TYPE::MESH))				
+
+			for (int i = 0; i < curr_go->components.size(); ++i)
+				curr_go->components[i]->Update();
+
+			curr_go->transform_applied = false;
+			App->renderer3D->ShowGameObject(curr_go);
 		}
 	}
 

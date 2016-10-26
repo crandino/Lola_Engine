@@ -25,24 +25,30 @@ ComponentTransform::ComponentTransform() : Component()
 	name = GetNameByType(type);
 }
 
+bool ComponentTransform::Update()
+{
+	if (game_object->transform_applied)
+		RecalcTransformations();
+		
+	return true;
+}
+
 void ComponentTransform::ShowEditorInfo()
 {
 	ImGui::TextColored(ImVec4(1.0f, 0.5, 0.0f, 1.0f), "Component: "); ImGui::SameLine();
-	ImGui::Text(name);
-
-	bool input_changed = false;
+	ImGui::Text(name);	
 
 	if (ImGui::DragFloat3("Position", &local_position.x, 0.25f, 0.0f, 0.0f, "%.3f"))
-		input_changed = true;	
+		game_object->transform_applied = true;	
 		
 	if (ImGui::DragFloat3("Rotation", &local_rotation_euler_deg.x, 0.25f, 0.0f, 0.0f, "%.3f"))
 	{
-		input_changed = true;
+		game_object->transform_applied = true;
 		EulerToQuat(local_rotation_euler_deg, local_rotation_quat);
 	}
 
 	if (ImGui::DragFloat3("Scale", &local_scale.x, 0.25f, 0.0f, 0.0f, "%.3f"))
-		input_changed = true;		
+		game_object->transform_applied = true;
 
 	if (ImGui::TreeNode("Transform matrix"))
 	{
@@ -54,9 +60,6 @@ void ComponentTransform::ShowEditorInfo()
 	}
 
 	ImGui::Separator();
-
-	if (input_changed)
-		RecalcTransformations();
 }
 
 void ComponentTransform::SetComponent(aiNode *go)
@@ -97,21 +100,21 @@ void ComponentTransform::SetComponent(aiNode *go)
 		node = node->mParent;
 	}
 
-	CalcWorldTransformMatrix(parent_transform);
+	CalcWorldTransformMatrix();
 }
 
 // CalcWorldTransformMatrix recalculates both parent and local transformation for the current gameobject. Besides, the method recursively
 // recalculates the world matrix transformation for all its children.
 void ComponentTransform::RecalcTransformations()
 {
-	CalcWorldTransformMatrix(parent_transform);
+	CalcWorldTransformMatrix();
 
 	std::stack<GameObject*> go_stack;
 	GameObject *go = game_object;
 
 	while (go != nullptr)
 	{
-		math::float4x4 parent_matrix_transformation = go->transform->world_transform;
+		math::float4x4 parent_matrix = go->transform->world_transform;
 
 		for (uint i = 0; i < go->children.size(); ++i)
 			go_stack.push(go->children[i]);
@@ -122,17 +125,15 @@ void ComponentTransform::RecalcTransformations()
 		{
 			go = go_stack.top();
 			go_stack.pop();
-			go->transform->CalcWorldTransformMatrix(parent_matrix_transformation);
+			go->transform->parent_transform = parent_matrix;
+			go->transform->CalcWorldTransformMatrix();
 		}
-	}
-	
+	}	
 }
 
-void ComponentTransform::CalcWorldTransformMatrix(const math::float4x4 &parent_mat)
+void ComponentTransform::CalcWorldTransformMatrix()
 {
 	local_transform = CalcTransformMatrix(local_position, local_scale, local_rotation_quat);
-
-	parent_transform = parent_mat;
 	world_transform = parent_transform * local_transform;
 	//world_transform = world_transform.Transposed();
 }
@@ -187,3 +188,15 @@ void ComponentTransform::EulerToQuat(math::float3 &euler, math::Quat &out_quat)
 
 	out_quat.Normalize();
 }
+
+void ComponentTransform::Move(const math::vec &movement)
+{
+	local_position += movement;
+}
+
+void ComponentTransform::SetPos(const math::vec &pos)
+{
+	local_position = pos;
+}
+
+
