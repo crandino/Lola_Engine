@@ -23,8 +23,8 @@ ModuleCameraEditor::ModuleCameraEditor(Application* app, bool start_enabled) : M
 	Y.Set(0.0f, 1.0f, 0.0f);
 	Z.Set(0.0f, 0.0f, 1.0f);
 
-	Position.Set(0.0f, 2.0f, 5.0f);
-	Reference.Set(0.0f, 2.0f, 5.0f);
+	Position.Set(0.0f, 0.0f,0.0f);
+	Reference.Set(0.0f, 0.0f, 0.0f);
 }
 
 ModuleCameraEditor::~ModuleCameraEditor()
@@ -33,7 +33,7 @@ ModuleCameraEditor::~ModuleCameraEditor()
 
 bool ModuleCameraEditor::Init()
 {
-	CreateEditorCamera();
+	//CreateEditorCamera();
 	return true;
 }
 
@@ -56,8 +56,8 @@ bool ModuleCameraEditor::CleanUp()
 // -----------------------------------------------------------------
 UPDATE_STATUS ModuleCameraEditor::Update(float dt)
 {
-	/*if (App->input->GetMouseButton(SDL_SCANCODE_C == KEY_DOWN))
-		CreateEditorCamera();*/
+	if (App->input->GetKey(SDL_SCANCODE_C) == KEY_DOWN)
+		CreateEditorCamera();
 
 	// Implement a debug camera with keys and mouse
 	// Now we can make this movememnt frame rate independant!
@@ -224,9 +224,37 @@ void ModuleCameraEditor::CalculateViewMatrix()
 	mat[0][3] *= -1;
 	mat[1][3] *= -1;
 	mat[2][3] *= -1;*/
-	ViewMatrix = math::float4x4(X.x, Y.x, Z.x, 0.0f, X.y, Y.y, Z.y, 0.0f, X.z, Y.z, Z.z, 0.0f, -math::Dot(X, Position), -math::Dot(Y, Position), -math::Dot(Z, Position), 1.0f);
-	//ViewMatrix = mat.Transposed();
 
+	if (App->camera->main_camera == nullptr)
+		ViewMatrix = math::float4x4(X.x, Y.x, Z.x, 0.0f, X.y, Y.y, Z.y, 0.0f, X.z, Y.z, Z.z, 0.0f, -math::Dot(X, Position), -math::Dot(Y, Position), -math::Dot(Z, Position), 1.0f);
+	else
+	{
+		ComponentCamera *c = (ComponentCamera*)App->camera->main_camera->GetComponentByType(COMPONENT_TYPE::CAMERA);
+		math::float3x4 view;
+		view = c->cam_frustum.ComputeViewMatrix();
+
+		math::float4x4 view_matrix;
+		view_matrix[0][0] = view[0][0];
+		view_matrix[0][1] = view[1][0];
+		view_matrix[0][2] = view[2][0];
+		view_matrix[0][3] = 0.0f;
+		view_matrix[1][0] = view[0][1];
+		view_matrix[1][1] = view[1][1];
+		view_matrix[1][2] = view[1][2];
+		view_matrix[1][3] = 0.0f;
+		view_matrix[2][0] = view[0][2];
+		view_matrix[2][1] = view[1][2];
+		view_matrix[2][2] = view[2][2];
+		view_matrix[2][3] = 0.0f;
+		view_matrix[3][0] = view[0][3];
+		view_matrix[3][1] = view[1][3];
+		view_matrix[3][2] = view[2][3];
+		view_matrix[3][3] = 1.0f;			
+
+		ViewMatrix = view_matrix;
+	}
+		
+	//ViewMatrix = mat.Transposed();
 	//ViewMatrixInverse = ViewMatrix.Inverted();
 }
 

@@ -25,12 +25,13 @@ public:
 
 private:
 
-	GameObject *main_camera;
+	
 	void CalculateViewMatrix();
 	void CreateEditorCamera();
 
 public:
 	
+	GameObject *main_camera = nullptr;
 	math::vec X, Y, Z, Position, Reference;
 
 private:

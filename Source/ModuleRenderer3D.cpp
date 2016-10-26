@@ -180,24 +180,25 @@ void ModuleRenderer3D::OnResize(int width, int height)
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 
-	float coty = 1.0f / tan(60.0f * (float)math::pi / 360.0f);
+	if (App->camera->main_camera == nullptr)
+	{
+		float coty = 1.0f / tan(60.0f * (float)math::pi / 360.0f);
 
-	ProjectionMatrix[0][0] = coty / ((float)width / (float)height);
-	ProjectionMatrix[1][1] = coty;
-	ProjectionMatrix[2][2] = (0.125f + 512.0f) / (0.125f - 512.0f);
-	ProjectionMatrix[2][3] = -1.0f;
-	ProjectionMatrix[3][2] = 2.0f * 0.125f * 512.0f / (0.125f - 512.0f);
-	ProjectionMatrix[3][3] = 0.0f;	
+		ProjectionMatrix[0][0] = coty / ((float)width / (float)height);
+		ProjectionMatrix[1][1] = coty;
+		ProjectionMatrix[2][2] = (0.125f + 512.0f) / (0.125f - 512.0f);
+		ProjectionMatrix[2][3] = -1.0f;
+		ProjectionMatrix[3][2] = 2.0f * 0.125f * 512.0f / (0.125f - 512.0f);
+		ProjectionMatrix[3][3] = 0.0f;
 
-	/*Perspective.M[0] = coty / ((float)width / (float)height);
-	Perspective.M[5] = coty;
-	Perspective.M[10] = (0.125f + 512.0f) / (0.125f - 512.0f);
-	Perspective.M[11] = -1.0f;
-	Perspective.M[14] = 2.0f * 0.125f * 512.0f / (0.125f - 512.0f);
-	Perspective.M[15] = 0.0f;
-
-	ProjectionMatrix = perspective(60.0f, (float)width / (float)height, 0.125f, 512.0f);*/
-	glLoadMatrixf(&ProjectionMatrix.v[0][0]);
+		glLoadMatrixf(&ProjectionMatrix.v[0][0]);
+	}		
+	else
+	{
+		ComponentCamera *c = (ComponentCamera*)App->camera->main_camera->GetComponentByType(COMPONENT_TYPE::CAMERA);
+		math::float4x4 proj = c->cam_frustum.ComputeProjectionMatrix();
+		glLoadMatrixf(*proj.Transposed().v);
+	}	
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();

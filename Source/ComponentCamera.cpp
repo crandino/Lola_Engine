@@ -10,10 +10,11 @@ ComponentCamera::ComponentCamera()
 	camera_modified = false;	
 
 	math::vec pos = { 0.0f, 0.0f, 0.0f };
-	math::vec fwd = { 0.0f, 0.0f, 1.0f };
+	math::vec fwd = { 0.0f, 0.0f, -1.0f };
 	math::vec up = { 0.0f, 1.0f, 0.0f };
 
 	origin_cam_frustum.SetFrame(pos, fwd, up);
+	origin_cam_frustum.SetKind(math::FrustumProjectiveSpace::FrustumSpaceGL, math::FrustumHandedness::FrustumRightHanded);
 
 	near_plane = near_plane_tmp = 1.0f;
 	far_plane = far_plane_tmp = 25.0f; 
@@ -97,6 +98,6 @@ void ComponentCamera::ShowEditorInfo()
 
 void ComponentCamera::CalcHorizontalFOV()
 {
-	FOV_h = 2 * math::Atan(math::Tan(math::DegToRad(FOV_v) / 2.0f) * aspect_ratio);
+	FOV_h = 2.0f * math::Atan(math::Tan(math::DegToRad(FOV_v) / 2.0f) * aspect_ratio);
 	origin_cam_frustum.SetPerspective(FOV_h, math::DegToRad(FOV_v));
 }
