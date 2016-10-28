@@ -456,7 +456,7 @@ void ModuleRenderer3D::ShowGameObject(GameObject *go)
 		if (mesh->bounding_box.IsFinite())
 		{
 			debug.DrawAABB(mesh->bounding_box);
-			debug.DrawOBB(mesh->test);
+			//debug.DrawOBB(mesh->test);
 		}			
 		
 		glDisable(GL_TEXTURE_2D);

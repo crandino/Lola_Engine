@@ -12,7 +12,7 @@ ComponentMesh::ComponentMesh() : Component()
 	wire = false;
 
 	bounding_box.SetNegativeInfinity();
-	test.SetNegativeInfinity();
+	initial_bounding_box.SetNegativeInfinity();
 
 	type = COMPONENT_TYPE::MESH;
 	name = GetNameByType(type);
@@ -24,6 +24,14 @@ ComponentMesh::~ComponentMesh()
 	RELEASE_ARRAY(normals);
 	RELEASE_ARRAY(tex_coord);
 	RELEASE_ARRAY(indices);
+}
+
+bool ComponentMesh::Update()
+{
+	if (game_object->transform_applied)
+		ApplyTransformToAABB();
+
+	return true;
 }
 
 void ComponentMesh::SetComponent(const aiMesh *mesh)
@@ -73,20 +81,9 @@ void ComponentMesh::SetComponent(const aiMesh *mesh)
 		}
 	}
 
-	//transform_aabb.SetIdentity();
-	//quat_aabb = quat_aabb.identity;
-
 	//// Calcultating AABB	
-	//bounding_box.SetNegativeInfinity();
-	//bounding_box.Enclose((math::float3*) vertices, num_vertices);
-	//test = bounding_box.ToOBB();
-	
-	/*ScaleAABB();
-	RotateAABB();
-	TranslateAABB();	*/
-	
-	//UpdateTransformAABB();
-	//UpdateTransformAABB();
+	initial_bounding_box.Enclose((math::float3*) vertices, num_vertices);
+	ApplyTransformToAABB();
 }
 
 void ComponentMesh::ShowEditorInfo()
@@ -104,66 +101,9 @@ void ComponentMesh::ShowEditorInfo()
 	ImGui::Separator();
 }
 
-void ComponentMesh::TranslateAABB()
+void ComponentMesh::ApplyTransformToAABB()
 {
-	math::float3 displacement = (game_object->transform->world_transform.Transposed().TranslatePart() - transform_aabb.Transposed().TranslatePart());
-	bounding_box.Translate(displacement);	
-}
-
-void ComponentMesh::RotateAABB()
-{
-	math::float3x3 rot = (game_object->transform->world_transform.RotatePart());// -transform_aabb.Transposed().RotatePart());
-	
-	//math::float4x4 transformation; 
-	math::OBB tmp = bounding_box.Transform(rot.Transposed());	
+	math::OBB tmp = initial_bounding_box.Transform(game_object->transform->world_transform);
 	bounding_box.SetNegativeInfinity();
 	bounding_box.Enclose(tmp);
-	
-}
-
-void ComponentMesh::ScaleAABB()
-{
-	math::float3 scale_factor;
-
-	scale_factor.x = game_object->transform->world_transform.GetScale().x / transform_aabb.GetScale().x;
-	scale_factor.y = game_object->transform->world_transform.GetScale().y / transform_aabb.GetScale().y;
-	scale_factor.z = game_object->transform->world_transform.GetScale().z / transform_aabb.GetScale().z;
-	
-	bounding_box.Scale(bounding_box.CenterPoint(), scale_factor);
-}
-
-void ComponentMesh::UpdateTransformAABB()
-{
-	math::float4x4 transform = transform_aabb.Inverted() * game_object->transform->world_transform;
-	
-	//test.Transform(transform.Transposed());
-	test.Transform(transform.Transposed());
-	bounding_box.SetNegativeInfinity();
-	bounding_box.Enclose(test);
-
-	transform_aabb = game_object->transform->world_transform;
-
-	/*math::float3 scale_factor;
-
-	scale_factor.x = game_object->transform->world_transform.GetScale().x / transform_aabb.GetScale().x;
-	scale_factor.y = game_object->transform->world_transform.GetScale().y / transform_aabb.GetScale().y;
-	scale_factor.z = game_object->transform->world_transform.GetScale().z / transform_aabb.GetScale().z;
-
-	bounding_box.Scale(bounding_box.CenterPoint(), scale_factor);*/
-
-	//math::Quat diff = quat_aabb * game_object->transform->local_rotation_quat.Inverted();
-
-	//DEBUG("%f, %f, %f, %f", diff.x, diff.y, diff.z, diff.w);
-
-	//test.SetNegativeInfinity();
-	//
-	//test = bounding_box.Transform(diff);
-	//bounding_box.SetNegativeInfinity();
-	//bounding_box.Enclose(test);
-
-	/*math::float3 displacement = (game_object->transform->world_transform.Transposed().TranslatePart() - transform_aabb.Transposed().TranslatePart());
-	bounding_box.Translate(displacement);*/
-
-	//quat_aabb = game_object->transform->local_rotation_quat;
-	//transform_aabb = game_object->transform->world_transform;
 }

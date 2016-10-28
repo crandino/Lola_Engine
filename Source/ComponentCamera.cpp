@@ -9,7 +9,7 @@
 
 #include "imgui\imgui.h"
 
-ComponentCamera::ComponentCamera()
+ComponentCamera::ComponentCamera() : Component()
 {
 	camera_modified = true;
 	editor_camera = false;
