@@ -119,8 +119,10 @@ bool ModuleRenderer3D::Init()
 		glEnable(GL_COLOR_MATERIAL);
 	}
 
-	// Projection matrix for
-	OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
+	// Projection matrix and view matrix
+	view_matrix.SetIdentity();
+	projection_matrix.SetIdentity();
+	projection_matrix_pending = true;
 
 	// Default texture
 	GenerateChecker(&checker_id);
@@ -132,14 +134,26 @@ bool ModuleRenderer3D::Init()
 UPDATE_STATUS ModuleRenderer3D::PreUpdate(float dt)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	//glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
-	glLoadIdentity();
+	
+	if (projection_matrix_pending)
+	{
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+
+		CalculateProjectionMatrix();
+		glLoadMatrixf(*projection_matrix.v);
+		
+		projection_matrix_pending = false;
+	}
 
 	glMatrixMode(GL_MODELVIEW);
-	glLoadMatrixf(App->camera->GetViewMatrix());
+	glLoadIdentity();
+	CalculateViewMatrix();
+	glLoadMatrixf(*view_matrix.v);
 
 	// light 0 on cam pos
-	lights[0].SetPos(App->camera->Position.x, App->camera->Position.y, App->camera->Position.z);
+	math::vec camera_pos = App->camera->camera->transform->GetPos();
+	lights[0].SetPos(camera_pos.x, camera_pos.y, camera_pos.z);
 
 	for(uint i = 0; i < MAX_LIGHTS; ++i)
 		lights[i].Render();
@@ -172,36 +186,26 @@ bool ModuleRenderer3D::CleanUp()
 	return true;
 }
 
-
-void ModuleRenderer3D::OnResize(int width, int height)
+void ModuleRenderer3D::SetFrustumForProjection(const math::Frustum &frustum)
 {
-	glViewport(0, 0, width, height);
+	this->proj_frustum = frustum;
+	projection_matrix_pending = true;
+}
 
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
+void ModuleRenderer3D::SetFrustumForView(const math::Frustum &frustum)
+{
+	this->view_frustum = frustum;	
+}
 
-	if (App->camera->main_camera == nullptr)
-	{
-		float coty = 1.0f / tan(60.0f * (float)math::pi / 360.0f);
+void ModuleRenderer3D::CalculateProjectionMatrix()
+{
+	projection_matrix = proj_frustum.ComputeProjectionMatrix();
+}
 
-		ProjectionMatrix[0][0] = coty / ((float)width / (float)height);
-		ProjectionMatrix[1][1] = coty;
-		ProjectionMatrix[2][2] = (0.125f + 512.0f) / (0.125f - 512.0f);
-		ProjectionMatrix[2][3] = -1.0f;
-		ProjectionMatrix[3][2] = 2.0f * 0.125f * 512.0f / (0.125f - 512.0f);
-		ProjectionMatrix[3][3] = 0.0f;
-
-		glLoadMatrixf(&ProjectionMatrix.v[0][0]);
-	}		
-	else
-	{
-		ComponentCamera *c = (ComponentCamera*)App->camera->main_camera->GetComponentByType(COMPONENT_TYPE::CAMERA);
-		math::float4x4 proj = c->cam_frustum.ComputeProjectionMatrix();
-		glLoadMatrixf(*proj.Transposed().v);
-	}	
-
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
+void ModuleRenderer3D::CalculateViewMatrix()
+{
+	math::float4x4 view = view_frustum.ComputeViewMatrix();
+	view_matrix = view.Transposed();
 }
 
 void ModuleRenderer3D::GenerateChecker(uint *buffer)

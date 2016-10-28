@@ -10,6 +10,10 @@
 
 ComponentTransform::ComponentTransform() : Component()
 {
+	forward_dir.Set(0.0f, 0.0f, 1.0f);
+	left_dir.Set(1.0f, 0.0f, 0.0f);
+	up_dir.Set(0.0f, 1.0f, 0.0f);
+
 	world_transform.SetIdentity();
 	local_transform.SetIdentity();
 	parent_transform.SetIdentity();
@@ -135,6 +139,11 @@ void ComponentTransform::CalcWorldTransformMatrix()
 {
 	local_transform = CalcTransformMatrix(local_position, local_scale, local_rotation_quat);
 	world_transform = parent_transform * local_transform;
+
+	forward = (world_transform.RotatePart() * forward_dir).Normalized();
+	left = (world_transform.RotatePart() * left_dir).Normalized();
+	up = (world_transform.RotatePart() * up_dir).Normalized();
+
 	//world_transform = world_transform.Transposed();
 }
 
@@ -192,11 +201,30 @@ void ComponentTransform::EulerToQuat(math::float3 &euler, math::Quat &out_quat)
 void ComponentTransform::Move(const math::vec &movement)
 {
 	local_position += movement;
+	game_object->transform_applied = true;
 }
 
 void ComponentTransform::SetPos(const math::vec &pos)
 {
 	local_position = pos;
+	game_object->transform_applied = true;
+}
+
+void ComponentTransform::RotateAngleAxis(float angle_rad, const math::vec &axis)
+{
+	math::Quat rot_quat; rot_quat = rot_quat.RotateAxisAngle(axis, angle_rad);
+	local_rotation_quat = local_rotation_quat.Mul(rot_quat);
+	game_object->transform_applied = true;
+
+	QuatToEuler(local_rotation_quat, local_rotation_euler_rad);
+	local_rotation_euler_deg.x = math::RadToDeg(local_rotation_euler_rad.x);
+	local_rotation_euler_deg.y = math::RadToDeg(local_rotation_euler_rad.y);
+	local_rotation_euler_deg.z = math::RadToDeg(local_rotation_euler_rad.z);
+}
+
+const math::vec &ComponentTransform::GetPos() const
+{
+	return local_position;
 }
 
 

@@ -11,14 +11,17 @@ class ComponentTransform : public Component
 
 private:
 
+	math::vec forward_dir, left_dir, up_dir;
+
 	math::float3 local_position;				// Position representation;
-	math::float3 local_scale;					// Scale representation;
-	
+	math::float3 local_scale;					// Scale representation;	
 
 	math::float3 local_rotation_euler_rad;		// Euler representation on rad.
 	math::float3 local_rotation_euler_deg;		// Euler representation on degrees.
 
 public:
+
+	math::vec forward, left, up;
 	
 	math::Quat local_rotation_quat;			 	// Rotation representation (quaternion);
 	math::float4x4 local_transform;				// Its local matrix transformation;
@@ -41,8 +44,10 @@ public:
 	// Utilities
 	void Move(const math::vec &movement);
 	void SetPos(const math::vec &position);
-	
+	void RotateAngleAxis(float angle_rad, const math::vec &axis);
 
+	// Getters
+	const math::vec &GetPos() const;
 };
 
 #endif __COMPONENTTRANSFORM_H__

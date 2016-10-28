@@ -5,6 +5,7 @@
 #include <vector>
 
 class GameObject;
+class ComponentCamera;
 
 class ModuleGameObjectManager : public Module
 {
@@ -22,8 +23,12 @@ public:
 	void ImportModel(const char *file_name, bool use_fs = true);
 	const GameObject *GetRoot() const;
 
-	GameObject *CreateGameObject(const char *name, GameObject *parent);
+	GameObject *CreateGameObject(const char *name, GameObject *parent = nullptr);
+
+	void CreateCamera();
 	bool DeleteGameObject(const GameObject *go_to_delete);
+
+	void SetEditorCamera(const ComponentCamera *comp_cam);
 
 private:
 

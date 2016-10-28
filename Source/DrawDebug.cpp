@@ -26,9 +26,7 @@ void DrawDebug::DrawAABB(const math::AABB &bbox) const
 	glColor3f(0.0f, 255.0f, 0.0f);
 
 	for (int i = 0; i < 24; ++i)
-		glVertex3f(edges[i].x, edges[i].y, edges[i].z);
-
-	glColor3f(0.0f, 0.0f, 0.0f);
+		glVertex3fv(edges[i].ptr());
 
 	glEnd();
 }
@@ -43,9 +41,7 @@ void DrawDebug::DrawOBB(const math::OBB &bbox) const
 	glColor3f(125.0f, 255.0f, 125.0f);
 
 	for (int i = 0; i < 24; ++i)
-		glVertex3f(edges[i].x, edges[i].y, edges[i].z);
-
-	glColor3f(0.0f, 0.0f, 0.0f);
+		glVertex3fv(edges[i].ptr());
 
 	glEnd();
 }
@@ -56,42 +52,40 @@ void DrawDebug::DrawFrustum(const math::Frustum &frustrum) const
 
 	glBegin(GL_LINES);
 
-	glLineWidth(2.0f);
+	glLineWidth(3.5f);
 	glColor3f(0.0f, 125.0f, 255.0f);
 
 	// Near plane
-	glVertex3f(corners[0].x, corners[0].y, corners[0].z);
-	glVertex3f(corners[1].x, corners[1].y, corners[1].z);
-	glVertex3f(corners[0].x, corners[0].y, corners[0].z);
-	glVertex3f(corners[2].x, corners[2].y, corners[2].z);
-	glVertex3f(corners[2].x, corners[2].y, corners[2].z);
-	glVertex3f(corners[3].x, corners[3].y, corners[3].z);
-	glVertex3f(corners[1].x, corners[1].y, corners[1].z);
-	glVertex3f(corners[3].x, corners[3].y, corners[3].z);
-
+	glVertex3fv(corners[0].ptr());
+	glVertex3fv(corners[1].ptr());
+	glVertex3fv(corners[0].ptr());
+	glVertex3fv(corners[2].ptr());
+	glVertex3fv(corners[2].ptr());
+	glVertex3fv(corners[3].ptr());
+	glVertex3fv(corners[1].ptr());
+	glVertex3fv(corners[3].ptr());
+							   
 	// Far plane
-	glVertex3f(corners[4].x, corners[4].y, corners[4].z);
-	glVertex3f(corners[5].x, corners[5].y, corners[5].z);
-	glVertex3f(corners[4].x, corners[4].y, corners[4].z);
-	glVertex3f(corners[6].x, corners[6].y, corners[6].z);
-	glVertex3f(corners[6].x, corners[6].y, corners[6].z);
-	glVertex3f(corners[7].x, corners[7].y, corners[7].z);
-	glVertex3f(corners[5].x, corners[5].y, corners[5].z);
-	glVertex3f(corners[7].x, corners[7].y, corners[7].z);
+	glVertex3fv(corners[4].ptr());
+	glVertex3fv(corners[5].ptr());
+	glVertex3fv(corners[4].ptr());
+	glVertex3fv(corners[6].ptr());
+	glVertex3fv(corners[6].ptr());
+	glVertex3fv(corners[7].ptr());
+	glVertex3fv(corners[5].ptr());
+	glVertex3fv(corners[7].ptr());
 
 	// Left plane
-	glVertex3f(corners[1].x, corners[1].y, corners[1].z);
-	glVertex3f(corners[5].x, corners[5].y, corners[5].z);
-	glVertex3f(corners[3].x, corners[3].y, corners[3].z);
-	glVertex3f(corners[7].x, corners[7].y, corners[7].z);
-
-	// Left plane
-	glVertex3f(corners[0].x, corners[0].y, corners[0].z);
-	glVertex3f(corners[4].x, corners[4].y, corners[4].z);
-	glVertex3f(corners[2].x, corners[2].y, corners[2].z);
-	glVertex3f(corners[6].x, corners[6].y, corners[6].z);
-
-	glColor3f(0.0f, 0.0f, 0.0f);
+	glVertex3fv(corners[1].ptr());
+	glVertex3fv(corners[5].ptr());
+	glVertex3fv(corners[3].ptr());
+	glVertex3fv(corners[7].ptr());
+			
+	// Right pvlane
+	glVertex3fv(corners[0].ptr());
+	glVertex3fv(corners[4].ptr());
+	glVertex3fv(corners[2].ptr());
+	glVertex3fv(corners[6].ptr());
 
 	glEnd();
 }

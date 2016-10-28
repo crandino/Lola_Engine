@@ -10,6 +10,9 @@ class GameObject;
 class ModuleCameraEditor : public Module
 {
 public:
+
+	GameObject *camera = nullptr;
+
 	ModuleCameraEditor(Application* app, bool start_enabled = true);
 	~ModuleCameraEditor();
 
@@ -18,25 +21,7 @@ public:
 	UPDATE_STATUS Update(float dt);
 	bool CleanUp();
 
-	void Look(const math::vec &Position, const math::vec &Reference, bool RotateAroundReference = false);
-	void LookAt(const math::vec &Spot);
-	void Move(const math::vec &Movement);
-	float* GetViewMatrix();
-
-private:
-
-	
-	void CalculateViewMatrix();
-	void CreateEditorCamera();
-
-public:
-	
-	GameObject *main_camera = nullptr;
-	math::vec X, Y, Z, Position, Reference;
-
-private:
-
-	math::float4x4 ViewMatrix, ViewMatrixInverse;
+	void SetAsEditorCamera(GameObject *camera);
 };
 
 #endif // !__ModuleCameraEditor_H__

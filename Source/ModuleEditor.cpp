@@ -97,6 +97,12 @@ void ModuleEditor::ShowMenuBar()
 		ImGui::EndMenu();
 	}
 
+	if (ImGui::BeginMenu("Create"))
+	{
+		ShowCreateMenu();
+		ImGui::EndMenu();
+	}
+
 	if (ImGui::BeginMenu("Help"))
 	{
 		ImGui::MenuItem("About", NULL, &about_menu);
@@ -111,6 +117,11 @@ void ModuleEditor::ShowMenuBar()
 void ModuleEditor::ShowMenuFile()
 {
 	if (ImGui::MenuItem("Quit", "ESC")) { App->CloseApp(); }	
+}
+
+void ModuleEditor::ShowCreateMenu()
+{
+	if (ImGui::MenuItem("Camera")) { App->gameobject_manager->CreateCamera(); }
 }
 
 void ModuleEditor::ShowAboutMenu()
@@ -181,7 +192,7 @@ void ModuleEditor::ShowConfMenu()
 		{
 			for (int j = 0; j < 4; ++j)
 			{
-				ImGui::Text("%.2f", App->renderer3D->ViewMatrix[i][j]);
+				ImGui::Text("%.2f", App->renderer3D->view_matrix[i][j]);
 			}
 			ImGui::NextColumn();
 		}		

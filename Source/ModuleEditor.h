@@ -39,6 +39,7 @@ class ModuleEditor : public Module
 		// Windows methods
 		void ShowMenuBar();
 		void ShowMenuFile();
+		void ShowCreateMenu();
 		void ShowAboutMenu();
 		void ShowConfMenu();
 		void ShowConsole();

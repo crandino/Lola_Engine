@@ -33,7 +33,10 @@ public:
 	UPDATE_STATUS PostUpdate(float dt);
 	bool CleanUp();
 
-	void OnResize(int width, int height);
+	void SetFrustumForProjection(const math::Frustum &frustrum);
+	void SetFrustumForView(const math::Frustum &frustrum);
+	void CalculateProjectionMatrix();
+	void CalculateViewMatrix();
 
 	bool LoadMeshBuffer(const ComponentMesh *mesh);
 	void ShowGameObject(GameObject *go);
@@ -42,15 +45,15 @@ public:
 
 public:
 
-	//ImVec4 clear_color;
+	bool projection_matrix_pending = false;
 	Light lights[MAX_LIGHTS];
 	SDL_GLContext context;
-	math::float3x3 NormalMatrix;
-	math::float4x4 ModelMatrix, ViewMatrix, ProjectionMatrix;
+	math::float4x4 projection_matrix, view_matrix;
 
 private:
 
 	DrawDebug debug;
+	math::Frustum proj_frustum, view_frustum;
 
 	unsigned int checker_id;
 	unsigned char check_image[CHECKERS_HEIGHT][CHECKERS_WIDTH][4];

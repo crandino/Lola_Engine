@@ -4,6 +4,7 @@
 #include "ModuleFileSystem.h"
 #include "ModuleRenderer3D.h"
 #include "ModuleInput.h"
+#include "ModuleCameraEditor.h"
 
 #include "GameObject.h"
 
@@ -15,6 +16,7 @@
 #include "ComponentMesh.h"
 #include "ComponentTransform.h"
 #include "ComponentMaterial.h"
+#include "ComponentCamera.h"
 
 #include <stack>
 
@@ -218,6 +220,22 @@ bool ModuleGameObjectManager::RemoveChildFromChildren(const GameObject *go_child
 	
 }
 
+
+void ModuleGameObjectManager::SetEditorCamera(const ComponentCamera *comp_cam)
+{
+	ComponentCamera *cam = nullptr;
+
+	for (uint i = 0; i < list_of_gos.size(); ++i)
+	{				
+		cam = (ComponentCamera*)list_of_gos[i]->GetComponentByType(COMPONENT_TYPE::CAMERA);
+		
+		if (cam && cam != comp_cam)
+			cam->editor_camera = false;
+	}
+
+	App->camera->SetAsEditorCamera(comp_cam->game_object);
+}
+
 /* ImportModel seperates each FBX sections into different GameObject components (transform, mesh, material,...).
 A GameObject is created for every individual mesh available on the FBX */
 void ModuleGameObjectManager::ImportModel(const char *file_name, bool use_fs)
@@ -309,4 +327,11 @@ void ModuleGameObjectManager::ImportModel(const char *file_name, bool use_fs)
 	{
 		DEBUG("Error loading scene %s: %s", file_name, aiGetErrorString());
 	}	
+}
+
+void ModuleGameObjectManager::CreateCamera()
+{
+	GameObject *go = CreateGameObject("Camera");
+	go->AddComponent(COMPONENT_TYPE::TRANSFORM);
+	go->AddComponent(COMPONENT_TYPE::CAMERA);
 }

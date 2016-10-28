@@ -18,11 +18,11 @@ private:
 
 	float near_plane_tmp, far_plane_tmp;
 
-	float max_far_plane;
-
-	void CalcHorizontalFOV();
+	float max_far_plane, min_near_plane;
 
 public:
+
+	bool editor_camera;
 
 	math::Frustum cam_frustum;
 	math::Frustum origin_cam_frustum;
