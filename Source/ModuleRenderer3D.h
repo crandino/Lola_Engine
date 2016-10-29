@@ -9,8 +9,6 @@
 #include "MathGeoLib\MathGeoLib.h"
 #include "SDL\include\SDL_video.h"
 
-#include "DrawDebug.h"
-
 #define MAX_LIGHTS 8
 #define CHECKERS_HEIGHT 512
 #define CHECKERS_WIDTH 512
@@ -52,7 +50,6 @@ public:
 
 private:
 
-	DrawDebug debug;
 	math::Frustum proj_frustum, view_frustum;
 
 	unsigned int checker_id;

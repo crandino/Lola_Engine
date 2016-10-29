@@ -398,8 +398,6 @@ void ModuleRenderer3D::ShowGameObject(const GameObject *go)
 	mat = (ComponentMaterial*)go->GetComponentByType(COMPONENT_TYPE::MATERIAL);
 	cam = (ComponentCamera*)go->GetComponentByType(COMPONENT_TYPE::CAMERA);
 
-	if (cam) debug.DrawFrustum(cam->cam_frustum);
-
 	// Rendering
 	if (mesh != nullptr && mesh->IsActive())
 	{
@@ -439,8 +437,8 @@ void ModuleRenderer3D::ShowGameObject(const GameObject *go)
 		glDrawElements(GL_TRIANGLES, mesh->num_indices, GL_UNSIGNED_INT, NULL);
 		glColor3f(1.0f, 1.0f, 1.0f);
 
-		// Is this GO selected?
-		/*if (go->selected)
+		 //Is this GO selected?
+		if (go->selected)
 		{
 			glLineWidth(1.5f);
 			glColor3f(255.0f, 255.0f, 0.0f);
@@ -448,16 +446,9 @@ void ModuleRenderer3D::ShowGameObject(const GameObject *go)
 			glDrawElements(GL_TRIANGLES, mesh->num_indices, GL_UNSIGNED_INT, NULL);
 			glColor3f(1.0f, 1.0f, 1.0f);
 			glLineWidth(1.0f);
-		}*/
+		}
 
 		glPopMatrix();
-
-		// Drawing AABB 
-		if (mesh->bounding_box.IsFinite())
-		{
-			debug.DrawAABB(mesh->bounding_box);
-			//debug.DrawOBB(mesh->test);
-		}			
 		
 		glDisable(GL_TEXTURE_2D);
 

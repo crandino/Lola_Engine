@@ -34,14 +34,12 @@ public:
 
 private:
 
-	GameObject *fake_camera;
+	DrawDebug							draw_debug;
 
 	uint								id_to_assign = 0;
 	GameObject							*root = nullptr;
 	std::vector<GameObject*>			list_of_gos;
 	std::vector<const GameObject*>	    list_of_gos_to_draw;
-
-	DrawDebug debug;
 
 	GameObject		*GetGameObject(uint id_to_search) const;
 

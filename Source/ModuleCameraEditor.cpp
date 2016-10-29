@@ -4,7 +4,6 @@
 #include "Application.h"
 #include "ModuleInput.h"
 #include "ModuleGameObjectManager.h"
-//#include "ModuleRenderer3D.h"
 
 #include "GameObject.h"
 #include "ComponentTransform.h"
@@ -30,8 +29,6 @@ bool ModuleCameraEditor::Init()
 	ComponentCamera *c = (ComponentCamera*)camera->AddComponent(COMPONENT_TYPE::CAMERA);
 	c->editor_camera = true;
 	c->SetComponent();
-
-	//App->renderer3D->SetFrustumForProjection(c->cam_frustum);
 
 	return true;
 }

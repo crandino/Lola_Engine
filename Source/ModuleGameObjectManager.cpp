@@ -44,11 +44,6 @@ bool ModuleGameObjectManager::Init()
 	stream = aiGetPredefinedLogStream(aiDefaultLogStream_DEBUGGER, nullptr);
 	aiAttachLogStream(&stream);
 
-	fake_camera = App->gameobject_manager->CreateGameObject("Fake_camera", nullptr);
-	fake_camera->AddComponent(COMPONENT_TYPE::TRANSFORM);
-	ComponentCamera *c = (ComponentCamera*)fake_camera->AddComponent(COMPONENT_TYPE::CAMERA);
-	c->SetComponent();
-
 	return ret;
 }
 
@@ -68,23 +63,34 @@ UPDATE_STATUS ModuleGameObjectManager::PreUpdate(float dt)
 // PostUpdate present buffer to screen
 UPDATE_STATUS ModuleGameObjectManager::Update(float dt)
 {
-	GameObject *curr_go = nullptr;
 	const GameObject *camera = App->camera->GetEditorCamera();
-
-	math::Frustum frustum = ((ComponentCamera*)fake_camera->GetComponentByType(COMPONENT_TYPE::CAMERA))->cam_frustum;
+	math::Frustum frustum = ((ComponentCamera*)camera->GetComponentByType(COMPONENT_TYPE::CAMERA))->cam_frustum;
 	FrustumCulling(frustum);
 
-	debug.DrawFrustum(frustum);
+	GameObject *curr_go = nullptr;
 
 	for (uint i = 0; i < list_of_gos.size(); ++i)
 	{
 		curr_go = list_of_gos[i];
 		if (curr_go->IsActive())
 		{
-			//if(curr_go->GetComponentByType(COMPONENT_TYPE::MESH))				
-
-			for (int i = 0; i < curr_go->components.size(); ++i)
+			for (uint i = 0; i < curr_go->components.size(); ++i)
+			{
 				curr_go->components[i]->Update();
+
+				if (App->debug_mode)
+				{
+					switch (curr_go->components[i]->GetType())
+					{
+					case(COMPONENT_TYPE::MESH):
+						draw_debug.DrawAABB(((ComponentMesh*)curr_go->components[i])->bounding_box);
+						break;
+					case(COMPONENT_TYPE::CAMERA):
+						draw_debug.DrawFrustum(((ComponentCamera*)curr_go->components[i])->cam_frustum);
+						break;					
+					}
+				}			
+			}				
 
 			curr_go->transform_applied = false;
 		}
@@ -111,6 +117,7 @@ bool ModuleGameObjectManager::CleanUp()
 		RELEASE(list_of_gos[i]);
 
 	list_of_gos.clear();
+	list_of_gos_to_draw.clear();
 
 	// detach log stream
 	aiDetachAllLogStreams();
@@ -357,9 +364,11 @@ int ModuleGameObjectManager::FrustumCulling(const math::Frustum &frustum)
 	const uint num_corners = 8;
 
 	const GameObject *curr_go;
+
 	math::Plane planes[num_planes];
-	math::vec corners[num_corners];
-	frustum.GetPlanes(planes);	
+	frustum.GetPlanes(planes);
+
+	math::vec corners[num_corners];	
 
 	// For every gameobject
 	for (uint i = 1; i < list_of_gos.size(); ++i)
@@ -392,6 +401,6 @@ int ModuleGameObjectManager::FrustumCulling(const math::Frustum &frustum)
 			}				
 		}
 	}
-	DEBUG("%d", list_of_gos_to_draw.size());
+	
 	return list_of_gos_to_draw.size();
 }

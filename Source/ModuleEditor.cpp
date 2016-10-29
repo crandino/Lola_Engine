@@ -103,13 +103,19 @@ void ModuleEditor::ShowMenuBar()
 		ImGui::EndMenu();
 	}
 
+	if (ImGui::BeginMenu("Debug"))
+	{
+		ImGui::MenuItem("Debug Mode", nullptr, &App->debug_mode);
+		ImGui::EndMenu();
+	}
+
 	if (ImGui::BeginMenu("Help"))
 	{
 		ImGui::MenuItem("About", NULL, &about_menu);
 		if (ImGui::MenuItem("GitHub Wiki"))
 			App->RequestBrowser("https://github.com/crandino/Lola_Engine/wiki");
 		ImGui::EndMenu();
-	}
+	}	
 
 	ImGui::EndMainMenuBar();
 }
@@ -184,19 +190,6 @@ void ModuleEditor::ShowConfMenu()
 		ImGui::LabelText("", "%s", "MathGeoLib Version:"); ImGui::SameLine();
 		ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.5f, 1.0f), "%s", "1.5");
 	}
-	if (ImGui::CollapsingHeader("Rendering"))
-	{
-		ImGui::Columns(4, NULL, true);
-
-		for (int i = 0; i < 4; ++i)
-		{
-			for (int j = 0; j < 4; ++j)
-			{
-				ImGui::Text("%.2f", App->renderer3D->view_matrix[i][j]);
-			}
-			ImGui::NextColumn();
-		}		
-	}
 
 	ImGui::End();
 }
@@ -208,19 +201,8 @@ void ModuleEditor::ShowConsole()
 
 void ModuleEditor::ShowHierarchy()
 {
-	ImGui::Begin("Hierarchy", &hierarchy_menu);
-	
+	ImGui::Begin("Hierarchy", &hierarchy_menu);	
 	ExpandTree(App->gameobject_manager->GetRoot());
-
-	//if (node_clicked != -1)
-	//{
-	//	// Update selection state. Process outside of tree loop to avoid visual inconsistencies during the clicking-frame.
-	//	if (ImGui::GetIO().KeyCtrl)
-	//		selection_mask ^= (1 << node_clicked);          // CTRL+click to toggle
-	//	else if (!(selection_mask & (1 << node_clicked)))   // Depending on selection behavior you want, this commented bit preserve selection when clicking on item that is part of the selection
-	//		selection_mask = (1 << node_clicked);           // Click to single-select
-	//}
-
 	ImGui::End();
 }
 

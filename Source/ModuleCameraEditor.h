@@ -10,6 +10,7 @@ class GameObject;
 class ModuleCameraEditor : public Module
 {
 private:
+
 	GameObject *camera = nullptr;
 
 public:	

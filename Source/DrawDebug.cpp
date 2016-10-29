@@ -28,6 +28,8 @@ void DrawDebug::DrawAABB(const math::AABB &bbox) const
 	for (int i = 0; i < 24; ++i)
 		glVertex3fv(edges[i].ptr());
 
+	glColor3f(1.0f, 1.0f, 1.0f);
+
 	glEnd();
 }
 
@@ -42,6 +44,8 @@ void DrawDebug::DrawOBB(const math::OBB &bbox) const
 
 	for (int i = 0; i < 24; ++i)
 		glVertex3fv(edges[i].ptr());
+
+	glColor3f(1.0f, 1.0f, 1.0f);
 
 	glEnd();
 }
@@ -86,6 +90,8 @@ void DrawDebug::DrawFrustum(const math::Frustum &frustrum) const
 	glVertex3fv(corners[4].ptr());
 	glVertex3fv(corners[2].ptr());
 	glVertex3fv(corners[6].ptr());
+
+	glColor3f(1.0f, 1.0f, 1.0f);
 
 	glEnd();
 }
