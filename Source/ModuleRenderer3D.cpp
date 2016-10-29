@@ -200,6 +200,7 @@ void ModuleRenderer3D::SetFrustumForView(const math::Frustum &frustum)
 void ModuleRenderer3D::CalculateProjectionMatrix()
 {
 	projection_matrix = proj_frustum.ComputeProjectionMatrix();
+	projection_matrix = projection_matrix.Transposed();
 }
 
 void ModuleRenderer3D::CalculateViewMatrix()

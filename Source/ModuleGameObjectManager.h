@@ -34,6 +34,8 @@ public:
 
 private:
 
+	GameObject *fake_camera;
+
 	DrawDebug							draw_debug;
 
 	uint								id_to_assign = 0;

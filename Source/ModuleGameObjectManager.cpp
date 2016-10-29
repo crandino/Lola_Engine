@@ -44,6 +44,11 @@ bool ModuleGameObjectManager::Init()
 	stream = aiGetPredefinedLogStream(aiDefaultLogStream_DEBUGGER, nullptr);
 	aiAttachLogStream(&stream);
 
+	fake_camera = App->gameobject_manager->CreateGameObject("Fake_camera", nullptr);
+	fake_camera->AddComponent(COMPONENT_TYPE::TRANSFORM);
+	ComponentCamera *c = (ComponentCamera*)fake_camera->AddComponent(COMPONENT_TYPE::CAMERA);
+	c->SetComponent();
+
 	return ret;
 }
 
@@ -63,8 +68,9 @@ UPDATE_STATUS ModuleGameObjectManager::PreUpdate(float dt)
 // PostUpdate present buffer to screen
 UPDATE_STATUS ModuleGameObjectManager::Update(float dt)
 {
-	const GameObject *camera = App->camera->GetEditorCamera();
-	math::Frustum frustum = ((ComponentCamera*)camera->GetComponentByType(COMPONENT_TYPE::CAMERA))->cam_frustum;
+	//const GameObject *camera = App->camera->GetEditorCamera();
+
+	math::Frustum frustum = ((ComponentCamera*)fake_camera->GetComponentByType(COMPONENT_TYPE::CAMERA))->cam_frustum;
 	FrustumCulling(frustum);
 
 	GameObject *curr_go = nullptr;
@@ -77,27 +83,36 @@ UPDATE_STATUS ModuleGameObjectManager::Update(float dt)
 			for (uint i = 0; i < curr_go->components.size(); ++i)
 			{
 				curr_go->components[i]->Update();
-
-				if (App->debug_mode)
+				switch (curr_go->components[i]->GetType())
 				{
-					switch (curr_go->components[i]->GetType())
-					{
-					case(COMPONENT_TYPE::MESH):
-						draw_debug.DrawAABB(((ComponentMesh*)curr_go->components[i])->bounding_box);
-						break;
 					case(COMPONENT_TYPE::CAMERA):
 						draw_debug.DrawFrustum(((ComponentCamera*)curr_go->components[i])->cam_frustum);
-						break;					
-					}
-				}			
-			}				
+						break;
+				}
+			}					
 
 			curr_go->transform_applied = false;
 		}
 	}
 
 	for (uint i = 0; i < list_of_gos_to_draw.size(); ++i)
-		App->renderer3D->ShowGameObject(list_of_gos_to_draw[i]);
+	{
+		const GameObject *curr_go = list_of_gos_to_draw[i];
+		App->renderer3D->ShowGameObject(curr_go);
+
+		if (App->debug_mode)
+		{
+			for (uint i = 0; i < curr_go->components.size(); ++i)
+			{
+				switch (curr_go->components[i]->GetType())
+				{
+				case(COMPONENT_TYPE::MESH):
+					draw_debug.DrawAABB(((ComponentMesh*)curr_go->components[i])->bounding_box);
+					break;
+				}
+			}			
+		}
+	}		
 
 	return UPDATE_CONTINUE;
 }
@@ -236,10 +251,8 @@ bool ModuleGameObjectManager::RemoveChildFromChildren(const GameObject *go_child
 			}
 		}
 	}
-	return false;
-	
+	return false;	
 }
-
 
 void ModuleGameObjectManager::SetEditorCamera(const ComponentCamera *comp_cam)
 {
@@ -383,23 +396,28 @@ int ModuleGameObjectManager::FrustumCulling(const math::Frustum &frustum)
 		curr_go->GetAABB(bounding_box);
 		bounding_box.GetCornerPoints(corners);
 
-		// We check if all the corners of the AABB are on the positive side of the plane described by frustum
+		bool go_accepted = true;
 
-		for (uint j = 0; j < num_corners; ++j)
-		{			
-			uint point_inside_frustum = 0;
-			for (uint k = 0; k < num_planes; ++k)
+		for (uint j = 0; j < num_planes; ++j)
+		{		
+			if (go_accepted)
 			{
-				if (!planes[k].IsOnPositiveSide(corners[j]))
-					++point_inside_frustum;
+				uint corners_outside_frustum = 0;
+				for (uint k = 0; k < num_corners; ++k)
+				{
+					if (planes[j].IsOnPositiveSide(corners[k]))
+						++corners_outside_frustum;
+				}
+
+				if (corners_outside_frustum == num_corners)
+				{
+					go_accepted = false;
+					break;
+				}
 			}
-
-			if (point_inside_frustum == num_planes)
-			{
-				list_of_gos_to_draw.push_back(curr_go);
-				break;
-			}				
 		}
+
+		if (go_accepted) list_of_gos_to_draw.push_back(curr_go);
 	}
 	
 	return list_of_gos_to_draw.size();
