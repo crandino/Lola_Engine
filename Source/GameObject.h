@@ -2,6 +2,7 @@
 #define __GAMEOBJECT_H__
 
 #include "Globals.h"
+#include "MathGeoLib\MathGeoLib.h"
 
 #include <vector>
 
@@ -32,8 +33,11 @@ public:
 	GameObject(uint id, const char* name, GameObject *parent);
 	~GameObject();
 
-	const Component *GetComponentByType(COMPONENT_TYPE type);
+	const Component *GetComponentByType(COMPONENT_TYPE type) const;
 	const Component *AddComponent(COMPONENT_TYPE type);
+
+	void GetAABB(math::AABB &aabb) const;
+	bool HasMesh() const;
 
 	void ChangeActiveState(bool *state, GameObject *go = nullptr);
 	

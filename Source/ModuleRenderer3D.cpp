@@ -152,7 +152,7 @@ UPDATE_STATUS ModuleRenderer3D::PreUpdate(float dt)
 	glLoadMatrixf(*view_matrix.v);
 
 	// light 0 on cam pos
-	math::vec camera_pos = App->camera->camera->transform->GetPos();
+	math::vec camera_pos = App->camera->GetCameraPos();
 	lights[0].SetPos(camera_pos.x, camera_pos.y, camera_pos.z);
 
 	for(uint i = 0; i < MAX_LIGHTS; ++i)
@@ -388,7 +388,7 @@ bool ModuleRenderer3D::LoadMeshBuffer(const ComponentMesh *mesh)
 	return ret;
 }
 
-void ModuleRenderer3D::ShowGameObject(GameObject *go)
+void ModuleRenderer3D::ShowGameObject(const GameObject *go)
 {
 	const ComponentMesh *mesh = nullptr;
 	const ComponentMaterial *mat = nullptr;

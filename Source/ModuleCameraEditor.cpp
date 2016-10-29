@@ -4,7 +4,7 @@
 #include "Application.h"
 #include "ModuleInput.h"
 #include "ModuleGameObjectManager.h"
-#include "ModuleRenderer3D.h"
+//#include "ModuleRenderer3D.h"
 
 #include "GameObject.h"
 #include "ComponentTransform.h"
@@ -85,7 +85,6 @@ UPDATE_STATUS ModuleCameraEditor::Update(float dt)
 	return UPDATE_CONTINUE;
 }
 
-void ModuleCameraEditor::SetAsEditorCamera(GameObject *go)
-{
-	camera = go;
-}
+void ModuleCameraEditor::SetAsEditorCamera(GameObject *go) { camera = go; }
+const math::vec &ModuleCameraEditor::GetCameraPos() const { return camera->transform->GetPos(); }
+const GameObject *ModuleCameraEditor::GetEditorCamera() const { return camera; }

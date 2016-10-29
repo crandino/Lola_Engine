@@ -53,7 +53,7 @@ const Component* GameObject::AddComponent(COMPONENT_TYPE type)
 	return comp;
 }
 
-const Component *GameObject::GetComponentByType(COMPONENT_TYPE type)
+const Component *GameObject::GetComponentByType(COMPONENT_TYPE type) const
 {
 	for (uint i = 0; i < components.size(); ++i)
 	{
@@ -80,3 +80,16 @@ void GameObject::Enable() { active = true; }
 void GameObject::Disable() { active = false; }
 bool GameObject::IsActive() const { return active; }
 const char *GameObject::GetName() const { return name; }
+
+ void GameObject::GetAABB(math::AABB &aabb) const
+{
+	aabb.SetNegativeInfinity();
+	const ComponentMesh *mesh = (ComponentMesh*)GetComponentByType(COMPONENT_TYPE::MESH);
+	if (mesh)
+		aabb = mesh->bounding_box;
+}
+
+ bool GameObject::HasMesh() const
+ {
+	 return (GetComponentByType(COMPONENT_TYPE::MESH) != nullptr  ? true : false);
+ }

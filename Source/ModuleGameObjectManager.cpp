@@ -44,6 +44,11 @@ bool ModuleGameObjectManager::Init()
 	stream = aiGetPredefinedLogStream(aiDefaultLogStream_DEBUGGER, nullptr);
 	aiAttachLogStream(&stream);
 
+	fake_camera = App->gameobject_manager->CreateGameObject("Fake_camera", nullptr);
+	fake_camera->AddComponent(COMPONENT_TYPE::TRANSFORM);
+	ComponentCamera *c = (ComponentCamera*)fake_camera->AddComponent(COMPONENT_TYPE::CAMERA);
+	c->SetComponent();
+
 	return ret;
 }
 
@@ -64,6 +69,12 @@ UPDATE_STATUS ModuleGameObjectManager::PreUpdate(float dt)
 UPDATE_STATUS ModuleGameObjectManager::Update(float dt)
 {
 	GameObject *curr_go = nullptr;
+	const GameObject *camera = App->camera->GetEditorCamera();
+
+	math::Frustum frustum = ((ComponentCamera*)fake_camera->GetComponentByType(COMPONENT_TYPE::CAMERA))->cam_frustum;
+	FrustumCulling(frustum);
+
+	debug.DrawFrustum(frustum);
 
 	for (uint i = 0; i < list_of_gos.size(); ++i)
 	{
@@ -76,9 +87,11 @@ UPDATE_STATUS ModuleGameObjectManager::Update(float dt)
 				curr_go->components[i]->Update();
 
 			curr_go->transform_applied = false;
-			App->renderer3D->ShowGameObject(curr_go);
 		}
 	}
+
+	for (uint i = 0; i < list_of_gos_to_draw.size(); ++i)
+		App->renderer3D->ShowGameObject(list_of_gos_to_draw[i]);
 
 	return UPDATE_CONTINUE;
 }
@@ -334,4 +347,51 @@ void ModuleGameObjectManager::CreateCamera()
 	GameObject *go = CreateGameObject("Camera");
 	go->AddComponent(COMPONENT_TYPE::TRANSFORM);
 	go->AddComponent(COMPONENT_TYPE::CAMERA);
+}
+
+int ModuleGameObjectManager::FrustumCulling(const math::Frustum &frustum)
+{
+	list_of_gos_to_draw.clear();
+
+	const uint num_planes = 6;
+	const uint num_corners = 8;
+
+	const GameObject *curr_go;
+	math::Plane planes[num_planes];
+	math::vec corners[num_corners];
+	frustum.GetPlanes(planes);	
+
+	// For every gameobject
+	for (uint i = 1; i < list_of_gos.size(); ++i)
+	{
+		bool next_go = false;
+		curr_go = list_of_gos[i];
+
+		if (!curr_go->HasMesh())
+			continue;
+
+		math::AABB bounding_box;
+		curr_go->GetAABB(bounding_box);
+		bounding_box.GetCornerPoints(corners);
+
+		// We check if all the corners of the AABB are on the positive side of the plane described by frustum
+
+		for (uint j = 0; j < num_corners; ++j)
+		{			
+			uint point_inside_frustum = 0;
+			for (uint k = 0; k < num_planes; ++k)
+			{
+				if (!planes[k].IsOnPositiveSide(corners[j]))
+					++point_inside_frustum;
+			}
+
+			if (point_inside_frustum == num_planes)
+			{
+				list_of_gos_to_draw.push_back(curr_go);
+				break;
+			}				
+		}
+	}
+	DEBUG("%d", list_of_gos_to_draw.size());
+	return list_of_gos_to_draw.size();
 }

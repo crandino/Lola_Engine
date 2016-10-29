@@ -39,7 +39,7 @@ public:
 	void CalculateViewMatrix();
 
 	bool LoadMeshBuffer(const ComponentMesh *mesh);
-	void ShowGameObject(GameObject *go);
+	void ShowGameObject(const GameObject *go);
 
 	void DrawDirectMode();
 

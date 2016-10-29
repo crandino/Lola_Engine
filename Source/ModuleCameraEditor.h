@@ -9,9 +9,10 @@ class GameObject;
 
 class ModuleCameraEditor : public Module
 {
-public:
-
+private:
 	GameObject *camera = nullptr;
+
+public:	
 
 	ModuleCameraEditor(Application* app, bool start_enabled = true);
 	~ModuleCameraEditor();
@@ -22,6 +23,8 @@ public:
 	bool CleanUp();
 
 	void SetAsEditorCamera(GameObject *camera);
+	const math::vec &GetCameraPos() const;
+	const GameObject *GetEditorCamera() const;
 };
 
 #endif // !__ModuleCameraEditor_H__

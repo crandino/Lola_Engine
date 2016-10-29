@@ -2,6 +2,8 @@
 #define __MODULEGAMEOBJECTMANAGER_H__
 
 #include "Module.h"
+#include "MathGeoLib\MathGeoLib.h"
+#include "DrawDebug.h"
 #include <vector>
 
 class GameObject;
@@ -32,16 +34,22 @@ public:
 
 private:
 
-	uint						    id_to_assign = 0;
-	GameObject					    *root = nullptr;
-	std::vector<GameObject*>	    list_of_gos;
+	GameObject *fake_camera;
 
-	
+	uint								id_to_assign = 0;
+	GameObject							*root = nullptr;
+	std::vector<GameObject*>			list_of_gos;
+	std::vector<const GameObject*>	    list_of_gos_to_draw;
+
+	DrawDebug debug;
+
 	GameObject		*GetGameObject(uint id_to_search) const;
 
 	bool DeleteGameObject(unsigned int id_to_delete);
 	bool DeleteChildrenGameObject(const GameObject *go_to_delete);
 	bool RemoveChildFromChildren(const GameObject *go_to_delete);
+
+	int FrustumCulling(const math::Frustum &frustum);
 
 };
 
