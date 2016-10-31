@@ -17,11 +17,8 @@ bool Intersects(const GameObject *a, const GameObject *b);
 bool Contains(const math::AABB &a, const GameObject *b);
 bool Intersects(const math::AABB &a, const GameObject *b);
 
-bool Contains(const GameObject *a, const math::AABB &b);
-bool Intersects(const GameObject *a, const math::AABB &b);
-
-bool ContainsAll(const GameObject *a, const OcTreeNode *b);
-bool IntersectsAll(const GameObject *a, const OcTreeNode *b);
+bool ContainsAllChildren(const GameObject *a, const OcTreeNode *b);
+bool IntersectsAllChildren(const GameObject *a, const OcTreeNode *b);
 
 // ----- TreeNode for OcTree -----
 class OcTreeNode
@@ -29,7 +26,7 @@ class OcTreeNode
 
 public:
 
-	math::AABB					rect;
+	math::AABB					box;
 	std::list<GameObject*>	    objects;
 	OcTreeNode*					childs[8];
 
@@ -39,7 +36,7 @@ public:
 	~OcTreeNode();
 	 
 	void Insert(GameObject* go);
-	//int CollectCandidates(DynArray<Collider*>& nodes, const SDL_Rect& r) const;
+	int CollectCandidates(std::vector<GameObject*> &nodes, const math::AABB& bbox) const;
 	void CollectRects(std::vector<OcTreeNode*> &nodes);
 	
 private:
@@ -62,7 +59,7 @@ public:
 	void Insert(GameObject* go);
 	void Clear();
 
-	//int CollectCandidates(DynArray<Collider*>& nodes, const SDL_Rect& r) const;
+	int CollectCandidates(std::vector<GameObject*> &nodes, const math::AABB& bbox) const;
 	void CollectRects(std::vector<OcTreeNode*> &nodes) const;
 };
 
