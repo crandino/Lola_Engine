@@ -9,6 +9,8 @@
 #include "GameObject.h"
 #include "Component.h"
 
+#include "DrawDebug.h"
+
 #include "imgui\imgui.h"
 #include "imgui\imgui_impl_sdl_gl3.h"
 
@@ -41,15 +43,15 @@ bool ModuleEditor::Init()
 UPDATE_STATUS ModuleEditor::PreUpdate(float dt)
 {
 	ImGui_ImplSdlGL3_NewFrame(App->window->window);
-
-	if (App->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN)
-		conf_menu = !conf_menu;
-
+	
 	if (App->input->GetKey(SDL_SCANCODE_0) == KEY_DOWN)
 		console_menu = !console_menu;
 
 	if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
 		hierarchy_menu = !hierarchy_menu;
+
+	if (App->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN)
+		conf_menu = !conf_menu;
 
 	if (App->input->GetKey(SDL_SCANCODE_DELETE) == KEY_DOWN && go_selected)
 		warning_alert = true;
@@ -104,8 +106,10 @@ void ModuleEditor::ShowMenuBar()
 	}
 
 	if (ImGui::BeginMenu("Debug"))
-	{
-		ImGui::MenuItem("Debug Mode", nullptr, &App->debug_mode);
+	{	
+		ImGui::MenuItem("Show AABB", nullptr, &DrawDebug::show_aabb);
+		ImGui::MenuItem("Show Frustum", nullptr, &DrawDebug::show_frustum);
+		ImGui::MenuItem("Show OcTree", nullptr, &DrawDebug::show_octree);
 		ImGui::EndMenu();
 	}
 

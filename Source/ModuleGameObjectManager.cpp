@@ -118,18 +118,15 @@ UPDATE_STATUS ModuleGameObjectManager::Update(float dt)
 		const GameObject *curr_go = list_of_gos_to_draw[i];
 		App->renderer3D->ShowGameObject(curr_go);
 
-		if (App->debug_mode)
+		for (uint i = 0; i < curr_go->components.size(); ++i)
 		{
-			for (uint i = 0; i < curr_go->components.size(); ++i)
+			switch (curr_go->components[i]->GetType())
 			{
-				switch (curr_go->components[i]->GetType())
-				{
-				case(COMPONENT_TYPE::MESH):
-					draw_debug.DrawAABB(((ComponentMesh*)curr_go->components[i])->bounding_box);
-					break;
-				}
-			}			
-		}
+			case(COMPONENT_TYPE::MESH):
+				draw_debug.DrawAABB(((ComponentMesh*)curr_go->components[i])->bounding_box);
+				break;
+			}
+		}			
 	}		
 
 	return UPDATE_CONTINUE;

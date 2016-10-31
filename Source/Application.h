@@ -26,8 +26,6 @@ class Application
 {
 public:
 
-	bool					debug_mode = false;
-
 	Performance				perf_info;
 	Console					*console = nullptr;
 

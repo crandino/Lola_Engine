@@ -154,6 +154,7 @@ UPDATE_STATUS ModuleRenderer3D::PreUpdate(float dt)
 	// light 0 on cam pos
 	math::vec camera_pos = App->camera->GetCameraPos();
 	lights[0].SetPos(camera_pos.x, camera_pos.y, camera_pos.z);
+	//lights[1].SetPos(100.0f, 100.0f, 100.0f);
 
 	for(uint i = 0; i < MAX_LIGHTS; ++i)
 		lights[i].Render();
@@ -441,7 +442,7 @@ void ModuleRenderer3D::ShowGameObject(const GameObject *go)
 		if (go->selected)
 		{
 			glLineWidth(1.5f);
-			glColor3f(255.0f, 255.0f, 0.0f);
+			glColor3f(1.0f, 1.0f, 0.0f);
 			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 			glDrawElements(GL_TRIANGLES, mesh->num_indices, GL_UNSIGNED_INT, NULL);
 			glColor3f(1.0f, 1.0f, 1.0f);

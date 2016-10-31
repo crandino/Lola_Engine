@@ -4,14 +4,21 @@
 #include "MathGeoLib\MathGeoLib.h"
 #include "OcTree.h"
 
+#define LINE_WIDTH 3
+#define DEFAULT_LINE_WIDTH 1
+
 class DrawDebug
 {
 private:
 
 	math::float3 *edges;
-	math::vec *corners;
+	math::vec *corners;	
 
-public:
+public:	
+
+	static bool show_aabb;
+	static bool show_frustum;
+	static bool show_octree;
 
 	DrawDebug();
 	~DrawDebug();
