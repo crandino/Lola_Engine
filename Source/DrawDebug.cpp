@@ -98,9 +98,9 @@ void DrawDebug::DrawFrustum(const math::Frustum &frustrum) const
 	glEnd();
 }
 
-void DrawDebug::DrawQuadTree(const QuadTree &quad) const
+void DrawDebug::DrawOcTree(const OcTree &quad) const
 {	
-	std::vector<QuadTreeNode*> nodes;
+	std::vector<OcTreeNode*> nodes;
 	quad.CollectRects(nodes);
 
 	for (uint i = 0; i < nodes.size();++i)

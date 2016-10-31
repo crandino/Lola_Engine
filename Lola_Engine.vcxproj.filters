@@ -237,7 +237,7 @@
     <ClCompile Include="Source\ComponentCamera.cpp">
       <Filter>Source\Components</Filter>
     </ClCompile>
-    <ClCompile Include="Source\QuadTree.cpp">
+    <ClCompile Include="Source\OcTree.cpp">
       <Filter>Source\Containers</Filter>
     </ClCompile>
   </ItemGroup>
@@ -548,7 +548,7 @@
     <ClInclude Include="Source\ComponentCamera.h">
       <Filter>Source\Components</Filter>
     </ClInclude>
-    <ClInclude Include="Source\QuadTree.h">
+    <ClInclude Include="Source\OcTree.h">
       <Filter>Source\Containers</Filter>
     </ClInclude>
   </ItemGroup>

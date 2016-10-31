@@ -37,7 +37,7 @@ void QuadTree<T>::Clear(const float2 &minXY, const float2 &maxXY)
 	root->center = (minXY + maxXY) * 0.5f;
 	root->radius = maxXY - root->center;
 
-#ifdef QUADTREE_VERBOSE_LOGGING
+#ifdef QuadTree_VERBOSE_LOGGING
 	totalNumObjectsInTree = 0;
 #endif
 }
@@ -56,7 +56,7 @@ void QuadTree<T>::Add(const T &object)
 	assert(objectAABB.IsFinite());
 	assert(!objectAABB.HasNegativeVolume());
 
-#ifdef QUADTREE_VERBOSE_LOGGING
+#ifdef QuadTree_VERBOSE_LOGGING
 	++totalNumObjectsInTree;
 #endif
 
@@ -119,7 +119,7 @@ void QuadTree<T>::Remove(const T &object)
 	{
 		n->Remove(object);
 
-#ifdef QUADTREE_VERBOSE_LOGGING
+#ifdef QuadTree_VERBOSE_LOGGING
 		--totalNumObjectsInTree;
 #endif
 	}
@@ -502,7 +502,7 @@ struct NearestNeighborObjectSearch
 {
 	NearestNeighborObjectSearch()
 	:objectCallback(0), numObjectsOutputted(0)
-#ifdef QUADTREE_VERBOSE_LOGGING
+#ifdef QuadTree_VERBOSE_LOGGING
 	,numNodesVisited(0)
 #endif
 	{
@@ -542,13 +542,13 @@ struct NearestNeighborObjectSearch
 
 	int numObjectsOutputted;
 
-#ifdef QUADTREE_VERBOSE_LOGGING
+#ifdef QuadTree_VERBOSE_LOGGING
 	int numNodesVisited;
 #endif
 
 	bool operator ()(QuadTree<T> &tree, const float2 &point, typename QuadTree<T>::Node &leaf, float minDistanceSquared)
 	{
-#ifdef QUADTREE_VERBOSE_LOGGING
+#ifdef QuadTree_VERBOSE_LOGGING
 		++numNodesVisited;
 #endif
 		// Output all points that are closer than the next closest AABB node.
@@ -558,7 +558,7 @@ struct NearestNeighborObjectSearch
 			bool shouldStopIteration = (*objectCallback)(tree, point, 0 /*nextNearestPoint.node*/, nextNearestPoint.d, *nextNearestPoint.object, numObjectsOutputted++);
 			if (shouldStopIteration)
 			{
-#ifdef QUADTREE_VERBOSE_LOGGING
+#ifdef QuadTree_VERBOSE_LOGGING
 				int numPoints = tree.NumObjects();
 				LOGI("Visited %d/%d (%.2f%%) of QuadTree nodes (tree height: %d). Saw %d/%d (%.2f%%) points of the QuadTree before outputting %d points.",
 					numNodesVisited, tree.NumNodes(), 100.f * numNodesVisited / tree.NumNodes(), -1/*tree.TreeHeight()*/,
@@ -726,7 +726,7 @@ int QuadTree<T>::NumInnerNodes() const
 template<typename T>
 int QuadTree<T>::NumObjects() const
 {
-#ifdef QUADTREE_VERBOSE_LOGGING
+#ifdef QuadTree_VERBOSE_LOGGING
 	return totalNumObjectsInTree;
 #else
 	int numObjects = 0;

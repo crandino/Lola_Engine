@@ -49,7 +49,7 @@ inline float MaxY(const float3 &pt) { return pt.y; }
 
 //#ifdef _DEBUG
 /// If enabled, QuadTree queries generate debug trace/stats logging when invoked. Use only for debugging/behavioral profiling.
-//#define QUADTREE_VERBOSE_LOGGING
+//#define QuadTree_VERBOSE_LOGGING
 //#endif
 
 template<typename T>
@@ -86,7 +86,7 @@ public:
 			for(size_t i = 0; i < objects.size(); ++i)
 				if (objects[i] == object)
 				{
-					AssociateQuadTreeNode(object, 0); // Mark in the object that it has been removed from the quadtree.
+					AssociateQuadTreeNode(object, 0); // Mark in the object that it has been removed from the QuadTree.
 					std::swap(objects[i], objects.back());
 					objects.pop_back();
 					return;
@@ -117,7 +117,7 @@ public:
 	QuadTree()
 	:rootNodeIndex(-1),
 	boundingAABB(float2(0,0), float2(1,1))
-#ifdef QUADTREE_VERBOSE_LOGGING
+#ifdef QuadTree_VERBOSE_LOGGING
 	,totalNumObjectsInTree(0)
 #endif
 	{
@@ -135,7 +135,7 @@ public:
 
 	/// Removes the given object from this tree.
 	/// To call this function, you must define a function QuadTree<T>::Node *GetQuadTreeNode(const T &object)
-	/// which returns the node of this quadtree where the object resides in.
+	/// which returns the node of this QuadTree where the object resides in.
 	void Remove(const T &object);
 
 	/// @return The bounding rectangle for the whole tree.
@@ -168,7 +168,7 @@ public:
 	/// Returns the height of the subtree rooted at 'node'.
 	int TreeHeight(const Node *node) const;
 
-	/// Performs an AABB intersection query in this Quadtreee, and calls the given callback function for each non-empty
+	/// Performs an AABB intersection query in this QuadTreee, and calls the given callback function for each non-empty
 	/// node of the tree which intersects the given AABB.
 	/** @param aabb The axis-aligned bounding box to intersect this QuadTree with.
 		@param callback A function or a function object of prototype
@@ -225,7 +225,7 @@ public:
 private:
 	void Add(const T &object, Node *n);
 
-	/// Allocates a sequential 4-tuple of QuadtreeNodes, contiguous in memory.
+	/// Allocates a sequential 4-tuple of QuadTreeNodes, contiguous in memory.
 	int AllocateNodeGroup(Node *parent);
 
 	void SplitLeaf(Node *leaf);
@@ -247,7 +247,7 @@ private:
 
 	void GrowImpl(int quadrantForRoot);
 
-#ifdef QUADTREE_VERBOSE_LOGGING
+#ifdef QuadTree_VERBOSE_LOGGING
 	int totalNumObjectsInTree;
 #endif
 };

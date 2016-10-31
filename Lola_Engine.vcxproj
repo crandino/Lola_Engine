@@ -138,7 +138,7 @@
     <ClCompile Include="Source\PerfTimer.cpp" />
     <ClCompile Include="Source\PhysBody3D.cpp" />
     <ClCompile Include="Source\Primitive.cpp" />
-    <ClCompile Include="Source\QuadTree.cpp" />
+    <ClCompile Include="Source\OcTree.cpp" />
     <ClCompile Include="Source\Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -243,7 +243,7 @@
     <ClInclude Include="Source\PhysBody3D.h" />
     <ClInclude Include="Source\Point2D.h" />
     <ClInclude Include="Source\Primitive.h" />
-    <ClInclude Include="Source\QuadTree.h" />
+    <ClInclude Include="Source\OcTree.h" />
     <ClInclude Include="Source\Timer.h" />
   </ItemGroup>
   <ItemGroup>
