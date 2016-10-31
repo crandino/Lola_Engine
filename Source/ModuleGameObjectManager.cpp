@@ -18,6 +18,8 @@
 #include "ComponentMaterial.h"
 #include "ComponentCamera.h"
 
+#include "QuadTree.h"
+
 #include <stack>
 
 #pragma comment (lib, "Source/Assimp/libx86/assimp.lib")
@@ -55,12 +57,19 @@ bool ModuleGameObjectManager::Init()
 // PreUpdate: clear buffer
 UPDATE_STATUS ModuleGameObjectManager::PreUpdate(float dt)
 {
+	static bool load_model = true;
 	if (App->input->GetKey(SDL_SCANCODE_G) == KEY_DOWN)
 	{
-		ImportModel("Models/primitives_with_parent.fbx");  //Street environment_V01.fbx
+		//ImportModel("Models/primitives_with_parent.fbx");  //Street environment_V01.fbx
 		//ImportModel("Models/aabb_test.fbx");
+		ImportModel("Models/Street environment_V01.fbx");
+	}	
+
+	if (load_model)
+	{
+		//ImportModel("Models/quadtree_test2.fbx");  //Street environment_V01.fbx
+		load_model = false;										   //ImportModel("Models/aabb_test.fbx");
 	}
-		
 
 	return UPDATE_CONTINUE;
 }
@@ -72,12 +81,18 @@ UPDATE_STATUS ModuleGameObjectManager::Update(float dt)
 
 	math::Frustum frustum = ((ComponentCamera*)fake_camera->GetComponentByType(COMPONENT_TYPE::CAMERA))->cam_frustum;
 	FrustumCulling(frustum);
+	
+	QuadTree quad_tree;
+	math::AABB boundaries = math::AABB({ -10.0f, -10.0f, -10.0f }, { 10.0f, 10.0f, 10.0f });
+	quad_tree.SetBoundaries(boundaries);
 
 	GameObject *curr_go = nullptr;
-
+	
 	for (uint i = 0; i < list_of_gos.size(); ++i)
 	{
 		curr_go = list_of_gos[i];
+		quad_tree.Insert(curr_go);
+
 		if (curr_go->IsActive())
 		{
 			for (uint i = 0; i < curr_go->components.size(); ++i)
@@ -94,6 +109,8 @@ UPDATE_STATUS ModuleGameObjectManager::Update(float dt)
 			curr_go->transform_applied = false;
 		}
 	}
+	
+	draw_debug.DrawQuadTree(quad_tree);
 
 	for (uint i = 0; i < list_of_gos_to_draw.size(); ++i)
 	{

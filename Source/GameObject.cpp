@@ -81,12 +81,18 @@ void GameObject::Disable() { active = false; }
 bool GameObject::IsActive() const { return active; }
 const char *GameObject::GetName() const { return name; }
 
- void GameObject::GetAABB(math::AABB &aabb) const
+bool GameObject::GetAABB(math::AABB &aabb) const
 {
+	bool ret = false;
 	aabb.SetNegativeInfinity();
 	const ComponentMesh *mesh = (ComponentMesh*)GetComponentByType(COMPONENT_TYPE::MESH);
 	if (mesh)
+	{
+		ret = true;
 		aabb = mesh->bounding_box;
+	}		
+
+	return ret;
 }
 
  bool GameObject::HasMesh() const

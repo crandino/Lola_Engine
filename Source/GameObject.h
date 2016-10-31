@@ -36,7 +36,7 @@ public:
 	const Component *GetComponentByType(COMPONENT_TYPE type) const;
 	const Component *AddComponent(COMPONENT_TYPE type);
 
-	void GetAABB(math::AABB &aabb) const;
+	bool GetAABB(math::AABB &aabb) const;
 	bool HasMesh() const;
 
 	void ChangeActiveState(bool *state, GameObject *go = nullptr);

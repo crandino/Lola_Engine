@@ -397,7 +397,6 @@ void ModuleRenderer3D::ShowGameObject(const GameObject *go)
 
 	mesh = (ComponentMesh*)go->GetComponentByType(COMPONENT_TYPE::MESH);
 	mat = (ComponentMaterial*)go->GetComponentByType(COMPONENT_TYPE::MATERIAL);
-	cam = (ComponentCamera*)go->GetComponentByType(COMPONENT_TYPE::CAMERA);
 
 	// Rendering
 	if (mesh != nullptr && mesh->IsActive())

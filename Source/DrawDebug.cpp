@@ -4,6 +4,8 @@
 
 #include "Globals.h"
 
+#include <stack>
+
 DrawDebug::DrawDebug()
 {
 	edges = new math::float3[24];
@@ -94,5 +96,14 @@ void DrawDebug::DrawFrustum(const math::Frustum &frustrum) const
 	glColor3f(1.0f, 1.0f, 1.0f);
 
 	glEnd();
+}
+
+void DrawDebug::DrawQuadTree(const QuadTree &quad) const
+{	
+	std::vector<QuadTreeNode*> nodes;
+	quad.CollectRects(nodes);
+
+	for (uint i = 0; i < nodes.size();++i)
+		DrawAABB(nodes[i]->rect);
 }
 
