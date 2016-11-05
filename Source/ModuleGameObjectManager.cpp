@@ -18,15 +18,13 @@
 #include "ComponentMaterial.h"
 #include "ComponentCamera.h"
 
-#include "OcTree.h"
-
 #include <stack>
 
 #pragma comment (lib, "Source/Assimp/libx86/assimp.lib")
 
 ModuleGameObjectManager::ModuleGameObjectManager(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
-	name.assign("GameObject Manager");
+	sprintf_s(name, SHORT_STRING, "GameObject Manager");
 }
 
 // Destructor
@@ -67,9 +65,9 @@ UPDATE_STATUS ModuleGameObjectManager::PreUpdate(float dt)
 
 	if (load_model)
 	{
-		//ImportModel("Models/QuadTree_test3.fbx");  //Street environment_V01.fbx
-		ImportModel("Models/color_cubes.fbx");  //Street environment_V01.fbx
-		load_model = false;										   
+		ImportModel("Models/QuadTree_test3.fbx");  //Street environment_V01.fbx
+		//ImportModel("Models/color_cubes.fbx");  //Street environment_V01.fbx
+		load_model = false;		
 	}
 
 	return UPDATE_CONTINUE;
@@ -78,16 +76,10 @@ UPDATE_STATUS ModuleGameObjectManager::PreUpdate(float dt)
 // PostUpdate present buffer to screen
 UPDATE_STATUS ModuleGameObjectManager::Update(float dt)
 {
-	const GameObject *camera = App->camera->GetEditorCamera();
-
-	math::Frustum frustum = ((ComponentCamera*)camera->GetComponentByType(COMPONENT_TYPE::CAMERA))->cam_frustum;
-	FrustumCulling(frustum);
-	
-	OcTree oc_tree;
+	GameObject *curr_go = nullptr;
+	oc_tree.Clear();
 	math::AABB boundaries = math::AABB({ -10.0f, -10.0f, -10.0f }, { 10.0f, 10.0f, 10.0f });
 	oc_tree.SetBoundaries(boundaries);
-
-	GameObject *curr_go = nullptr;
 	
 	for (uint i = 0; i < list_of_gos.size(); ++i)
 	{
@@ -110,7 +102,11 @@ UPDATE_STATUS ModuleGameObjectManager::Update(float dt)
 			curr_go->transform_applied = false;
 		}
 	}
-	
+
+	// Frustum culling
+	const GameObject *camera = App->camera->GetEditorCamera();
+	math::Frustum frustum = ((ComponentCamera*)camera->GetComponentByType(COMPONENT_TYPE::CAMERA))->cam_frustum;
+	FrustumCulling(frustum);
 	draw_debug.DrawOcTree(oc_tree);
 
 	for (uint i = 0; i < list_of_gos_to_draw.size(); ++i)
@@ -398,11 +394,14 @@ int ModuleGameObjectManager::FrustumCulling(const math::Frustum &frustum)
 
 	math::vec corners[num_corners];	
 
+	std::vector<GameObject*> nodes;
+	oc_tree.CollectCandidates(nodes, frustum);
+
 	// For every gameobject
-	for (uint i = 1; i < list_of_gos.size(); ++i)
+	for (uint i = 1; i < nodes.size(); ++i)
 	{
 		bool next_go = false;
-		curr_go = list_of_gos[i];
+		curr_go = nodes[i];
 
 		if (!curr_go->HasMesh())
 			continue;

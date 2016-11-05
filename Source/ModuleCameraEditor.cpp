@@ -15,7 +15,7 @@
 
 ModuleCameraEditor::ModuleCameraEditor(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
-	name.assign("Camera3D");	
+	sprintf_s(name, SHORT_STRING, "Camera Editor");
 }
 
 ModuleCameraEditor::~ModuleCameraEditor()

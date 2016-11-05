@@ -63,7 +63,7 @@ bool ContainsAllChildren(const GameObject *a, const OcTreeNode * b)
 	bool contains_all = true;
 
 	math::AABB a_bbox;
-	if (a->GetAABB(a_bbox) && b->childs[0] != nullptr)
+	if (a->GetAABB(a_bbox) && b->HasChildren())
 	{
 		for (uint i = 0; i < 8; ++i)
 		{
@@ -85,7 +85,7 @@ bool IntersectsAllChildren(const GameObject *a, const OcTreeNode *b)
 	bool intersects_all = true;
 
 	math::AABB a_bbox;
-	if (a->GetAABB(a_bbox) && b->childs[0] != nullptr)
+	if (a->GetAABB(a_bbox) && b->HasChildren())
 	{
 		for (uint i = 0; i < 8; ++i)
 		{
@@ -112,8 +112,11 @@ OcTreeNode::OcTreeNode(math::AABB bbox) : box(bbox)
 
 OcTreeNode::~OcTreeNode()
 {
-	for (int i = 0; i < 8; ++i)
-		if (childs[i] != nullptr) delete childs[i];
+	if (HasChildren())
+	{
+		for (int i = 0; i < 8; ++i)
+			delete childs[i];
+	}	
 }
 
 void OcTreeNode::Insert(GameObject* go)
@@ -122,7 +125,7 @@ void OcTreeNode::Insert(GameObject* go)
 	go->GetAABB(bounding_box);
 
 	// Each new item will go deep to the set of children, if they exists.
-	if (childs[0] != nullptr)
+	if (HasChildren())
 	{
 		if (!(IntersectsAllChildren(go, this)))
 		{
@@ -138,7 +141,7 @@ void OcTreeNode::Insert(GameObject* go)
 			objects.push_back(go);
 		else
 		{
-			if (childs[0] == nullptr)
+			if (!HasChildren())
 				SubdivideNode();
 
 			// Possible redistribution of objects on this node on splitting
@@ -163,29 +166,17 @@ void OcTreeNode::Insert(GameObject* go)
 	}
 }
 
-int OcTreeNode::CollectCandidates(std::vector<GameObject*> &nodes, const math::AABB& bbox) const
-{
-	int tests = 0;
-
-	for (std::list<GameObject*>::const_iterator it = objects.begin(); it != objects.end(); ++it)
-		nodes.push_back(*it);
-
-	for (int i = 0; i < 8; ++i)
-	{
-		if(childs[i]->box.Intersects(bbox))
-			tests += CollectCandidates(nodes, childs[i]->box);
-		++tests;			
-	}
-
-	return tests;
-}
-
 void OcTreeNode::CollectRects(std::vector<OcTreeNode*> &nodes)
 {
 	nodes.push_back(this);
 
 	for (int i = 0; i < 8; ++i)
 		if (childs[i] != nullptr) childs[i]->CollectRects(nodes);
+}
+
+bool OcTreeNode::HasChildren() const
+{
+	return childs[0] != nullptr;
 }
 
 void OcTreeNode::SubdivideNode()
@@ -245,14 +236,6 @@ void OcTree::Clear()
 		delete root;
 		root = nullptr;
 	}
-}
-
-int OcTree::CollectCandidates(std::vector<GameObject*> &nodes, const math::AABB& bbox) const
-{
-	int tests = 1;
-	if(root != nullptr && root->box.Intersects(bbox))
-		tests += root->CollectCandidates(nodes, bbox);
-	return tests;
 }
 
 void OcTree::CollectRects(std::vector<OcTreeNode*> &nodes) const

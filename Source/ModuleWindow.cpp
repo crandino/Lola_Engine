@@ -8,7 +8,7 @@
 
 ModuleWindow::ModuleWindow(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
-	name.assign("Window");
+	sprintf_s(name, SHORT_STRING, "Window");
 	window = NULL;
 	screen_surface = NULL;
 }
@@ -109,4 +109,21 @@ bool ModuleWindow::CleanUp()
 void ModuleWindow::SetTitle(const char* title)
 {
 	SDL_SetWindowTitle(window, title);
+}
+
+bool ModuleWindow::Save(JSONParser &module)
+{
+	module.AddBoolean("Fullscreen", true);
+	module.AddBoolean("V-Sync", false);
+
+	return true;
+}
+
+bool ModuleWindow::Load(JSONParser &module)
+{
+	module.GetBoolean("Fullscreen");
+	module.GetBoolean("V-Sync");
+	//bool fullscreen = json_array_get_boolean(module, "Fullscreen");
+	//bool v_sync = json_object_get_boolean(obj, "V-Sync");
+	return true;
 }

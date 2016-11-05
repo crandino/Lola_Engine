@@ -12,6 +12,8 @@
 #include "ModuleGameObjectManager.h"
 #include "ModuleRenderer3D.h"
 
+#include "JSONParser.h"
+
 Application::Application()
 {
 	window = new ModuleWindow(this, true);
@@ -75,6 +77,8 @@ bool Application::Init()
 {
 	bool ret = true;
 
+	LoadConfig();
+
 	// Call Init() in all modules
 	std::list<Module*>::iterator item = list_modules.begin();
 
@@ -100,12 +104,20 @@ bool Application::Init()
 // ---------------------------------------------
 void Application::PrepareUpdate()
 {
+	if (App->input->GetKey(SDL_SCANCODE_F8) == KEY_DOWN)
+		SaveGame("Test.json");
+	if (App->input->GetKey(SDL_SCANCODE_F9) == KEY_DOWN)
+		LoadGame("Test.json");
+
 	perf_info.PreUpdate();
 }
 
 // ---------------------------------------------
 void Application::FinishUpdate()
 {
+	if (want_to_load == true) LoadGameNow();
+	if (want_to_save == true) SaveGameNow();
+
 	perf_info.PostUpdate();
 }
 
@@ -164,6 +176,130 @@ bool Application::CleanUp()
 void Application::AddModule(Module* mod)
 {
 	list_modules.push_back(mod);
+}
+
+// *************** Load / Save ******************
+void Application::LoadConfig() const
+{
+	// --- load config file ---
+	/*char* buf;
+	int size = App->file_system->Load("config.json", &buf);*/
+
+	/*JSON_Value *user_data = json_parse_file("config.json");
+
+	if (user_data != nullptr)
+	{
+		JSON_Object *object = json_value_get_object(user_data);
+		json_object_get_value(object, "Framerate");
+		json_value
+	}*/
+
+	
+	/*pugi::xml_parse_result result = config_file.
+	RELEASE(buf);
+
+	if (result == NULL)
+	{
+		LOG("Could not load map xml file config.xml. pugi error: %s", result.description());
+	}
+
+	return config_file.child("config");*/
+}
+
+void Application::LoadGame(const char *file)
+{
+	want_to_load = true;
+	sprintf_s(load_game, SHORT_STRING, "%s%s", App->file_system->GetSaveDirectory(), file);
+}
+
+void Application::SaveGame(const char *file)
+{
+	want_to_save = true;
+	sprintf_s(save_game, SHORT_STRING, "%s", file);
+}
+
+bool Application::SaveGameNow()
+{
+	bool ret = true;
+
+	//http://kgabis.github.io/parson/
+
+	DEBUG("Saving Game State on %s...", save_game);
+
+	JSONParser parser;
+	
+	JSONParser module = parser.AddNode("Modules");
+	
+	std::list<Module*>::iterator it = list_modules.begin();
+	for (; it != list_modules.end() && ret != false; ++it)
+	{	
+		ret = (*it)->Save(module.AddNode((*it)->GetModuleName()));
+	}	
+
+	char *serialized_string;
+	parser.Save(&serialized_string);	
+	App->file_system->Save(save_game, serialized_string, strlen(serialized_string));
+	parser.FreeBuffer(serialized_string);
+
+	want_to_save = false;
+
+	return ret;
+}
+
+bool Application::LoadGameNow()
+{
+	bool ret = true;
+
+	char* buf;
+	uint size = App->file_system->Load(load_game, &buf);
+
+	if (size > 0)
+	{
+		JSONParser parser(buf);
+		JSONParser modules = parser.GetNode("Modules");
+		
+		std::list<Module*>::iterator it = list_modules.begin();
+		for (; it != list_modules.end() && ret != false; ++it)
+		{			
+			(*it)->Load(modules.GetNode((*it)->GetModuleName()));
+		}			
+
+		parser.FreeBuffer(buf);
+
+		//// We create the necessary elements from pugiXML
+		//pugi::xml_document	data;
+		//pugi::xml_node		root;
+
+		//pugi::xml_parse_result result = data.load_buffer(buffer, size);
+		//
+
+		//if (result != NULL)
+		//{
+		//	LOG("Loading new Game State from %s...", load_game.data());
+		//	root = data.child("game_state");
+
+		//	list<Module*>::iterator item = modules.begin();
+		//	while (item != modules.end() && ret != false)
+		//	{
+		//		LOG("Loading module %s  ", (*item)->name.c_str());
+		//		ret = (*item)->load(root.child((*item)->name.data()));
+		//		++item;
+		//	}
+
+		//	data.reset();
+		//	if (ret == true)
+		//		LOG("...finished loading");
+		//	else
+		//		LOG("...loading process interrupted with error on module %s", (item != modules.end()) ? (*item)->name.data() : "unknown");
+		//}
+		//else
+		//	LOG("Could not parse game state xml file %s. pugi error: %s", load_game.data(), result.description());
+	}
+	else
+		DEBUG("Could not load game state xml file %s", load_game);
+
+	want_to_load = false;
+	return ret;
 }
 
 // *************** Utilities ********************

@@ -15,7 +15,7 @@
 
 ModuleTextureLoader::ModuleTextureLoader(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
-	name.assign("Texture Loader");
+	sprintf_s(name, SHORT_STRING, "Texture Loader");
 }
 
 // Destructor

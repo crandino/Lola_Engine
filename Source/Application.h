@@ -53,8 +53,16 @@ public:
 
 	const char *GetAppName();
 	const char *GetOrganization();
+
+	void LoadGame(const char *file);
+	void SaveGame(const char *file);
 		
 private:
+
+	bool	want_to_load = false;
+	bool	want_to_save = false;
+	char	load_game[SHORT_STRING];
+	char	save_game[SHORT_STRING];
 
 	char app_name[SHORT_STRING];
 	char organization[SHORT_STRING];
@@ -66,6 +74,12 @@ private:
 	void FinishUpdate();	
 
 	void AddModule(Module* mod);
+
+	void LoadConfig() const;
+	bool SaveGameNow();
+	bool LoadGameNow();
+
+
 };
 
 extern Application *App;

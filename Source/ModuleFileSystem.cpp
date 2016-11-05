@@ -9,7 +9,7 @@
 
 ModuleFileSystem::ModuleFileSystem(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
-	name.assign("file_system");
+	sprintf_s(name, SHORT_STRING, "File System");
 
 	// PHYSFS must be initialized before other modules awake,
 	// because it will be used by them.
@@ -200,7 +200,7 @@ bool ModuleFileSystem::Exists(const char *file) const
 
 const char *ModuleFileSystem::GetSaveDirectory() const
 {
-	return "save/";
+	return "Save/";
 }
 
 const char *ModuleFileSystem::GetFileFromDirPath(const char *path) const
@@ -228,7 +228,6 @@ const char *ModuleFileSystem::GetRealDirectory(const char *file) const
 {
 	return PHYSFS_getRealDir(file);
 }
-
 
 // -----------------------------------------------------
 // ASSIMP IO

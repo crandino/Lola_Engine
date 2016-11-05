@@ -4,6 +4,8 @@
 #include "Module.h"
 #include "MathGeoLib\MathGeoLib.h"
 #include "DrawDebug.h"
+
+#include "OcTree.h"
 #include <vector>
 
 class GameObject;
@@ -34,7 +36,8 @@ public:
 
 private:
 
-	GameObject *fake_camera;
+	OcTree								oc_tree;
+	GameObject							*fake_camera;
 
 	DrawDebug							draw_debug;
 

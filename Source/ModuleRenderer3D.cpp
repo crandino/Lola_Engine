@@ -22,7 +22,7 @@
 
 ModuleRenderer3D::ModuleRenderer3D(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
-	name.assign("Renderer3D");
+	sprintf_s(name, SHORT_STRING, "Renderer3D");
 }
 
 // Destructor

@@ -17,7 +17,7 @@
 // Constructor
 ModuleEditor::ModuleEditor(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
-	name.assign("Editor");
+	sprintf_s(name, SHORT_STRING, "Editor");
 }
 
 // Destructor

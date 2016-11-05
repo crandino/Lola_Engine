@@ -1,6 +1,9 @@
-#pragma once
+#ifndef __MODULE_H__
+#define __MODULE_H__
+
 #include "Globals.h"
-#include <string>
+
+#include "JSONParser.h"
 
 class Application;
 struct PhysBody3D;
@@ -13,7 +16,7 @@ private :
 	
 protected:
 	
-	std::string name;
+	char name[SHORT_STRING];
 
 public:
 
@@ -59,6 +62,16 @@ public:
 	{
 	}
 
+	virtual bool Save(JSONParser &module)
+	{
+		return true;
+	}
+
+	virtual bool Load(JSONParser &module)
+	{
+		return true;
+	}
+
 	void Enable()
 	{
 		if (!enabled)
@@ -76,4 +89,11 @@ public:
 		return enabled;
 	}
 
+	const char *GetModuleName() const
+	{
+		return name;
+	}
+
 };
+
+#endif //__MODULE_H__

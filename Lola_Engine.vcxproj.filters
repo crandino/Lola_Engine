@@ -37,6 +37,9 @@
     <Filter Include="Importers">
       <UniqueIdentifier>{fd528fed-81a4-427b-9349-2b42c30069fd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="3rd Party\Parson">
+      <UniqueIdentifier>{13093877-12ad-4ed8-bf47-78aff60d0c30}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Color.cpp">
@@ -240,12 +243,15 @@
     <ClCompile Include="Source\OcTree.cpp">
       <Filter>Source\Containers</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Parson\parson.c">
+      <Filter>3rd Party\Parson</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\JSONParser.cpp">
+      <Filter>Source\Helpers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Color.h">
-      <Filter>Source\Containers</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Point2D.h">
       <Filter>Source\Containers</Filter>
     </ClInclude>
     <ClInclude Include="Source\Light.h">
@@ -550,6 +556,12 @@
     </ClInclude>
     <ClInclude Include="Source\OcTree.h">
       <Filter>Source\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Parson\parson.h">
+      <Filter>3rd Party\Parson</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\JSONParser.h">
+      <Filter>Source\Helpers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

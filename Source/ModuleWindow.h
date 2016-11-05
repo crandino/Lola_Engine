@@ -26,6 +26,11 @@ public:
 
 	//The surface contained by the window
 	SDL_Surface* screen_surface;
+
+private:
+
+	bool Save(JSONParser &module);
+	bool Load(JSONParser &module);
 };
 
 #endif // __MODULEWINDOW_H__
