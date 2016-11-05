@@ -1,9 +1,14 @@
 #include "Component.h"
 
+#include "MathGeoLib\Algorithm\Random\LCG.h"
+
 Component::Component()
 {
 	type = COMPONENT_TYPE::UNKNOWN;
 	active = true;
+
+	math::LCG random;
+	UUID = random.Int();
 }
 
 Component::~Component()

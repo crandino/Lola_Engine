@@ -6,12 +6,17 @@
 #include "ComponentMaterial.h"
 #include "ComponentCamera.h"
 
+#include "MathGeoLib\Algorithm\Random\LCG.h"
+
 GameObject::GameObject(uint id, const char* name, GameObject *parent)
 {
 	active = true;
-	selected = false;
-	this->id = id;
+	selected = false;	
 	sprintf_s(this->name, SHORT_STRING, name);
+
+	this->id = id;
+	math::LCG random;
+	UUID = random.Int();
 
 	if (parent != nullptr)
 		parent->children.push_back(this);

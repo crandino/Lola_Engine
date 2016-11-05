@@ -123,7 +123,5 @@ bool ModuleWindow::Load(JSONParser &module)
 {
 	module.GetBoolean("Fullscreen");
 	module.GetBoolean("V-Sync");
-	//bool fullscreen = json_array_get_boolean(module, "Fullscreen");
-	//bool v_sync = json_object_get_boolean(obj, "V-Sync");
 	return true;
 }

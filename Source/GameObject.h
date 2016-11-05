@@ -27,6 +27,7 @@ public:
 	std::vector<Component*>			 components;
 	std::vector<GameObject*>         children;
 	uint						     id;
+	long unsigned int				 UUID;
 	bool						     active;
 	bool					         selected;
 

@@ -20,7 +20,7 @@ protected:
 	const char				 *name;
 	COMPONENT_TYPE            type;
 	bool					active;
-	unsigned int				id;		// They are not used right now!
+	long unsigned int		  UUID;
 
 public:
 	
