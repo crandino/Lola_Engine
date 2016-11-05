@@ -39,7 +39,8 @@ public:
 
 	// Gets
 	JSONParser GetNode(const char *name_node) const;
-	int GetArrayCount(const char *name_node) const;
+	JSONParser GetArray(const char *array_name, int index = -1) const;
+	int GetArrayCount(const char *array_name) const;
 
 	bool GetBoolean(const char *name_boolean) const;
 

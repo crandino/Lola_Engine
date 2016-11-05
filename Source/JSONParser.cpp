@@ -67,6 +67,14 @@ JSONParser JSONParser::GetNode(const char *name_node) const
 	return JSONParser(json_object_get_object(root, name_node));
 }
 
+JSONParser JSONParser::GetArray(const char *array_name, int index) const
+{
+	JSON_Array* array = json_object_get_array(root, array_name);
+	if (array != nullptr)
+		return JSONParser(json_array_get_object(array, index));
+	return JSONParser((JSON_Object*) nullptr);
+}
+
 int JSONParser::GetArrayCount(const char *array_name) const
 {
 	int size = 0;

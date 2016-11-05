@@ -31,6 +31,7 @@ public:
 
 	void CreateCamera();
 	bool DeleteGameObject(const GameObject *go_to_delete);
+	void MarkChildToDelete(GameObject *go);
 
 	void SetEditorCamera(const ComponentCamera *comp_cam);
 
@@ -46,11 +47,10 @@ private:
 	std::vector<GameObject*>			list_of_gos;
 	std::vector<const GameObject*>	    list_of_gos_to_draw;
 
-	GameObject		*GetGameObject(uint id_to_search) const;
+	GameObject	*GetGameObject(uint id_to_search) const;
+	GameObject  *FindParent(const GameObject* go) const;
 
 	bool DeleteGameObject(unsigned int id_to_delete);
-	bool DeleteChildrenGameObject(const GameObject *go_to_delete);
-	bool RemoveChildFromChildren(const GameObject *go_to_delete);
 
 	int FrustumCulling(const math::Frustum &frustum);
 

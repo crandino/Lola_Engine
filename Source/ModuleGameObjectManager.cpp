@@ -55,6 +55,27 @@ bool ModuleGameObjectManager::Init()
 // PreUpdate: clear buffer
 UPDATE_STATUS ModuleGameObjectManager::PreUpdate(float dt)
 {
+	// Looking GameObject to delete...
+	std::vector<GameObject*>::iterator it;
+	
+	for(it = list_of_gos.begin(); it != list_of_gos.end(); ++it)
+	{
+		if ((*it) != nullptr && (*it)->to_delete)
+		{
+			DeleteGameObject((*it));
+			(*it) = nullptr;
+		}
+	}
+
+	// Deleting the erased GameObjects form the list of GOs
+	for (it = list_of_gos.begin(); it != list_of_gos.end();)
+	{
+		if ((*it) == nullptr)
+			it = list_of_gos.erase(it);
+		else
+			++it;
+	}
+
 	static bool load_model = true;
 	if (App->input->GetKey(SDL_SCANCODE_G) == KEY_DOWN)
 	{
@@ -183,57 +204,75 @@ GameObject *ModuleGameObjectManager::GetGameObject(uint id_to_search) const
 	return nullptr;
 }
 
+GameObject *ModuleGameObjectManager::FindParent(const GameObject* go) const
+{
+	std::stack<GameObject*> go_stack;
+	go_stack.push(root);
+
+	GameObject *curr_go = nullptr;
+
+	while (!go_stack.empty())
+	{
+		curr_go = go_stack.top();
+		go_stack.pop();
+
+		if (curr_go != nullptr)
+		{
+			for (uint i = 0; i < curr_go->children.size(); ++i)
+			{
+				if (curr_go->children[i] == go)
+					return curr_go;
+
+				go_stack.push(curr_go->children[i]);
+			}
+		}		
+	}
+
+	return nullptr;
+}
+
+void ModuleGameObjectManager::MarkChildToDelete(GameObject *go)
+{
+	std::stack<GameObject*> go_stack;
+	go_stack.push(go);
+
+	GameObject *curr_go = nullptr;
+
+	while (!go_stack.empty())
+	{
+		curr_go = go_stack.top();
+		go_stack.pop();
+
+		curr_go->to_delete = true;
+
+		for (uint i = 0; i < curr_go->children.size(); ++i)
+			go_stack.push(curr_go->children[i]);
+	}
+}
+
 bool ModuleGameObjectManager::DeleteGameObject(const GameObject *go_to_delete)
 {
 	bool ret = false;
 
 	if (go_to_delete != nullptr)
 	{
-		std::vector<GameObject*>::iterator it_gos = list_of_gos.begin();
-		
-		for (;it_gos != list_of_gos.end();)
+		GameObject *parent = FindParent(go_to_delete);
+
+		if (parent != nullptr)
 		{
-			if ((*it_gos) == go_to_delete)
-			{	
-				for (uint i = 0; i < (*it_gos)->children.size(); ++i)
-					DeleteChildrenGameObject((*it_gos)->children[i]);
-
-				RemoveChildFromChildren(go_to_delete);
-				it_gos = list_of_gos.erase(it_gos);
-				RELEASE(go_to_delete);	
-				ret = true;
-			}
-			else
-				++it_gos;
-		}
-	}	
-
-	return ret;
-}
-
-bool ModuleGameObjectManager::DeleteChildrenGameObject(const GameObject *go_to_delete)
-{
-	bool ret = false;
-
-	if (go_to_delete != nullptr)
-	{
-		std::vector<GameObject*>::iterator it_gos = list_of_gos.begin();
-
-		for (;it_gos != list_of_gos.end();)
-		{
-			if ((*it_gos) == go_to_delete)
+			for(std::vector<GameObject*>::iterator it = parent->children.begin(); it != parent->children.end(); ++it)
 			{
-				for (uint i = 0; i < (*it_gos)->children.size(); ++i)
-					DeleteChildrenGameObject((*it_gos)->children[i]);
-
-				it_gos = list_of_gos.erase(it_gos);
-				RELEASE(go_to_delete);
-				ret = true;
+				if ((*it) == go_to_delete)
+				{
+					parent->children.erase(it);
+					break;
+				}				
 			}
-			else
-				++it_gos;
 		}
-	}
+
+		RELEASE(go_to_delete);
+		ret = true;		
+	}	
 
 	return ret;
 }
@@ -241,28 +280,6 @@ bool ModuleGameObjectManager::DeleteChildrenGameObject(const GameObject *go_to_d
 bool ModuleGameObjectManager::DeleteGameObject(unsigned int id_to_delete)
 {
 	return DeleteGameObject(GetGameObject(id_to_delete));
-}
-
-bool ModuleGameObjectManager::RemoveChildFromChildren(const GameObject *go_child_to_remove)
-{
-	if (go_child_to_remove)
-	{
-		std::vector<GameObject*>::iterator it_gos = list_of_gos.begin();
-		std::vector<GameObject*>::iterator it_child;
-
-		for (; it_gos != list_of_gos.end(); ++it_gos)
-		{
-			for(it_child = (*it_gos)->children.begin(); it_child != (*it_gos)->children.end(); ++it_child)
-			{
-				if ((*it_child) == go_child_to_remove)
-				{
-					(*it_gos)->children.erase(it_child);
-					return true;
-				}				
-			}
-		}
-	}
-	return false;	
 }
 
 void ModuleGameObjectManager::SetEditorCamera(const ComponentCamera *comp_cam)
@@ -450,9 +467,10 @@ bool ModuleGameObjectManager::Load(JSONParser &module)
 {
 	for (uint i = 0; i < module.GetArrayCount("Game Objects"); ++i)
 	{
-
+		JSONParser go = module.GetArray("Game Objects", i);
+		go.GetBoolean("Active");
+		go.GetBoolean("Selected");
 	}
-		//list_of_gos[i]->Load(module);
-
+		
 	return true;
 }

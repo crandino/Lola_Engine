@@ -244,8 +244,8 @@ void ModuleEditor::ShowWarning()
 	ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.0f, 0.75f, 0.0f, 0.9f));
 	if (ImGui::Button("Yes", button_size))
 	{
-		if (App->gameobject_manager->DeleteGameObject(go_selected))
-			go_selected = nullptr;
+		App->gameobject_manager->MarkChildToDelete(go_selected);
+		go_selected = nullptr;
 		warning_alert = false;
 	}
 		

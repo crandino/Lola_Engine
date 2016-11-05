@@ -30,8 +30,10 @@ public:
 	std::vector<GameObject*>         children;
 	uint						     id;
 	long unsigned int				 UUID;
+
 	bool						     active;
 	bool					         selected;
+	bool							 to_delete;
 
 	GameObject(uint id, const char* name, GameObject *parent);
 	~GameObject();
