@@ -77,5 +77,17 @@ void ComponentMaterial::ShowEditorInfo()
 	ImGui::Separator();
 }
 
+bool ComponentMaterial::Save(JSONParser &go)
+{
+	JSONParser component;
+
+	component.AddInt("Type", type);
+	component.AddInt("Opacity", opacity);
+
+	go.AddArray(component);
+
+	return true;
+}
+
 
 

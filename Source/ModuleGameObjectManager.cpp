@@ -436,3 +436,23 @@ int ModuleGameObjectManager::FrustumCulling(const math::Frustum &frustum)
 	
 	return list_of_gos_to_draw.size();
 }
+
+bool ModuleGameObjectManager::Save(JSONParser &module)
+{
+	module.AddArray("Game Objects");
+	for (uint i = 0; i < list_of_gos.size(); ++i)
+		list_of_gos[i]->Save(module);
+
+	return true;
+}
+
+bool ModuleGameObjectManager::Load(JSONParser &module)
+{
+	for (uint i = 0; i < module.GetArrayCount("Game Objects"); ++i)
+	{
+
+	}
+		//list_of_gos[i]->Load(module);
+
+	return true;
+}

@@ -33,6 +33,7 @@ public:
 
 	void ShowEditorInfo();
 	
+	bool Save(JSONParser &go);
 };
 
 #endif __COMPONENTMATERIAL_H__

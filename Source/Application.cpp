@@ -259,41 +259,10 @@ bool Application::LoadGameNow()
 		JSONParser modules = parser.GetNode("Modules");
 		
 		std::list<Module*>::iterator it = list_modules.begin();
-		for (; it != list_modules.end() && ret != false; ++it)
-		{			
+		for (; it != list_modules.end() && ret != false; ++it)			
 			(*it)->Load(modules.GetNode((*it)->GetModuleName()));
-		}			
 
 		parser.FreeBuffer(buf);
-
-		//// We create the necessary elements from pugiXML
-		//pugi::xml_document	data;
-		//pugi::xml_node		root;
-
-		//pugi::xml_parse_result result = data.load_buffer(buffer, size);
-		//
-
-		//if (result != NULL)
-		//{
-		//	LOG("Loading new Game State from %s...", load_game.data());
-		//	root = data.child("game_state");
-
-		//	list<Module*>::iterator item = modules.begin();
-		//	while (item != modules.end() && ret != false)
-		//	{
-		//		LOG("Loading module %s  ", (*item)->name.c_str());
-		//		ret = (*item)->load(root.child((*item)->name.data()));
-		//		++item;
-		//	}
-
-		//	data.reset();
-		//	if (ret == true)
-		//		LOG("...finished loading");
-		//	else
-		//		LOG("...loading process interrupted with error on module %s", (item != modules.end()) ? (*item)->name.data() : "unknown");
-		//}
-		//else
-		//	LOG("Could not parse game state xml file %s. pugi error: %s", load_game.data(), result.description());
 	}
 	else
 		DEBUG("Could not load game state xml file %s", load_game);

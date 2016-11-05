@@ -1,6 +1,7 @@
 #include "Component.h"
 
 #include "MathGeoLib\Algorithm\Random\LCG.h"
+#include "JSONParser.h"
 
 Component::Component()
 {
@@ -54,4 +55,9 @@ const char *Component::GetNameByType(COMPONENT_TYPE type)
 bool Component::IsActive() const
 {
 	return active;
+}
+
+bool Component::Save(JSONParser &go)
+{
+	return true;
 }

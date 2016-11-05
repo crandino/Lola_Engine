@@ -4,6 +4,8 @@
 #include "Globals.h"
 #include "MathGeoLib\MathGeoLib.h"
 
+#include "JSONParser.h"
+
 #include <vector>
 
 enum COMPONENT_TYPE;
@@ -46,6 +48,8 @@ public:
 	void Disable();
 	bool IsActive() const;
 	const char *GetName() const;
+
+	bool Save(JSONParser &game_objects);
 	
 };
 

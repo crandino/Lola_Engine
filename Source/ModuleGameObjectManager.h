@@ -54,6 +54,9 @@ private:
 
 	int FrustumCulling(const math::Frustum &frustum);
 
+	bool Save(JSONParser &module);
+	bool Load(JSONParser &module);
+	
 };
 
 #endif // !__MODULEGAMEOBJECTMANAGER_H__

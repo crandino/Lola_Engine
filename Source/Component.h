@@ -1,6 +1,8 @@
 #ifndef __COMPONENT_H__
 #define __COMPONENT_H__
 
+#include "JSONParser.h"
+
 class GameObject;
 
 enum COMPONENT_TYPE
@@ -36,10 +38,7 @@ public:
 	const char *GetNameByType(COMPONENT_TYPE type);
 	bool IsActive() const;
 
+	virtual bool Save(JSONParser &go);
 };
-
-
-
-
 
 #endif //!__COMPONENT_H__

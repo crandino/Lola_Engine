@@ -104,3 +104,22 @@ bool GameObject::GetAABB(math::AABB &aabb) const
  {
 	 return (GetComponentByType(COMPONENT_TYPE::MESH) != nullptr  ? true : false);
  }
+
+ bool GameObject::Save(JSONParser &game_objects)
+ {
+	 JSONParser go;
+
+	 go.AddBoolean("Active", active);
+	 go.AddBoolean("Selected", selected);	
+
+	 go.AddArray("Components");
+
+	 for (uint i = 0; i < components.size(); ++i)
+	 {
+		 components[i]->Save(go);
+	 }
+
+	 game_objects.AddArray(go);
+	
+	 return true;
+ }
