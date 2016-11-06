@@ -1,6 +1,8 @@
 #include "Component.h"
 
-#include "MathGeoLib\Algorithm\Random\LCG.h"
+#include "Application.h"
+#include "ModuleGameObjectManager.h"
+
 #include "JSONParser.h"
 
 Component::Component()
@@ -8,8 +10,7 @@ Component::Component()
 	type = COMPONENT_TYPE::UNKNOWN;
 	active = true;
 
-	math::LCG random;
-	UUID = random.Int();
+	App->gameobject_manager->GenerateUUID(this);
 }
 
 Component::~Component()

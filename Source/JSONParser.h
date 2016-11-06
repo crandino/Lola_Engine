@@ -33,8 +33,9 @@ public:
 	bool AddArray(const char *name_array);
 	bool AddArray(const JSONParser &block);
 
-	bool AddBoolean(const char *name_node, bool boolean);
-	int AddInt(const char *name_int, int value);
+	bool AddBoolean(const char *node_name, bool boolean);
+	bool AddInt(const char *int_name, int value);
+	bool AddString(const char *string_name, const char *string_value);
 	bool AppendBoolean(const char *name_boolean, bool boolean);
 
 	// Gets
@@ -43,6 +44,7 @@ public:
 	int GetArrayCount(const char *array_name) const;
 
 	bool GetBoolean(const char *name_boolean) const;
+	const char *GetString(const char *string_name) const;
 
 	// Save
 	void Save(char **buf);

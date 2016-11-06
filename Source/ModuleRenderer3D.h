@@ -13,7 +13,7 @@
 #define CHECKERS_HEIGHT 512
 #define CHECKERS_WIDTH 512
 
-class ComponentMesh;
+class Mesh;
 class GameObject;
 
 class ModuleRenderer3D : public Module
@@ -36,7 +36,7 @@ public:
 	void CalculateProjectionMatrix();
 	void CalculateViewMatrix();
 
-	bool LoadMeshBuffer(const ComponentMesh *mesh);
+	bool LoadMeshBuffer(const Mesh *mesh);
 	void ShowGameObject(const GameObject *go);
 
 	void DrawDirectMode();

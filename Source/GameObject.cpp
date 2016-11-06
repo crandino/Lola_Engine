@@ -6,7 +6,8 @@
 #include "ComponentMaterial.h"
 #include "ComponentCamera.h"
 
-#include "MathGeoLib\Algorithm\Random\LCG.h"
+#include "Application.h"
+#include "ModuleGameObjectManager.h"
 
 GameObject::GameObject(uint id, const char* name, GameObject *parent)
 {
@@ -17,8 +18,7 @@ GameObject::GameObject(uint id, const char* name, GameObject *parent)
 	sprintf_s(this->name, SHORT_STRING, name);
 
 	this->id = id;
-	math::LCG random;
-	UUID = random.Int();
+	App->gameobject_manager->GenerateUUID(this);
 
 	if (parent != nullptr)
 		parent->children.push_back(this);

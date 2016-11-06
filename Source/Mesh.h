@@ -1,8 +1,6 @@
 #ifndef __MESH_H__
 #define __MESH_H__
 
-// NOT USED IN CODE! Remains here for Importer/Exporter moment...
-
 #include "MathGeoLib\MathGeoLib.h"
 
 struct Mesh

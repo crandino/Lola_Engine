@@ -14,7 +14,7 @@ ComponentMaterial::ComponentMaterial() : Component()
 	color_emissive.Set(0.0f, 0.0f, 0.0f);
 	color_transparent.Set(0.0f, 0.0f, 0.0f);
 
-	sprintf_s(tex_path, "%s", '\0');
+	sprintf_s(tex_path, "%c", '\0');
 	tex_buffer = 0;
 	opacity = 1.0f;
 

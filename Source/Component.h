@@ -21,12 +21,12 @@ protected:
 
 	const char				 *name;
 	COMPONENT_TYPE            type;
-	bool					active;
-	long unsigned int		  UUID;
+	bool					active;	
 
 public:
 	
 	GameObject *game_object = nullptr;
+	long unsigned int	      UUID;
 
 	Component();
 	virtual ~Component();

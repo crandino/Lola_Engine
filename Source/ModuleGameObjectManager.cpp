@@ -365,7 +365,7 @@ void ModuleGameObjectManager::ImportModel(const char *file_name, bool use_fs)
 							ComponentMesh *comp_mesh  = (ComponentMesh*)new_go->AddComponent(COMPONENT_TYPE::MESH);
 							comp_mesh->SetComponent(ai_mesh);							
 
-							App->renderer3D->LoadMeshBuffer(comp_mesh);							
+							App->renderer3D->LoadMeshBuffer(&comp_mesh->mesh);							
 
 							// --- MATERIAL ---
 							aiMaterial *ai_material = scene->mMaterials[ai_mesh->mMaterialIndex];
@@ -473,4 +473,14 @@ bool ModuleGameObjectManager::Load(JSONParser &module)
 	}
 		
 	return true;
+}
+
+void ModuleGameObjectManager::GenerateUUID(GameObject *go)
+{
+	go->UUID = UUID_generator.Int();
+}
+
+void ModuleGameObjectManager::GenerateUUID(Component *comp)
+{
+	comp->UUID = UUID_generator.Int();
 }

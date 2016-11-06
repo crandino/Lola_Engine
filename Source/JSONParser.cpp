@@ -49,9 +49,14 @@ bool JSONParser::AddBoolean(const char *name_boolean, bool boolean)
 	return json_object_set_boolean(root, name_boolean, boolean) == JSONSuccess;
 }
 
-int JSONParser::AddInt(const char *name_int, int value)
+bool JSONParser::AddInt(const char *name_int, int value)
 {
 	return json_object_set_number(root, name_int, (int)value) == JSONSuccess;
+}
+
+bool JSONParser::AddString(const char *string_name, const char *string_value)
+{
+	return json_object_set_string(root, string_name, string_value) == JSONSuccess;
 }
 
 bool JSONParser::AppendBoolean(const char *name_boolean, bool boolean)
@@ -86,6 +91,11 @@ int JSONParser::GetArrayCount(const char *array_name) const
 bool JSONParser::GetBoolean(const char *name_boolean) const
 {
 	return (json_object_get_boolean(root, name_boolean) != 0) ? true : false;
+}
+
+const char *JSONParser::GetString(const char *string_name) const
+{
+	return (json_object_get_string(root, string_name));
 }
 
 // Buffer must be deleted calling FreeBuffer(char **buff)

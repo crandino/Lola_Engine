@@ -33,6 +33,9 @@ public:
 	bool DeleteGameObject(const GameObject *go_to_delete);
 	void MarkChildToDelete(GameObject *go);
 
+	void GenerateUUID(GameObject *go);
+	void GenerateUUID(Component *comp);
+
 	void SetEditorCamera(const ComponentCamera *comp_cam);
 
 private:
@@ -41,6 +44,8 @@ private:
 	GameObject							*fake_camera;
 
 	DrawDebug							draw_debug;
+
+	math::LCG							UUID_generator;
 
 	uint								id_to_assign = 0;
 	GameObject							*root = nullptr;
