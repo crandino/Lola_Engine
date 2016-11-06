@@ -152,6 +152,24 @@ UPDATE_STATUS ModuleGameObjectManager::Update(float dt)
 // PostUpdate present buffer to screen
 UPDATE_STATUS ModuleGameObjectManager::PostUpdate(float dt)
 {
+	if (App->input->GetKey(SDL_SCANCODE_6))
+	{
+		for (uint i = 0; i < list_of_gos.size(); ++i)
+		{
+			const GameObject *curr_go = list_of_gos[i];
+
+			for (uint i = 0; i < curr_go->components.size(); ++i)
+			{
+				switch (curr_go->components[i]->GetType())
+				{
+				case(COMPONENT_TYPE::MESH):
+					((ComponentMesh*)curr_go->components[i])->Load();
+					break;
+				}
+			}
+		}
+	}
+
 	return UPDATE_CONTINUE;
 }
 

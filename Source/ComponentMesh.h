@@ -51,6 +51,7 @@ public:
 	void ApplyTransformToAABB();
 
 	bool Save(JSONParser &go);
+	void Load(); // TESTING!!!
 };
 
 #endif __COMPONENTMESH_H__

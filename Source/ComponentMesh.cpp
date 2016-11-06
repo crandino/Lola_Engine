@@ -122,7 +122,6 @@ bool ComponentMesh::Save(JSONParser &go)
 	component.AddBoolean("Wire", wire);
 
 	MeshImporter mesh_importer;
-	DEBUG("%lu", UUID);
 	char save_filename[SHORT_STRING]; sprintf_s(save_filename, SHORT_STRING, "%lu%s", UUID, ".msh");
 	char *buf;
 	unsigned int size = mesh_importer.Save(&buf, &mesh);
@@ -133,4 +132,14 @@ bool ComponentMesh::Save(JSONParser &go)
 	go.AddArray(component);
 
 	return true;
+}
+
+void ComponentMesh::Load()
+{
+	MeshImporter mesh_importer;
+	char save_filename[SHORT_STRING]; sprintf_s(save_filename, SHORT_STRING, "%s%lu%s", App->file_system->GetSaveDirectory(), UUID, ".msh");
+	char *buf;
+	App->file_system->Load(save_filename, &buf);
+	Mesh test;
+	unsigned int size = mesh_importer.Load(&buf, &test);
 }
