@@ -70,7 +70,6 @@ public:
 		{
 			bytes = sizeof(float) * mesh->num_tex_coord * 2;
 			memcpy(cursor, mesh->tex_coord, bytes);
-			cursor += bytes;
 		}
 
 		return size;
@@ -132,7 +131,6 @@ public:
 			bytes = sizeof(float) * mesh->num_tex_coord * 2;
 			mesh->tex_coord = new math::float2[bytes];
 			memcpy(mesh->tex_coord, cursor, bytes);
-			cursor += bytes;
 		}
 
 		return bytes;

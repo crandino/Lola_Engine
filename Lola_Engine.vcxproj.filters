@@ -249,6 +249,9 @@
     <ClCompile Include="Source\JSONParser.cpp">
       <Filter>Source\Helpers</Filter>
     </ClCompile>
+    <ClCompile Include="Source\ModuleSceneImporter.cpp">
+      <Filter>Source\Modules</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Color.h">
@@ -562,6 +565,9 @@
     </ClInclude>
     <ClInclude Include="Source\JSONParser.h">
       <Filter>Source\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ModuleSceneImporter.h">
+      <Filter>Source\Modules</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -10,6 +10,7 @@
 #include "ModuleEditor.h"
 #include "ModuleTextureLoader.h"
 #include "ModuleGameObjectManager.h"
+#include "ModuleSceneImporter.h"
 #include "ModuleRenderer3D.h"
 
 #include "JSONParser.h"
@@ -22,6 +23,7 @@ Application::Application()
 	input = new ModuleInput(this, true);
 	audio = new ModuleAudio(this, true);
 	scene_intro = new ModuleSceneIntro(this, true);
+	scene_importer = new ModuleSceneImporter(this, true);
 	renderer3D = new ModuleRenderer3D(this, true);
 	camera = new ModuleCameraEditor(this, true);
 	//physics = new ModulePhysics3D(this, true);
@@ -42,6 +44,7 @@ Application::Application()
 	AddModule(file_system);
 	AddModule(tex_loader);
 	AddModule(gameobject_manager);
+	AddModule(scene_importer);
 	
 	// Scenes
 	AddModule(camera);

@@ -15,6 +15,7 @@ class ModuleFileSystem;
 class ModuleInput;
 class ModuleAudio;
 class ModuleSceneIntro;
+class ModuleSceneImporter;
 class ModuleRenderer3D;
 class ModuleCameraEditor;
 class ModulePhysics3D;
@@ -35,9 +36,10 @@ public:
 	ModuleInput				*input = nullptr;
 	ModuleAudio				*audio = nullptr;
 	ModuleSceneIntro		*scene_intro = nullptr;
+	ModuleSceneImporter	    *scene_importer = nullptr;
 	ModuleRenderer3D		*renderer3D = nullptr;
 	ModuleCameraEditor		*camera = nullptr;
-	//ModulePhysics3D			*physics = nullptr;
+	//ModulePhysics3D		*physics = nullptr;
 	ModuleGameObjectManager *gameobject_manager = nullptr;
 	ModuleEditor			*editor = nullptr;
 

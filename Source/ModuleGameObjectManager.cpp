@@ -388,8 +388,7 @@ void ModuleGameObjectManager::ImportModel(const char *file_name, bool use_fs)
 							// --- MATERIAL ---
 							aiMaterial *ai_material = scene->mMaterials[ai_mesh->mMaterialIndex];
 							ComponentMaterial *comp_mat = (ComponentMaterial*)new_go->AddComponent(COMPONENT_TYPE::MATERIAL);							
-							comp_mat->SetComponent(ai_material);
-							
+							comp_mat->SetComponent(ai_material);							
 						}					
 					}
 				}
@@ -400,6 +399,7 @@ void ModuleGameObjectManager::ImportModel(const char *file_name, bool use_fs)
 				}
 			}
 		}
+
 		aiReleaseImport(scene);
 	}
 	else

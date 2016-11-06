@@ -133,6 +133,7 @@
     <ClCompile Include="Source\ModuleGameObjectManager.cpp" />
     <ClCompile Include="Source\ModuleInput.cpp" />
     <ClCompile Include="Source\ModuleRenderer3D.cpp" />
+    <ClCompile Include="Source\ModuleSceneImporter.cpp" />
     <ClCompile Include="Source\ModuleSceneIntro.cpp" />
     <ClCompile Include="Source\ModuleTextureLoader.cpp" />
     <ClCompile Include="Source\ModuleWindow.cpp" />
@@ -238,6 +239,7 @@
     <ClInclude Include="Source\ModuleGameObjectManager.h" />
     <ClInclude Include="Source\ModuleInput.h" />
     <ClInclude Include="Source\ModuleRenderer3D.h" />
+    <ClInclude Include="Source\ModuleSceneImporter.h" />
     <ClInclude Include="Source\ModuleTextureLoader.h" />
     <ClInclude Include="Source\ModuleWindow.h" />
     <ClInclude Include="Source\openGL.h" />
