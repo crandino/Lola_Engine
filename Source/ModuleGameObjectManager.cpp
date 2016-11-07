@@ -1,26 +1,19 @@
 #include "ModuleGameObjectManager.h"
 
 #include "Application.h"
-#include "ModuleFileSystem.h"
+//#include "ModuleFileSystem.h"
 #include "ModuleRenderer3D.h"
-#include "ModuleInput.h"
 #include "ModuleCameraEditor.h"
+#include "ModuleInput.h"
 
 #include "GameObject.h"
 
-#include "Assimp/include/cimport.h"
-#include "Assimp/include/scene.h"
-#include "Assimp/include/postprocess.h"
-#include "Assimp/include/cfileio.h"
-
 #include "ComponentMesh.h"
-#include "ComponentTransform.h"
-#include "ComponentMaterial.h"
+//#include "ComponentTransform.h"
+//#include "ComponentMaterial.h"
 #include "ComponentCamera.h"
 
 #include <stack>
-
-#pragma comment (lib, "Source/Assimp/libx86/assimp.lib")
 
 ModuleGameObjectManager::ModuleGameObjectManager(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -32,17 +25,12 @@ ModuleGameObjectManager::~ModuleGameObjectManager()
 { }
 
 // Called before render is available
-bool ModuleGameObjectManager::Init()
+bool ModuleGameObjectManager::Awake(JSONParser &config)
 {
 	bool ret = true;
 
 	// First gameobject of the scene (id = 0)
 	root = CreateGameObject("Root", nullptr);
-
-	// Stream log messages to Debug window
-	struct aiLogStream stream;
-	stream = aiGetPredefinedLogStream(aiDefaultLogStream_DEBUGGER, nullptr);
-	aiAttachLogStream(&stream);
 
 	fake_camera = App->gameobject_manager->CreateGameObject("Fake_camera", nullptr);
 	fake_camera->AddComponent(COMPONENT_TYPE::TRANSFORM);
@@ -74,21 +62,6 @@ UPDATE_STATUS ModuleGameObjectManager::PreUpdate(float dt)
 			it = list_of_gos.erase(it);
 		else
 			++it;
-	}
-
-	static bool load_model = true;
-	if (App->input->GetKey(SDL_SCANCODE_G) == KEY_DOWN)
-	{
-		//ImportModel("Models/primitives_with_parent.fbx");  //Street environment_V01.fbx
-		//ImportModel("Models/aabb_test.fbx");
-		//ImportModel("Models/Street environment_V01.fbx");
-	}	
-
-	if (load_model)
-	{
-		ImportModel("Models/QuadTree_test3.fbx");  //Street environment_V01.fbx
-		//ImportModel("Models/color_cubes.fbx");  //Street environment_V01.fbx
-		load_model = false;		
 	}
 
 	return UPDATE_CONTINUE;
@@ -183,9 +156,6 @@ bool ModuleGameObjectManager::CleanUp()
 
 	list_of_gos.clear();
 	list_of_gos_to_draw.clear();
-
-	// detach log stream
-	aiDetachAllLogStreams();
 	
 	return ret;
 }
@@ -313,99 +283,6 @@ void ModuleGameObjectManager::SetEditorCamera(const ComponentCamera *comp_cam)
 	}
 
 	App->camera->SetAsEditorCamera(comp_cam->game_object);
-}
-
-/* ImportModel seperates each FBX sections into different GameObject components (transform, mesh, material,...).
-A GameObject is created for every individual mesh available on the FBX */
-void ModuleGameObjectManager::ImportModel(const char *file_name, bool use_fs)
-{
-	const aiScene* scene;
-
-	if (use_fs)
-		scene = aiImportFileEx(file_name, aiProcessPreset_TargetRealtime_MaxQuality, App->file_system->GetAssimpIO());
-	else
-		scene = aiImportFile(file_name, aiProcessPreset_TargetRealtime_MaxQuality);
-
-	if (scene != nullptr)
-	{
-		if (scene->HasMeshes())
-		{
-			std::stack<aiNode*> nodes_stack;
-			std::stack<GameObject*> go_stack;
-
-			nodes_stack.push(scene->mRootNode);
-			go_stack.push(root);
-
-			aiNode *curr_node;
-			GameObject *parent;
-
-			while (!nodes_stack.empty())
-			{
-				curr_node = nodes_stack.top();
-				parent = go_stack.top();
-
-				int num_children = curr_node->mNumChildren;
-
-				if (num_children > 0)
-				{
-					nodes_stack.pop();  // Node checked is eliminated.
-					go_stack.pop();
-
-					for (int i = 0; i < num_children; ++i)
-					{
-						aiNode *node_to_add = curr_node->mChildren[i];												
-
-						nodes_stack.push(node_to_add);
-						char *go_name = node_to_add->mName.data;
-
-						// I don't like! This part eliminates the strange names on Ricard's FBX,
-						// but it is exclusive for his FBX, so a better and generic option has to be implemented.						
-						for (uint i = 0; i < node_to_add->mName.length; ++i)
-						{
-							if (go_name[i] == '$')
-							{
-								go_name[i-1] = '\0';
-								break;
-							}								
-						}							
-
-						GameObject *new_go = CreateGameObject(go_name, parent);	
-						go_stack.push(new_go);						
-
-						// --- TRANSFORM ---						
-						ComponentTransform *comp_trans = (ComponentTransform*)new_go->AddComponent(COMPONENT_TYPE::TRANSFORM);
-						comp_trans->SetComponent(node_to_add);						
-									
-						// --- MESH ---						
-						if (node_to_add->mNumMeshes != 0)
-						{
-							aiMesh *ai_mesh = scene->mMeshes[*node_to_add->mMeshes];
-							ComponentMesh *comp_mesh  = (ComponentMesh*)new_go->AddComponent(COMPONENT_TYPE::MESH);
-							comp_mesh->SetComponent(ai_mesh);							
-
-							App->renderer3D->LoadMeshBuffer(&comp_mesh->mesh);							
-
-							// --- MATERIAL ---
-							aiMaterial *ai_material = scene->mMaterials[ai_mesh->mMaterialIndex];
-							ComponentMaterial *comp_mat = (ComponentMaterial*)new_go->AddComponent(COMPONENT_TYPE::MATERIAL);							
-							comp_mat->SetComponent(ai_material);							
-						}					
-					}
-				}
-				else
-				{
-					go_stack.pop();
-					nodes_stack.pop();					
-				}
-			}
-		}
-
-		aiReleaseImport(scene);
-	}
-	else
-	{
-		DEBUG("Error loading scene %s: %s", file_name, aiGetErrorString());
-	}	
 }
 
 void ModuleGameObjectManager::CreateCamera()

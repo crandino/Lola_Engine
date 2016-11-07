@@ -569,6 +569,12 @@
     <ClInclude Include="Source\ModuleSceneImporter.h">
       <Filter>Source\Modules</Filter>
     </ClInclude>
+    <ClInclude Include="Source\MaterialImporter.h">
+      <Filter>Importers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ModuleSceneIntro.h">
+      <Filter>Source\Modules\Game</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Source\MathGeoLib\Math\float2.inl">

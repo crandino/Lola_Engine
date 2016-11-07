@@ -1,3 +1,24 @@
 {
-    "Framerate": 60
+	"Application": {
+		"engine_name": "LOLA Engine",
+		"organization": "CITM"
+	},
+    "Modules": {
+		"Window": {
+			"fullscreen": false,
+			"resizable": true,
+			"borderless": false,
+			"fullscreen_desktop": false,
+            "vsync": false,			
+			"screen_height": 800,
+			"screen_width": 1200,
+			"screen_size": 1
+		},
+        "Input": {},
+        "Audio": {},
+		"Renderer3D": {
+			"V-Sync": true
+		}
+	}
 }
+		

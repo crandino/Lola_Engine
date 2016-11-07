@@ -15,7 +15,7 @@ public:
 	// Destructor
 	virtual ~ModuleWindow();
 
-	bool Init();
+	bool Awake(JSONParser &config);
 	bool CleanUp();
 
 	void SetTitle(const char* title);
@@ -28,6 +28,10 @@ public:
 	SDL_Surface* screen_surface;
 
 private:
+
+	uint screen_width;
+	uint screen_height;
+	uint screen_size;
 
 	bool Save(JSONParser &module);
 	bool Load(JSONParser &module);

@@ -21,8 +21,16 @@ JSONParser::~JSONParser()
 		json_value_free(value_root);
 }
 
-// SETS
+void JSONParser::ParseBuffer(char *buffer)
+{
+	if (buffer != nullptr)
+	{
+		value_root = json_parse_string(buffer);
+		root = json_value_get_object(value_root);
+	}	
+}
 
+// SETS
 JSONParser JSONParser::AddNode(const char *node_name)
 {
 	json_object_set_value(root, node_name, json_value_init_object());
@@ -66,7 +74,6 @@ bool JSONParser::AppendBoolean(const char *name_boolean, bool boolean)
 }
 
 // GETS
-
 JSONParser JSONParser::GetNode(const char *name_node) const
 {
 	return JSONParser(json_object_get_object(root, name_node));
@@ -90,7 +97,15 @@ int JSONParser::GetArrayCount(const char *array_name) const
 
 bool JSONParser::GetBoolean(const char *name_boolean) const
 {
-	return (json_object_get_boolean(root, name_boolean) != 0) ? true : false;
+	if (ValueExists(name_boolean))
+		return (json_object_get_boolean(root, name_boolean) != 0) ? true : false;
+	else
+		return false; 
+}
+
+int JSONParser::GetInt(const char *int_name) const
+{
+	return (int)json_object_get_number(root, int_name);
 }
 
 const char *JSONParser::GetString(const char *string_name) const
@@ -106,6 +121,13 @@ void JSONParser::Save(char **buff)
 	*buff = json_serialize_to_string_pretty(value_root);
 	//json_serialize_to_buffer_pretty(value_root, *buff, bytes_size);
 }
+
+// Utilities
+bool JSONParser::ValueExists(const char *node_name) const
+{
+	return (json_object_has_value(root, node_name) != 0) ? true : false;
+}
+
 
 void JSONParser::FreeBuffer(char *buff)
 {

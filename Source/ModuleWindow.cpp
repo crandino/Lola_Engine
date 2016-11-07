@@ -18,7 +18,7 @@ ModuleWindow::~ModuleWindow()
 { }
 
 // Called before render is available
-bool ModuleWindow::Init()
+bool ModuleWindow::Awake(JSONParser &config)
 {
 	DEBUG("Init SDL window & surface");
 	bool ret = true;
@@ -31,8 +31,8 @@ bool ModuleWindow::Init()
 	else
 	{
 		//Create window
-		int width = SCREEN_WIDTH * SCREEN_SIZE;
-		int height = SCREEN_HEIGHT * SCREEN_SIZE;
+		screen_height = config.GetInt("screen_height") * config.GetInt("screen_size");
+		screen_width = config.GetInt("screen_width") * config.GetInt("screen_size");
 		Uint32 flags = SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN;
 
 		//Use OpenGL 2.1
@@ -47,31 +47,14 @@ bool ModuleWindow::Init()
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1); // 2 before change it
 
-		if(WIN_FULLSCREEN == true)
-		{
-			flags |= SDL_WINDOW_FULLSCREEN;
-		}
-
-		if(WIN_RESIZABLE == true)
-		{
-			flags |= SDL_WINDOW_RESIZABLE;
-		}
-
-		if(WIN_BORDERLESS == true)
-		{
-			flags |= SDL_WINDOW_BORDERLESS;
-		}
-
-		if (WIN_FULLSCREEN_DESKTOP == true)
-		{
-			flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
-		}
+		if(config.GetBoolean("fullscreen")) flags |= SDL_WINDOW_FULLSCREEN;
+		if(config.GetBoolean("resizable")) flags |= SDL_WINDOW_RESIZABLE;
+		if(config.GetBoolean("borderless")) flags |= SDL_WINDOW_BORDERLESS;
+		if(config.GetBoolean("fullscreen_desktop")) flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
 
 		SDL_DisplayMode current;
 		SDL_GetCurrentDisplayMode(0, &current);
-		window = SDL_CreateWindow("LOLA Engine", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, flags);
-
-		//window = SDL_CreateWindow(TITLE, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, flags);
+		window = SDL_CreateWindow(App->GetAppName(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, screen_width, screen_height, flags);
 
 		if(window == NULL)
 		{

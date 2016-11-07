@@ -23,7 +23,7 @@ ModuleTextureLoader::~ModuleTextureLoader()
 {}
 
 // Called before render is available
-bool ModuleTextureLoader::Init()
+bool ModuleTextureLoader::Awake(JSONParser &config)
 {
 	bool ret = true;
 

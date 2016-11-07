@@ -18,7 +18,7 @@ public:
 	ModuleCameraEditor(Application* app, bool start_enabled = true);
 	~ModuleCameraEditor();
 
-	bool Init();
+	bool Awake(JSONParser &config);
 	bool Start();
 	UPDATE_STATUS Update(float dt);
 	bool CleanUp();

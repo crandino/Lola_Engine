@@ -14,7 +14,7 @@ public:
 	ModuleTextureLoader(Application* app, bool start_enabled = true);
 	~ModuleTextureLoader();
 
-	bool Init();
+	bool Awake(JSONParser &config);
 	UPDATE_STATUS PreUpdate(float dt);
 	UPDATE_STATUS Update(float dt);
 	UPDATE_STATUS PostUpdate(float dt);

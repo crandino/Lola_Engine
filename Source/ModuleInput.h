@@ -22,7 +22,7 @@ public:
 	ModuleInput(Application* app, bool start_enabled = true);
 	~ModuleInput();
 
-	bool Init();
+	bool Awake(JSONParser &config);
 	UPDATE_STATUS PreUpdate(float dt);
 	bool CleanUp();
 

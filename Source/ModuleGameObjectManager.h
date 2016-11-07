@@ -18,13 +18,12 @@ public:
 	ModuleGameObjectManager(Application* app, bool start_enabled = true);
 	~ModuleGameObjectManager();
 
-	bool Init();
+	bool Awake(JSONParser &config);
 	UPDATE_STATUS PreUpdate(float dt);
 	UPDATE_STATUS Update(float dt);
 	UPDATE_STATUS PostUpdate(float dt);
 	bool CleanUp();
 
-	void ImportModel(const char *file_name, bool use_fs = true);
 	const GameObject *GetRoot() const;
 
 	GameObject *CreateGameObject(const char *name, GameObject *parent = nullptr);

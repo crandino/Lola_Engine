@@ -166,6 +166,7 @@
     <ClInclude Include="Source\Importer.h" />
     <ClInclude Include="Source\JSONParser.h" />
     <ClInclude Include="Source\Light.h" />
+    <ClInclude Include="Source\MaterialImporter.h" />
     <ClInclude Include="Source\MathGeoLib\Algorithm\GJK.h" />
     <ClInclude Include="Source\MathGeoLib\Algorithm\Random\LCG.h" />
     <ClInclude Include="Source\MathGeoLib\Algorithm\SAT.h" />
@@ -240,6 +241,7 @@
     <ClInclude Include="Source\ModuleInput.h" />
     <ClInclude Include="Source\ModuleRenderer3D.h" />
     <ClInclude Include="Source\ModuleSceneImporter.h" />
+    <ClInclude Include="Source\ModuleSceneIntro.h" />
     <ClInclude Include="Source\ModuleTextureLoader.h" />
     <ClInclude Include="Source\ModuleWindow.h" />
     <ClInclude Include="Source\openGL.h" />

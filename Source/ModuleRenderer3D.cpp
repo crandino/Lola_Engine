@@ -30,7 +30,7 @@ ModuleRenderer3D::~ModuleRenderer3D()
 {}
 
 // Called before render is available
-bool ModuleRenderer3D::Init()
+bool ModuleRenderer3D::Awake(JSONParser &config)
 {
 	DEBUG("Creating 3D Renderer context");
 	bool ret = true;
@@ -55,7 +55,7 @@ bool ModuleRenderer3D::Init()
 	if(ret == true)
 	{
 		//Use Vsync
-		if(VSYNC && SDL_GL_SetSwapInterval(1) < 0)
+		if(config.GetBoolean("V-Sync") && SDL_GL_SetSwapInterval(1) < 0)
 			DEBUG("[error] Warning: Unable to set VSync! SDL Error: %s\n", SDL_GetError());
 
 		//Initialize Projection Matrix

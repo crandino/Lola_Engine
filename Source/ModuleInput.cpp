@@ -3,7 +3,7 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleRenderer3D.h"
-#include "ModuleGameObjectManager.h"
+#include "ModuleSceneImporter.h"
 
 #include "Imgui\imgui_impl_sdl_gl3.h"
 
@@ -25,7 +25,7 @@ ModuleInput::~ModuleInput()
 }
 
 // Called before render is available
-bool ModuleInput::Init()
+bool ModuleInput::Awake(JSONParser &config)
 {
 	DEBUG("Init SDL input event system");
 	bool ret = true;
@@ -114,7 +114,7 @@ UPDATE_STATUS ModuleInput::PreUpdate(float dt)
 			case SDL_DROPFILE:
 			{
 				char *dropped_filedir = e.drop.file;
-				App->gameobject_manager->ImportModel(dropped_filedir, false);
+				App->scene_importer->ImportModel(dropped_filedir, false);
 				SDL_free(dropped_filedir);    // Free dropped_filedir memory
 			}				
 			break;

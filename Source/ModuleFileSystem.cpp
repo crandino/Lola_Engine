@@ -29,7 +29,7 @@ ModuleFileSystem::~ModuleFileSystem()
 		PHYSFS_deinit();
 }
 
-bool ModuleFileSystem::Init()
+bool ModuleFileSystem::Awake(JSONParser &config)
 {
 	bool ret = true;
 
@@ -47,6 +47,10 @@ bool ModuleFileSystem::Init()
 		AddSearchPath("Assets/Models", "Models");
 		AddSearchPath("Assets/Textures", "Textures");		
 	}
+
+	// Creating internal folders for own engine usage
+	if(PHYSFS_exists(LIBRARY_TEXTURE)) PHYSFS_mkdir(LIBRARY_TEXTURE);
+	if(PHYSFS_exists(LIBRARY_MESH)) PHYSFS_mkdir(LIBRARY_MESH);
 
 	SDL_free(write_dir);	
 

@@ -15,7 +15,7 @@ class ModuleEditor : public Module
 		ModuleEditor(Application* app, bool start_enabled = true);
 		~ModuleEditor();
 
-		bool Init();
+		bool Awake(JSONParser &config);
 		UPDATE_STATUS PreUpdate(float dt);
 		UPDATE_STATUS Update(float dt);
 		UPDATE_STATUS PostUpdate(float dt);

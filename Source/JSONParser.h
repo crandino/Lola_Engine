@@ -3,15 +3,6 @@
 
 #include "Parson\parson.h"
 
-enum JSON_TYPES
-{
-	JSON_OBJECT,
-	JSON_VALUE, 
-	JSON_ARRAY,
-	JSON_BOOLEAN,
-	JSON_STRING
-};
-
 class JSONParser
 {
 
@@ -38,13 +29,19 @@ public:
 	bool AddString(const char *string_name, const char *string_value);
 	bool AppendBoolean(const char *name_boolean, bool boolean);
 
+	void ParseBuffer(char *buffer);
+
 	// Gets
-	JSONParser GetNode(const char *name_node) const;
+	JSONParser GetNode(const char *node_name) const;
 	JSONParser GetArray(const char *array_name, int index = -1) const;
 	int GetArrayCount(const char *array_name) const;
 
 	bool GetBoolean(const char *name_boolean) const;
+	int GetInt(const char *int_name) const;
 	const char *GetString(const char *string_name) const;
+
+	// Utilities
+	bool ValueExists(const char *node_name) const;
 
 	// Save
 	void Save(char **buf);

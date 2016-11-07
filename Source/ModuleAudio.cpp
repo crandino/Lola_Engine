@@ -14,7 +14,7 @@ ModuleAudio::~ModuleAudio()
 {}
 
 // Called before render is available
-bool ModuleAudio::Init()
+bool ModuleAudio::Awake(JSONParser &config)
 {
 	DEBUG("Loading Audio Mixer");
 	bool ret = true;

@@ -66,8 +66,8 @@ private:
 	char	load_game[SHORT_STRING];
 	char	save_game[SHORT_STRING];
 
-	char app_name[SHORT_STRING];
-	char organization[SHORT_STRING];
+	char	app_name[SHORT_STRING];
+	char	organization[SHORT_STRING];
 
 	bool					app_marked_for_closing = false;
 	std::list<Module*>		list_modules;
@@ -77,11 +77,9 @@ private:
 
 	void AddModule(Module* mod);
 
-	void LoadConfig() const;
+	void LoadConfig(const char *file_config, JSONParser &config);
 	bool SaveGameNow();
 	bool LoadGameNow();
-
-
 };
 
 extern Application *App;

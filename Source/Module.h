@@ -28,7 +28,7 @@ public:
 	virtual ~Module()
 	{}
 
-	virtual bool Init() 
+	virtual bool Awake(JSONParser &config) 
 	{
 		return true; 
 	}

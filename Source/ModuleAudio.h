@@ -15,7 +15,7 @@ public:
 	ModuleAudio(Application* app, bool start_enabled = true);
 	~ModuleAudio();
 
-	bool Init();
+	bool Awake(JSONParser &config);
 	bool CleanUp();
 
 	// Play a music file

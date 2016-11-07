@@ -6,6 +6,9 @@
 #include "Assimp\include\cfileio.h"
 #include "Devil\include\il.h"
 
+#define LIBRARY_TEXTURE "Library/Textures"
+#define LIBRARY_MESH "Library/Mesh"
+
 struct SDL_RWops;
 int close_sdl_rwops(SDL_RWops *rw);
 
@@ -16,7 +19,7 @@ public:
 	ModuleFileSystem(Application* app, bool start_enabled = true);
 	~ModuleFileSystem();
 
-	bool Init();
+	bool Awake(JSONParser &config);
 	bool CleanUp();
 
 	bool AddSearchPath(const char *path_or_zip, const char *mount_point = NULL);

@@ -54,10 +54,6 @@ Application::Application()
 	// Renderer last!
 	AddModule(renderer3D);
 
-	// Strings
-	sprintf_s(app_name, SHORT_STRING, "LOLA Engine");
-	sprintf_s(organization, SHORT_STRING, "CITM");
-
 	// Console
 	console = new Console();
 }
@@ -80,14 +76,20 @@ bool Application::Init()
 {
 	bool ret = true;
 
-	LoadConfig();
+	JSONParser config, app_config, modules;
+	LoadConfig("config.json", config);
 
-	// Call Init() in all modules
+	app_config = config.GetNode("Application");
+	sprintf_s(app_name, SHORT_STRING, app_config.GetString("engine_name"));
+	sprintf_s(organization, SHORT_STRING, app_config.GetString("organization"));
+		
+	// Call Awake() in all modules
+	modules = config.GetNode("Modules");
 	std::list<Module*>::iterator item = list_modules.begin();
-
 	while(item != list_modules.end() && ret == true)
 	{
-		ret = (*item)->Init();
+		ret = (*item)->Awake(modules.GetNode((*item)->GetModuleName()));
+		//ret = (*item)->Awake(modules);
 		++item;
 	}
 
@@ -182,31 +184,13 @@ void Application::AddModule(Module* mod)
 }
 
 // *************** Load / Save ******************
-void Application::LoadConfig() const
+void Application::LoadConfig(const char *file_config, JSONParser &root)
 {
 	// --- load config file ---
-	/*char* buf;
-	int size = App->file_system->Load("config.json", &buf);*/
-
-	/*JSON_Value *user_data = json_parse_file("config.json");
-
-	if (user_data != nullptr)
-	{
-		JSON_Object *object = json_value_get_object(user_data);
-		json_object_get_value(object, "Framerate");
-		json_value
-	}*/
-
-	
-	/*pugi::xml_parse_result result = config_file.
+	char* buf;
+	int size = App->file_system->Load(file_config, &buf);
+	root.ParseBuffer(buf);
 	RELEASE(buf);
-
-	if (result == NULL)
-	{
-		LOG("Could not load map xml file config.xml. pugi error: %s", result.description());
-	}
-
-	return config_file.child("config");*/
 }
 
 void Application::LoadGame(const char *file)
