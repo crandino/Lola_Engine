@@ -5,6 +5,9 @@
 #include "Globals.h"
 #include "MathGeoLib\MathGeoLib.h"
 
+//DELETE
+#include "DrawDebug.h"
+
 class GameObject;
 
 class ModuleCameraEditor : public Module
@@ -12,6 +15,12 @@ class ModuleCameraEditor : public Module
 private:
 
 	GameObject *camera = nullptr;
+	math::LineSegment ray_cast;
+
+	// DELETE
+	DrawDebug debug;
+
+	void MousePick();
 
 public:	
 

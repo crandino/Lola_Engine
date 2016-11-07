@@ -19,6 +19,9 @@ public:
 	bool CleanUp();
 
 	void SetTitle(const char* title);
+	int GetScreenSize() const;
+	int GetScreenWidth() const;
+	int GetScreenHeight() const;
 
 public:
 	//The window we'll be rendering to

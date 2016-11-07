@@ -3,6 +3,7 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleInput.h"
+#include "ModuleWindow.h"
 #include "ModuleGameObjectManager.h"
 
 #include "GameObject.h"
@@ -78,8 +79,28 @@ UPDATE_STATUS ModuleCameraEditor::Update(float dt)
 		camera->transform->RotateAngleAxis(dx * sensitivity, camera->transform->up);
 		//main_camera->transform->RotateAngleAxis(dy * sensitivity, main_camera->transform->left);
 	}
+
+	// Mouse picking
+	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN)
+	{
+		MousePick();
+	}
+
+	debug.DrawLineSegment(ray_cast);
 	
 	return UPDATE_CONTINUE;
+}
+
+void ModuleCameraEditor::MousePick()
+{
+	math::float2 half_screen_size(App->window->GetScreenWidth() / 2.0f, App->window->GetScreenHeight() / 2.0f);
+	math::float2 normalized_pos((App->input->GetMouseX() - half_screen_size.x) / half_screen_size.x, (App->input->GetMouseY() - half_screen_size.y) / half_screen_size.y);
+
+	math::Frustum cam_frustum;
+	camera->GetFrustum(cam_frustum);
+
+	ray_cast = cam_frustum.UnProjectLineSegment(normalized_pos.x, -normalized_pos.y);
+
 }
 
 void ModuleCameraEditor::SetAsEditorCamera(GameObject *go) { camera = go; }

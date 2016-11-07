@@ -216,7 +216,7 @@ void ModuleEditor::ShowComponentInfo()
 	{
 		float width = 350.0f;
 		ImGui::SetNextWindowSizeConstraints(ImVec2(width, 0), ImVec2(width, FLT_MAX));
-		ImGui::SetNextWindowPos(ImVec2(SCREEN_WIDTH - width, 20.0f));
+		ImGui::SetNextWindowPos(ImVec2(App->window->GetScreenWidth() - width, 20.0f));
 		ImGui::Begin(go_selected->GetName(), nullptr, ImGuiWindowFlags_ShowBorders);
 
 		if (ImGui::Checkbox("Active", &go_selected->active))
@@ -234,7 +234,7 @@ void ModuleEditor::ShowWarning()
 {
 	ImGuiWindowFlags window_flags = (ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize |
 									 ImGuiWindowFlags_NoResize | ImGuiWindowFlags_ShowBorders);
-	ImGui::SetNextWindowPos(ImVec2(SCREEN_WIDTH / 2.0f, SCREEN_HEIGHT / 2.0f), ImGuiSetCond_FirstUseEver);
+	ImGui::SetNextWindowPos(ImVec2(App->window->GetScreenWidth()/ 2.0f, App->window->GetScreenHeight() / 2.0f), ImGuiSetCond_FirstUseEver);
 	ImGui::Begin("Warning", nullptr, window_flags);
 	ImGui::Text("%s%s%s", "Are you sure you wanna delete ", go_selected->GetName(), " ?");
 

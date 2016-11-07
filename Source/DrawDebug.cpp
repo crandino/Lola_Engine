@@ -28,18 +28,18 @@ void DrawDebug::DrawAABB(const math::AABB &bbox) const
 	{
 		bbox.ToEdgeList(edges);
 
-		glBegin(GL_LINES);
-
 		glLineWidth(LINE_WIDTH);
+		glBegin(GL_LINES);
+		
 		glColor3f(0.0f, 1.0f, 0.0f);
 
 		for (int i = 0; i < 24; ++i)
 			glVertex3fv(edges[i].ptr());
 
-		glColor3f(1.0f, 1.0f, 1.0f);
-		glLineWidth(DEFAULT_LINE_WIDTH);
+		glColor3f(1.0f, 1.0f, 1.0f);		
 
 		glEnd();
+		glLineWidth(DEFAULT_LINE_WIDTH);
 	}	
 }
 
@@ -47,18 +47,18 @@ void DrawDebug::DrawOBB(const math::OBB &bbox) const
 {
 	bbox.ToEdgeList(edges);
 
-	glBegin(GL_LINES);
-
 	glLineWidth(LINE_WIDTH);
+	glBegin(GL_LINES);
+	
 	glColor3f(0.5f, 1.0f, 0.5f);
 
 	for (int i = 0; i < 24; ++i)
 		glVertex3fv(edges[i].ptr());
 
-	glColor3f(1.0f, 1.0f, 1.0f);
-	glLineWidth(DEFAULT_LINE_WIDTH);
+	glColor3f(1.0f, 1.0f, 1.0f);	
 
 	glEnd();
+	glLineWidth(DEFAULT_LINE_WIDTH);
 }
 
 void DrawDebug::DrawFrustum(const math::Frustum &frustrum) const
@@ -67,9 +67,9 @@ void DrawDebug::DrawFrustum(const math::Frustum &frustrum) const
 	{
 		frustrum.GetCornerPoints(corners);
 
-		glBegin(GL_LINES);
-
 		glLineWidth(LINE_WIDTH);
+		glBegin(GL_LINES);
+		
 		glColor3f(0.0f, 0.5f, 1.0f);
 
 		// Near plane
@@ -104,10 +104,10 @@ void DrawDebug::DrawFrustum(const math::Frustum &frustrum) const
 		glVertex3fv(corners[2].ptr());
 		glVertex3fv(corners[6].ptr());
 
-		glColor3f(1.0f, 1.0f, 1.0f);
-		glLineWidth(DEFAULT_LINE_WIDTH);
+		glColor3f(1.0f, 1.0f, 1.0f);		
 
 		glEnd();
+		glLineWidth(DEFAULT_LINE_WIDTH);
 	}	
 }
 
@@ -118,9 +118,9 @@ void DrawDebug::DrawOcTree(const OcTree &quad) const
 		std::vector<OcTreeNode*> nodes;
 		quad.CollectRects(nodes);
 
-		glBegin(GL_LINES);
-
 		glLineWidth(LINE_WIDTH);
+		glBegin(GL_LINES);
+		
 		glColor3f(1.0f, 0.7f, 0.0f);
 
 		for (uint i = 0; i < nodes.size();++i)
@@ -131,10 +131,27 @@ void DrawDebug::DrawOcTree(const OcTree &quad) const
 				glVertex3fv(edges[i].ptr());			
 		}
 
-		glColor3f(1.0f, 1.0f, 1.0f);
-		glLineWidth(DEFAULT_LINE_WIDTH);
+		glColor3f(1.0f, 1.0f, 1.0f);		
 
 		glEnd();
+		glLineWidth(DEFAULT_LINE_WIDTH);
 	}	
+}
+
+void DrawDebug::DrawLineSegment(const math::LineSegment &line) const
+{
+	glLineWidth(LINE_WIDTH);
+	glBegin(GL_LINES);
+	
+	glColor3f(1.0f, 0.7f, 1.0f);
+
+	glVertex3fv(&line.a.x);
+	glVertex3fv(&line.b.x);
+
+	glColor3f(1.0f, 1.0f, 1.0f);	
+
+	glEnd();
+	glLineWidth(DEFAULT_LINE_WIDTH);
+
 }
 

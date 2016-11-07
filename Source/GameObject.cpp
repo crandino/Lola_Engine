@@ -102,6 +102,19 @@ bool GameObject::GetAABB(math::AABB &aabb) const
 	return ret;
 }
 
+bool GameObject::GetFrustum(math::Frustum &frustum) const
+{
+	bool ret = false;
+	const ComponentCamera *camera = (ComponentCamera*)GetComponentByType(COMPONENT_TYPE::CAMERA);
+	if (camera)
+	{
+		ret = true;
+		frustum = camera->cam_frustum;
+	}
+
+	return ret;
+}
+
  bool GameObject::HasMesh() const
  {
 	 return (GetComponentByType(COMPONENT_TYPE::MESH) != nullptr  ? true : false);

@@ -31,8 +31,9 @@ bool ModuleWindow::Awake(JSONParser &config)
 	else
 	{
 		//Create window
-		screen_height = config.GetInt("screen_height") * config.GetInt("screen_size");
-		screen_width = config.GetInt("screen_width") * config.GetInt("screen_size");
+		screen_size = config.GetInt("screen_size");
+		screen_height = config.GetInt("screen_height") * screen_size;
+		screen_width = config.GetInt("screen_width") * screen_size;
 		Uint32 flags = SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN;
 
 		//Use OpenGL 2.1
@@ -108,3 +109,7 @@ bool ModuleWindow::Load(JSONParser &module)
 	module.GetBoolean("V-Sync");
 	return true;
 }
+
+int ModuleWindow::GetScreenSize() const { return screen_size; }
+int ModuleWindow::GetScreenWidth() const { return screen_width; }
+int ModuleWindow::GetScreenHeight() const { return screen_height; }

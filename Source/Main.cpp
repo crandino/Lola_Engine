@@ -30,7 +30,7 @@ int main(int argc, char ** argv)
 		case MAIN_CREATION:
 
 			App = new Application();
-			DEBUG("Starting game '%s'...", TITLE);
+			DEBUG("Starting Engine");
 			DEBUG("-------------- Application Creation --------------");
 			state = MAIN_START;
 			break;
@@ -83,7 +83,7 @@ int main(int argc, char ** argv)
 		}
 	}
 
-	DEBUG("Exiting game '%s'...\n", TITLE);
+	DEBUG("Exiting Engine");
 	delete App;
 	
 	return main_return;

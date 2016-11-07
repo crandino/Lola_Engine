@@ -27,6 +27,7 @@ public:
 	void DrawOBB(const math::OBB &bbox) const;
 	void DrawFrustum(const math::Frustum &frustrum) const;
 	void DrawOcTree(const OcTree &quad) const;
+	void DrawLineSegment(const math::LineSegment &line) const;
 };
 
 #endif // __DRAWDEBUG_H__
