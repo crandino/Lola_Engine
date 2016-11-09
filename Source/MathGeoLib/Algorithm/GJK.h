@@ -27,6 +27,37 @@ vec UpdateSimplex(vec *s, int &n);
 #define SUPPORT(dir) (a.ExtremePoint(dir, maxS) - b.ExtremePoint(-dir, minS));
 
 template<typename A, typename B>
+bool OwnIntersect(const A &a, const B &b)
+{
+	// Function reimplemented by CRZ!! Hold on your chair!
+
+	const unsigned int num_planes = 6;
+	const unsigned int num_corners = 8;
+
+	math::Plane planes[num_planes];
+	a.GetPlanes(planes);
+
+	math::vec corners[num_corners];
+	b.GetCornerPoints(corners);
+
+	unsigned int planes_with_corners_inside = 0;
+	for (unsigned int j = 0; j < num_planes; ++j)
+	{
+		unsigned int corners_on_negative_plane = 0;
+		for (unsigned int k = 0; k < num_corners; ++k)
+		{
+			if (!planes[j].IsOnPositiveSide(corners[k]))
+				++corners_on_negative_plane;
+		}
+
+		if (corners_on_negative_plane > 0)
+			++planes_with_corners_inside;
+	}
+
+	return planes_with_corners_inside == 6 ? true : false;
+}
+
+template<typename A, typename B>
 bool GJKIntersect(const A &a, const B &b)
 {
 	vec support[4];

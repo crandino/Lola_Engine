@@ -50,7 +50,7 @@ private:
 	uint								id_to_assign = 0;
 	GameObject							*root = nullptr;
 	std::vector<GameObject*>			list_of_gos;
-	std::vector<const GameObject*>	    list_of_gos_to_draw;
+	std::vector<GameObject*>		    list_of_gos_to_draw;
 
 	GameObject	*GetGameObject(uint id_to_search) const;
 	GameObject  *FindParent(const GameObject* go) const;

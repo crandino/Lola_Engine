@@ -36,7 +36,7 @@ public:
 	~OcTreeNode();
 	 
 	void Insert(GameObject* go);
-	template<class PRIMITIVE>
+	template <class PRIMITIVE>
 	int CollectCandidates(std::vector<GameObject*> &nodes, const PRIMITIVE &primitive) const;
 	void CollectRects(std::vector<OcTreeNode*> &nodes);
 

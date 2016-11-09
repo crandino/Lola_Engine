@@ -42,7 +42,7 @@ bool ComponentMesh::Update()
 
 void ComponentMesh::SetComponent(const aiMesh *ai_mesh)
 {
-	DEBUG("Creating new mesh %s", ai_mesh->mName);
+	DEBUG("Creating new mesh...");
 
 	// Copying vertices...
 	mesh.num_vertices = ai_mesh->mNumVertices;

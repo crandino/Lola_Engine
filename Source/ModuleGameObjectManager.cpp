@@ -73,7 +73,7 @@ UPDATE_STATUS ModuleGameObjectManager::Update(float dt)
 {
 	GameObject *curr_go = nullptr;
 	oc_tree.Clear();
-	math::AABB boundaries = math::AABB({ -10.0f, -10.0f, -10.0f }, { 10.0f, 10.0f, 10.0f });
+	math::AABB boundaries = math::AABB({ -50.f, -50.0f, -50.0f }, { 50.0f, 50.0f, 50.0f });
 	oc_tree.SetBoundaries(boundaries);
 	
 	for (uint i = 0; i < list_of_gos.size(); ++i)
@@ -107,7 +107,8 @@ UPDATE_STATUS ModuleGameObjectManager::Update(float dt)
 	for (uint i = 0; i < list_of_gos_to_draw.size(); ++i)
 	{
 		const GameObject *curr_go = list_of_gos_to_draw[i];
-		App->renderer3D->ShowGameObject(curr_go);
+		if(curr_go->active)
+			App->renderer3D->ShowGameObject(curr_go);
 
 		for (uint i = 0; i < curr_go->components.size(); ++i)
 		{
@@ -297,7 +298,7 @@ int ModuleGameObjectManager::FrustumCulling(const math::Frustum &frustum)
 {
 	list_of_gos_to_draw.clear();
 
-	const uint num_planes = 6;
+	/*const uint num_planes = 6;
 	const uint num_corners = 8;
 
 	const GameObject *curr_go;
@@ -305,47 +306,47 @@ int ModuleGameObjectManager::FrustumCulling(const math::Frustum &frustum)
 	math::Plane planes[num_planes];
 	frustum.GetPlanes(planes);
 
-	math::vec corners[num_corners];	
+	math::vec corners[num_corners];	*/
 
-	std::vector<GameObject*> nodes;
-	oc_tree.CollectCandidates(nodes, frustum);
+	//std::vector<GameObject*> nodes;
+	oc_tree.CollectCandidates(list_of_gos_to_draw, frustum);
 
-	// For every gameobject
-	for (uint i = 1; i < nodes.size(); ++i)
-	{
-		bool next_go = false;
-		curr_go = nodes[i];
+	//// For every gameobject
+	//for (uint i = 1; i < nodes.size(); ++i)
+	//{
+	//	bool next_go = false;
+	//	curr_go = nodes[i];
 
-		if (!curr_go->HasMesh())
-			continue;
+	//	if (!curr_go->HasMesh())
+	//		continue;
 
-		math::AABB bounding_box;
-		curr_go->GetAABB(bounding_box);
-		bounding_box.GetCornerPoints(corners);
+	//	math::AABB bounding_box;
+	//	curr_go->GetAABB(bounding_box);
+	//	bounding_box.GetCornerPoints(corners);
 
-		bool go_accepted = true;
+	//	bool go_accepted = true;
 
-		for (uint j = 0; j < num_planes; ++j)
-		{		
-			if (go_accepted)
-			{
-				uint corners_outside_frustum = 0;
-				for (uint k = 0; k < num_corners; ++k)
-				{
-					if (planes[j].IsOnPositiveSide(corners[k]))
-						++corners_outside_frustum;
-				}
+	//	for (uint j = 0; j < num_planes; ++j)
+	//	{		
+	//		if (go_accepted)
+	//		{
+	//			uint corners_outside_frustum = 0;
+	//			for (uint k = 0; k < num_corners; ++k)
+	//			{
+	//				if (planes[j].IsOnPositiveSide(corners[k]))
+	//					++corners_outside_frustum;
+	//			}
 
-				if (corners_outside_frustum == num_corners)
-				{
-					go_accepted = false;
-					break;
-				}
-			}
-		}
+	//			if (corners_outside_frustum == num_corners)
+	//			{
+	//				go_accepted = false;
+	//				break;
+	//			}
+	//		}
+	//	}
 
-		if (go_accepted) list_of_gos_to_draw.push_back(curr_go);
-	}
+	//	if (go_accepted) list_of_gos_to_draw.push_back(curr_go);
+	//}
 	
 	return list_of_gos_to_draw.size();
 }

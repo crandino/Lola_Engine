@@ -143,6 +143,7 @@ void ModuleSceneImporter::ImportModel(const char *file_name, bool use_fs)
 								if (ai_mesh->mFaces[k].mNumIndices != 3)
 								{
 									DEBUG("WARNING, geometry face with != 3 indices!");
+									DEBUG("%s %d %s %s", "Mesh", j, "on", node_to_add->mName.C_Str(), "will not be loaded");
 									accepted = false;
 								}
 							}

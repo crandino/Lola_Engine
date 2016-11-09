@@ -1053,8 +1053,10 @@ bool Frustum::Intersects(const LineSegment &lineSegment) const
 }
 
 bool Frustum::Intersects(const AABB &aabb) const
-{
-	return GJKIntersect(*this, aabb);
+{	
+	// CRZ trying to be almigthy god!
+	return OwnIntersect(*this, aabb);
+	//return GJKIntersect(*this, aabb);
 }
 
 bool Frustum::Intersects(const OBB &obb) const
