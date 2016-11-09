@@ -1,54 +1,54 @@
 #include "OcTree.h"
 
-bool Contains(const GameObject *a, const GameObject *b)
-{
-	math::AABB a_bbox, b_bbox;
-
-	if (a->GetAABB(a_bbox) && b->GetAABB(b_bbox))
-		return a_bbox.Contains(b_bbox);
-	
-	return false;
-}
-
-bool Intersects(const GameObject *a, const GameObject *b)
-{
-	math::AABB a_bbox, b_bbox;
-
-	if (a->GetAABB(a_bbox) && b->GetAABB(b_bbox))
-		return a_bbox.Intersects(b_bbox);
-
-	return false;
-}
-
-bool Contains(const math::AABB &a_bbox, const GameObject *b)
-{
-	math::AABB b_bbox;
-
-	if (b->GetAABB(b_bbox))
-		return a_bbox.Contains(b_bbox);
-
-	return false;
-}
-
-bool Intersects(const math::AABB &a_bbox, const GameObject *b)
-{
-	math::AABB b_bbox;
-
-	if (b->GetAABB(b_bbox))
-		return a_bbox.Intersects(b_bbox);
-
-	return false;
-}
-
-bool Contains(const GameObject *a, const math::AABB &b_bbox)
-{
-	math::AABB a_bbox;
-	if (a->GetAABB(a_bbox))
-		return a_bbox.Contains(b_bbox);
-
-	return false;
-}
-
+//bool Contains(const GameObject *a, const GameObject *b)
+//{
+//	math::AABB a_bbox, b_bbox;
+//
+//	if (a->GetAABB(a_bbox) && b->GetAABB(b_bbox))
+//		return a_bbox.Contains(b_bbox);
+//	
+//	return false;
+//}
+//
+//bool Intersects(const GameObject *a, const GameObject *b)
+//{
+//	math::AABB a_bbox, b_bbox;
+//
+//	if (a->GetAABB(a_bbox) && b->GetAABB(b_bbox))
+//		return a_bbox.Intersects(b_bbox);
+//
+//	return false;
+//}
+//
+//bool Contains(const math::AABB &a_bbox, const GameObject *b)
+//{
+//	math::AABB b_bbox;
+//
+//	if (b->GetAABB(b_bbox))
+//		return a_bbox.Contains(b_bbox);
+//
+//	return false;
+//}
+//
+//bool Intersects(const math::AABB &a_bbox, const GameObject *b)
+//{
+//	math::AABB b_bbox;
+//
+//	if (b->GetAABB(b_bbox))
+//		return a_bbox.Intersects(b_bbox);
+//
+//	return false;
+//}
+//
+//bool Contains(const GameObject *a, const math::AABB &b_bbox)
+//{
+//	math::AABB a_bbox;
+//	if (a->GetAABB(a_bbox))
+//		return a_bbox.Contains(b_bbox);
+//
+//	return false;
+//}
+//
 bool Intersects(const GameObject *a, const math::AABB &b_bbox)
 {
 	math::AABB a_bbox;
@@ -57,50 +57,50 @@ bool Intersects(const GameObject *a, const math::AABB &b_bbox)
 
 	return false;
 }
-
-bool ContainsAllChildren(const GameObject *a, const OcTreeNode * b)
-{
-	bool contains_all = true;
-
-	math::AABB a_bbox;
-	if (a->GetAABB(a_bbox) && b->HasChildren())
-	{
-		for (uint i = 0; i < 8; ++i)
-		{
-			if (!a_bbox.Contains(b->childs[i]->box))
-			{
-				contains_all = false;
-				break;
-			}
-		}
-
-		return contains_all;
-	}
-
-	return false;
-}
-
-bool IntersectsAllChildren(const GameObject *a, const OcTreeNode *b)
-{
-	bool intersects_all = true;
-
-	math::AABB a_bbox;
-	if (a->GetAABB(a_bbox) && b->HasChildren())
-	{
-		for (uint i = 0; i < 8; ++i)
-		{
-			if (!a_bbox.Intersects(b->childs[i]->box))
-			{
-				intersects_all = false;
-				break;
-			}
-		}
-
-		return intersects_all;
-	}
-
-	return false;
-}
+//
+//bool ContainsAllChildren(const GameObject *a, const OcTreeNode * b)
+//{
+//	bool contains_all = true;
+//
+//	math::AABB a_bbox;
+//	if (a->GetAABB(a_bbox) && b->HasChildren())
+//	{
+//		for (uint i = 0; i < 8; ++i)
+//		{
+//			if (!a_bbox.Contains(b->childs[i]->box))
+//			{
+//				contains_all = false;
+//				break;
+//			}
+//		}
+//
+//		return contains_all;
+//	}
+//
+//	return false;
+//}
+//
+//bool IntersectsAllChildren(const GameObject *a, const OcTreeNode *b)
+//{
+//	bool intersects_all = true;
+//
+//	math::AABB a_bbox;
+//	if (a->GetAABB(a_bbox) && b->HasChildren())
+//	{
+//		for (uint i = 0; i < 8; ++i)
+//		{
+//			if (!a_bbox.Intersects(b->childs[i]->box))
+//			{
+//				intersects_all = false;
+//				break;
+//			}
+//		}
+//
+//		return intersects_all;
+//	}
+//
+//	return false;
+//}
 
 // ---- OCTREE NODE ----
 
@@ -119,59 +119,203 @@ OcTreeNode::~OcTreeNode()
 	}	
 }
 
-void OcTreeNode::Insert(GameObject* go)
+bool OcTreeNode::Insert(GameObject* go)
 {
-	math::AABB bounding_box;
-	go->GetAABB(bounding_box);
+	bool item_inserted = false;
 
-	// Each new item will go deep to the set of children, if they exists.
-	if (HasChildren())
+	if (SharedByMoreThanXChild(go, 2))
 	{
-		if (!(IntersectsAllChildren(go, this)))
-		{
-			for (int i = 0; i < 8; ++i)
-				childs[i]->Insert(go);
-		}
-		else
-			objects.push_back(go);					// No limit for items that spread across all children.
+		objects.push_back(go);
+		item_inserted = true;
 	}
-	else if (Intersects(box, go))
+	else if (HasChildren())
 	{
-		if (objects.size() < OCTREE_MAX_ITEMS)	    // Limit of OCTREE_MAX_ITEMS for items that spread across all children.
+		for (int i = 0; i < 8; ++i)
+		{
+			if(childs[i]->Insert(go))
+			{
+				item_inserted = true;
+				break;
+			}			
+		}
+	}
+	else if(Intersects(go, box))
+	{
+		if (objects.size() < OCTREE_MAX_ITEMS)
+		{
 			objects.push_back(go);
+			item_inserted = true;
+		}
 		else
 		{
 			if (!HasChildren())
 				SubdivideNode();
 
-			// Possible redistribution of objects on this node on splitting
+			// Items on this node will be moved downwards if they are not shared by more than one child.
 			for (std::list<GameObject*>::iterator it = objects.begin(); it != objects.end();)
 			{
-				if (!IntersectsAllChildren(go, this))
+				if (!SharedByMoreThanXChild(*it, 2))
 				{
 					for (int i = 0; i < 8; ++i)
-						childs[i]->Insert(*it);
+					{
+						if (childs[i]->Insert(*it))
+							break;
+					}
 
 					it = objects.erase(it);
 				}
 				else
-				{
 					++it;
-				}
 			}
 
+			// Now, it's time to insert the GO.
 			for (int i = 0; i < 8; ++i)
-				childs[i]->Insert(go);
+			{
+				if (childs[i]->Insert(go))
+				{
+					item_inserted = true;
+					break;
+				}
+			}
+		}
+	}	
+
+	return item_inserted;
+
+	//bool item_inserted = false;
+
+	//if (HasChildren())
+	//{
+	//	for (int i = 0; i < 8; ++i)
+	//	{
+	//		if(childs[i]->Insert(go))
+	//		{
+	//			item_inserted = true;
+	//			break;
+	//		}			
+	//	}
+	//}
+	//else if(Intersects(go, box))
+	//{
+	//	if (objects.size() < OCTREE_MAX_ITEMS)
+	//	{
+	//		objects.push_back(go);
+	//		item_inserted = true;
+	//	}
+	//	else if (SharedByAllChild(go))
+	//	{
+	//		objects.push_back(go);
+	//		item_inserted = true;
+	//	}
+	//	else
+	//	{
+	//		if (!HasChildren())
+	//			SubdivideNode();
+
+	//		// Items on this node will be moved downwards if they are not shared by more than one child.
+	//		for (std::list<GameObject*>::iterator it = objects.begin(); it != objects.end();)
+	//		{
+	//			if (!SharedByAllChild(*it))
+	//			{
+	//				for (int i = 0; i < 8; ++i)
+	//				{
+	//					if(childs[i]->Insert(*it))			
+	//						break;
+	//				}
+
+	//				it = objects.erase(it);
+	//			}
+	//			else
+	//				++it;
+	//		}
+
+	//		// Now, it's time to insert the GO.
+	//		for (int i = 0; i < 8; ++i)
+	//		{
+	//			if (childs[i]->Insert(go))
+	//			{
+	//				item_inserted = true;
+	//				break;
+	//			}
+	//		}
+	//	}
+	//}	
+
+	//return item_inserted;
+
+	//math::AABB bounding_box;
+	//go->GetAABB(bounding_box);
+
+	// Each new item will go deep to the set of children, if they exists.
+	//if (HasChildren())
+	//{
+	//	if (!(IntersectsAllChildren(go, this)))
+	//	{
+	//		for (int i = 0; i < 8; ++i)
+	//			childs[i]->Insert(go);
+	//	}
+	//	else
+	//		objects.push_back(go);					// No limit for items that spread across all children.
+	//}
+	//else if (Intersects(box, go))
+	//{
+	//	if (objects.size() < OCTREE_MAX_ITEMS)	    // Limit of OCTREE_MAX_ITEMS for items that spread across all children.
+	//		objects.push_back(go);
+	//	else
+	//	{
+	//		if (!HasChildren())
+	//			SubdivideNode();
+
+	//		// Possible redistribution of objects on this node on splitting
+	//		for (std::list<GameObject*>::iterator it = objects.begin(); it != objects.end();)
+	//		{
+	//			if (!IntersectsAllChildren(go, this))
+	//			{
+	//				for (int i = 0; i < 8; ++i)
+	//					childs[i]->Insert(*it);
+
+	//				it = objects.erase(it);
+	//			}
+	//			else
+	//			{
+	//				++it;
+	//			}
+	//		}
+
+	//		for (int i = 0; i < 8; ++i)
+	//			childs[i]->Insert(go);
+	//	}
+	//}
+
+	//return true;
+}
+
+bool OcTreeNode::SharedByMoreThanXChild(GameObject *go, unsigned int X) const
+{
+	math::AABB bbox;
+	unsigned int shared_childs = 0;
+
+	if (HasChildren() && go->GetAABB(bbox))
+	{
+		for (int i = 0; i < 8; ++i)
+		{
+			if (childs[i]->box.Intersects(bbox))
+				++shared_childs;
 		}
 	}
+
+	return (shared_childs >= X) ? true : false;
 }
 
 void OcTreeNode::CollectRects(std::vector<OcTreeNode*> &nodes)
 {
 	nodes.push_back(this);
 
-	for (int i = 0; i < 8; ++i)
-		if (childs[i] != nullptr) childs[i]->CollectRects(nodes);
+	if (HasChildren())
+	{
+		for (int i = 0; i < 8; ++i)
+			childs[i]->CollectRects(nodes);
+	}	
 }
 
 bool OcTreeNode::HasChildren() const
@@ -218,15 +362,15 @@ void OcTree::SetBoundaries(const math::AABB &r)
 	root = new OcTreeNode(r);
 }
 
-void OcTree::Insert(GameObject* go)
+bool OcTree::Insert(GameObject* go)
 {
 	if (root != nullptr)
 	{
 		math::AABB bbox;
-
 		if (go->GetAABB(bbox) && root->box.Intersects(bbox))
-			root->Insert(go);
+			return root->Insert(go);
 	}
+	return false;
 }
 
 void OcTree::Clear()

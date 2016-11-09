@@ -11,14 +11,14 @@
 class OcTreeNode;
 
 // Helper function to check if one rectangle complately contains another
-bool Contains(const GameObject *a, const GameObject *b);
-bool Intersects(const GameObject *a, const GameObject *b);
-
-bool Contains(const math::AABB &a, const GameObject *b);
-bool Intersects(const math::AABB &a, const GameObject *b);
-
-bool ContainsAllChildren(const GameObject *a, const OcTreeNode *b);
-bool IntersectsAllChildren(const GameObject *a, const OcTreeNode *b);
+//bool Contains(const GameObject *a, const GameObject *b);
+//bool Intersects(const GameObject *a, const GameObject *b);
+//
+//bool Contains(const math::AABB &a, const GameObject *b);
+//bool Intersects(const math::AABB &a, const GameObject *b);
+//
+//bool ContainsAllChildren(const GameObject *a, const OcTreeNode *b);
+//bool IntersectsAllChildren(const GameObject *a, const OcTreeNode *b);
 
 // ----- TreeNode for OcTree -----
 class OcTreeNode
@@ -35,7 +35,8 @@ public:
 	OcTreeNode(math::AABB bbox);
 	~OcTreeNode();
 	 
-	void Insert(GameObject* go);
+	bool Insert(GameObject* go);
+	bool SharedByMoreThanXChild(GameObject *go, unsigned int X) const;
 	template <class PRIMITIVE>
 	int CollectCandidates(std::vector<GameObject*> &nodes, const PRIMITIVE &primitive) const;
 	void CollectRects(std::vector<OcTreeNode*> &nodes);
@@ -59,7 +60,7 @@ public:
 
 	void SetBoundaries(const math::AABB &r);
 
-	void Insert(GameObject* go);
+	bool Insert(GameObject* go);
 	void Clear();
 	
 	template<class PRIMITIVE>

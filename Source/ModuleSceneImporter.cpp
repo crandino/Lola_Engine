@@ -46,11 +46,18 @@ UPDATE_STATUS ModuleSceneImporter::PreUpdate(float dt)
 	static bool load_model = true;
 	if (App->input->GetKey(SDL_SCANCODE_G) == KEY_DOWN)
 	{
-		//ImportModel("Models/primitives_with_parent.fbx");
-		//ImportModel("Models/aabb_test.fbx");
+		ImportModel("Models/primitives_with_parent.fbx");
+		ImportModel("Models/aabb_test.fbx");
 		ImportModel("Models/Street environment_V01.fbx");
-		//ImportModel("Models/QuadTree_test3.fbx");
-		//ImportModel("Models/color_cubes.fbx");
+		ImportModel("Models/QuadTree_test3.fbx");
+		ImportModel("Models/color_cubes.fbx");
+		//ImportModel("Models/conflict_octree.fbx");
+		App->gameobject_manager->UpdateOcTree();
+	}
+
+	if (App->input->GetKey(SDL_SCANCODE_C) == KEY_DOWN)
+	{
+		ImportModel("Models/cube.fbx");
 	}
 
 	if (load_model)

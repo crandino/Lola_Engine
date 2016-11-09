@@ -101,7 +101,7 @@ void ModuleCameraEditor::MousePick()
 	camera->GetFrustum(cam_frustum);
 
 	ray_cast = cam_frustum.UnProjectLineSegment(normalized_pos.x, -normalized_pos.y);
-	//ray_cast.Translate(-App->renderer3D->view_matrix.Transposed().TranslatePart());
+	//ray_cast.Transform(App->renderer3D->view_matrix.Transposed());
 	App->gameobject_manager->RayCast(ray_cast);
 }
 

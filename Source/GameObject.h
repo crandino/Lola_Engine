@@ -35,6 +35,7 @@ public:
 	bool						     active;
 	bool					         selected;
 	bool							 to_delete;
+	bool							 bstatic;
 
 	GameObject(uint id, const char* name, GameObject *parent);
 	~GameObject();

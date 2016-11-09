@@ -14,6 +14,7 @@ GameObject::GameObject(uint id, const char* name, GameObject *parent)
 	active = true;
 	selected = false;
 	to_delete = false;
+	bstatic = true;
 
 	sprintf_s(this->name, SHORT_STRING, name);
 

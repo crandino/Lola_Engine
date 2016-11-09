@@ -15,6 +15,7 @@
 #include "ComponentCamera.h"
 
 #include <stack>
+#include <algorithm> 
 
 ModuleGameObjectManager::ModuleGameObjectManager(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -37,6 +38,10 @@ bool ModuleGameObjectManager::Awake(JSONParser &config)
 	fake_camera->AddComponent(COMPONENT_TYPE::TRANSFORM);
 	ComponentCamera *c = (ComponentCamera*)fake_camera->AddComponent(COMPONENT_TYPE::CAMERA);
 	c->SetComponent();
+
+	// Initializing OcTree	
+	oc_tree_boundaries.SetFromCenterAndSize({ 0.0f, 0.0f, 0.0f }, { 100.0f, 100.0f, 100.0f });
+	oc_tree.SetBoundaries(oc_tree_boundaries);
 
 	return ret;
 }
@@ -72,15 +77,11 @@ UPDATE_STATUS ModuleGameObjectManager::PreUpdate(float dt)
 UPDATE_STATUS ModuleGameObjectManager::Update(float dt)
 {
 	GameObject *curr_go = nullptr;
-	oc_tree.Clear();
-	math::AABB boundaries = math::AABB({ -50.f, -50.0f, -50.0f }, { 50.0f, 50.0f, 50.0f });
-	oc_tree.SetBoundaries(boundaries);
-	
+		
 	for (uint i = 0; i < list_of_gos.size(); ++i)
 	{
 		curr_go = list_of_gos[i];
-		oc_tree.Insert(curr_go);
-
+		
 		if (curr_go->IsActive())
 		{
 			for (uint i = 0; i < curr_go->components.size(); ++i)
@@ -297,56 +298,7 @@ void ModuleGameObjectManager::CreateCamera()
 int ModuleGameObjectManager::FrustumCulling(const math::Frustum &frustum)
 {
 	list_of_gos_to_draw.clear();
-
-	/*const uint num_planes = 6;
-	const uint num_corners = 8;
-
-	const GameObject *curr_go;
-
-	math::Plane planes[num_planes];
-	frustum.GetPlanes(planes);
-
-	math::vec corners[num_corners];	*/
-
-	//std::vector<GameObject*> nodes;
 	oc_tree.CollectCandidates(list_of_gos_to_draw, frustum);
-
-	//// For every gameobject
-	//for (uint i = 1; i < nodes.size(); ++i)
-	//{
-	//	bool next_go = false;
-	//	curr_go = nodes[i];
-
-	//	if (!curr_go->HasMesh())
-	//		continue;
-
-	//	math::AABB bounding_box;
-	//	curr_go->GetAABB(bounding_box);
-	//	bounding_box.GetCornerPoints(corners);
-
-	//	bool go_accepted = true;
-
-	//	for (uint j = 0; j < num_planes; ++j)
-	//	{		
-	//		if (go_accepted)
-	//		{
-	//			uint corners_outside_frustum = 0;
-	//			for (uint k = 0; k < num_corners; ++k)
-	//			{
-	//				if (planes[j].IsOnPositiveSide(corners[k]))
-	//					++corners_outside_frustum;
-	//			}
-
-	//			if (corners_outside_frustum == num_corners)
-	//			{
-	//				go_accepted = false;
-	//				break;
-	//			}
-	//		}
-	//	}
-
-	//	if (go_accepted) list_of_gos_to_draw.push_back(curr_go);
-	//}
 	
 	return list_of_gos_to_draw.size();
 }
@@ -388,9 +340,12 @@ void ModuleGameObjectManager::RayCast(const math::LineSegment &ray_cast) const
 	GameObject *selection_canditate = nullptr;
 	float min_dist = 1.0f;
 
-	for (uint i = 0; i < list_of_gos.size(); ++i)
+	std::vector<GameObject*> selection;
+	oc_tree.CollectCandidates(selection, ray_cast);
+
+	for (uint i = 0; i < selection.size(); ++i)
 	{
-		curr_go = list_of_gos[i];
+		curr_go = selection[i];
 		Mesh* mesh = curr_go->GetMesh();
 		
 		if (mesh)
@@ -409,11 +364,25 @@ void ModuleGameObjectManager::RayCast(const math::LineSegment &ray_cast) const
 				{
 					selection_canditate = curr_go;
 					min_dist = hit_dist;
-					DEBUG("%s %s %s %f", "Hit on", curr_go->GetName(), "at", hit_dist);
 				}
 			}
 		}
 	}
 
 	App->editor->ChangeSelectedGameObject(selection_canditate);
+}
+
+void ModuleGameObjectManager::UpdateOcTree()
+{
+	oc_tree.Clear();
+	oc_tree.SetBoundaries(oc_tree_boundaries);
+
+	GameObject *curr_go = nullptr;
+
+	for (uint i = 0; i < list_of_gos.size(); ++i)
+	{
+		curr_go = list_of_gos[i];
+		if (curr_go->bstatic && curr_go->active)
+			oc_tree.Insert(curr_go);
+	}
 }

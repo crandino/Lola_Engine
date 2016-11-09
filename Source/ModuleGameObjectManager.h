@@ -38,9 +38,13 @@ public:
 	void SetEditorCamera(const ComponentCamera *comp_cam);
 	void RayCast(const math::LineSegment &ray_cast) const;
 
+	void UpdateOcTree();
+
 private:
 
 	OcTree								oc_tree;
+	math::AABB							oc_tree_boundaries;
+
 	GameObject							*fake_camera;
 
 	DrawDebug							draw_debug;

@@ -221,6 +221,8 @@ void ModuleEditor::ShowComponentInfo()
 
 		if (ImGui::Checkbox("Active", &go_selected->active))
 			go_selected->ChangeActiveState(&go_selected->active);
+		ImGui::SameLine();
+		ImGui::Checkbox("Static", &go_selected->bstatic);
 		ImGui::Separator();
 
 		for (uint i = 0; i < go_selected->components.size(); ++i)
