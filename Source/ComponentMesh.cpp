@@ -78,12 +78,13 @@ void ComponentMesh::SetComponent(const aiMesh *ai_mesh)
 		DEBUG("  -> %d indices", mesh.num_indices);
 		for (uint j = 0; j < ai_mesh->mNumFaces; ++j)
 		{
-			if (ai_mesh->mFaces[j].mNumIndices != 3)
+			/*if (ai_mesh->mFaces[j].mNumIndices != 3)
 				DEBUG("WARNING, geometry face with != 3 indices!");
 			else
 			{
 				memcpy(&mesh.indices[j * 3], ai_mesh->mFaces[j].mIndices, 3 * sizeof(uint));
-			}
+			}*/
+			memcpy(&mesh.indices[j * 3], ai_mesh->mFaces[j].mIndices, 3 * sizeof(uint));
 		}
 	}
 

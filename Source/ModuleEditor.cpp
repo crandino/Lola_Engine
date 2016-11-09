@@ -299,10 +299,15 @@ void ModuleEditor::ExpandTree(const GameObject* go_to_expand)
 
 void ModuleEditor::ChangeSelectedGameObject(GameObject *new_go)
 {
-	if (go_selected)
-		go_selected->selected = false;
+	if (new_go)
+	{
+		// Previous GO selected becomes unselected.
+		if (go_selected)
+			go_selected->selected = false;
 
-	go_selected = new_go;
-	go_selected->selected = true;
-	item_selected_by_id = new_go->id;
+		// Now, we make the new GO selected and use its ID to show highlighted
+		go_selected = new_go;
+		go_selected->selected = true;
+		item_selected_by_id = new_go->id;
+	}	
 }

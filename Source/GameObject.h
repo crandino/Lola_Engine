@@ -12,6 +12,7 @@ enum COMPONENT_TYPE;
 
 class Component;
 class ComponentTransform;
+struct Mesh;
 
 class GameObject
 {
@@ -43,6 +44,7 @@ public:
 
 	bool GetAABB(math::AABB &aabb) const;
 	bool GetFrustum(math::Frustum &frustum) const;
+	Mesh *GetMesh() const;
 	bool HasMesh() const;
 
 	void ChangeActiveState(bool *state, GameObject *go = nullptr);

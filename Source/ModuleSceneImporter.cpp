@@ -46,15 +46,17 @@ UPDATE_STATUS ModuleSceneImporter::PreUpdate(float dt)
 	static bool load_model = true;
 	if (App->input->GetKey(SDL_SCANCODE_G) == KEY_DOWN)
 	{
-		//ImportModel("Models/primitives_with_parent.fbx");  //Street environment_V01.fbx
+		//ImportModel("Models/primitives_with_parent.fbx");
 		//ImportModel("Models/aabb_test.fbx");
-		//ImportModel("Models/Street environment_V01.fbx");
+		ImportModel("Models/Street environment_V01.fbx");
+		//ImportModel("Models/QuadTree_test3.fbx");
+		//ImportModel("Models/color_cubes.fbx");
 	}
 
 	if (load_model)
 	{
-		ImportModel("Models/QuadTree_test3.fbx");  //Street environment_V01.fbx
-												   //ImportModel("Models/color_cubes.fbx");  //Street environment_V01.fbx
+		//ImportModel("Models/color_cubes.fbx");  //Street environment_V01.fbx
+												//ImportModel("Models/color_cubes.fbx");  //Street environment_V01.fbx
 		load_model = false;
 	}
 
@@ -128,27 +130,64 @@ void ModuleSceneImporter::ImportModel(const char *file_name, bool use_fs)
 						ComponentTransform *comp_trans = (ComponentTransform*)new_go->AddComponent(COMPONENT_TYPE::TRANSFORM);
 						comp_trans->SetComponent(node_to_add);
 
-						// --- MESH ---						
-						if (node_to_add->mNumMeshes != 0)
-						{
-							aiMesh *ai_mesh = scene->mMeshes[*node_to_add->mMeshes];
-							ComponentMesh *comp_mesh = (ComponentMesh*)new_go->AddComponent(COMPONENT_TYPE::MESH);
-							comp_mesh->SetComponent(ai_mesh);
+						// --- MESH ---	
+						for (int j = 0; j < node_to_add->mNumMeshes; ++j)
+						{							
+							aiMesh *ai_mesh = scene->mMeshes[node_to_add->mMeshes[j]];
 
-							MeshImporter mesh_importer;
-							char save_filename[SHORT_STRING]; sprintf_s(save_filename, SHORT_STRING, "%lu%s", comp_mesh->UUID, ".msh");
-							char *buf;
-							unsigned int size = mesh_importer.Save(&buf, &comp_mesh->mesh);
-							App->file_system->Save(save_filename, buf, size);
-							RELEASE_ARRAY(buf);
+							bool accepted = true;
 
-							App->renderer3D->LoadMeshBuffer(&comp_mesh->mesh);
+							// Checking for correct number of indices per face. If not, discarded.
+							for (uint k = 0; k < ai_mesh->mNumFaces; ++k)
+							{
+								if (ai_mesh->mFaces[k].mNumIndices != 3)
+								{
+									DEBUG("WARNING, geometry face with != 3 indices!");
+									accepted = false;
+								}
+							}
 
-							// --- MATERIAL ---
-							aiMaterial *ai_material = scene->mMaterials[ai_mesh->mMaterialIndex];
-							ComponentMaterial *comp_mat = (ComponentMaterial*)new_go->AddComponent(COMPONENT_TYPE::MATERIAL);
-							comp_mat->SetComponent(ai_material);
+							if (accepted)
+							{
+								ComponentMesh *comp_mesh = (ComponentMesh*)new_go->AddComponent(COMPONENT_TYPE::MESH);
+								comp_mesh->SetComponent(ai_mesh);
+
+								MeshImporter mesh_importer;
+								char save_filename[SHORT_STRING]; sprintf_s(save_filename, SHORT_STRING, "%lu%s", comp_mesh->UUID, ".msh");
+								char *buf;
+								unsigned int size = mesh_importer.Save(&buf, &comp_mesh->mesh);
+								App->file_system->Save(save_filename, buf, size);
+								RELEASE_ARRAY(buf);
+
+								App->renderer3D->LoadMeshBuffer(&comp_mesh->mesh);
+
+								// --- MATERIAL ---
+								aiMaterial *ai_material = scene->mMaterials[ai_mesh->mMaterialIndex];
+								ComponentMaterial *comp_mat = (ComponentMaterial*)new_go->AddComponent(COMPONENT_TYPE::MATERIAL);
+								comp_mat->SetComponent(ai_material);
+							}							
 						}
+
+						//if (node_to_add->mNumMeshes != 0)
+						//{
+						//	aiMesh *ai_mesh = scene->mMeshes[*node_to_add->mMeshes];
+						//	ComponentMesh *comp_mesh = (ComponentMesh*)new_go->AddComponent(COMPONENT_TYPE::MESH);
+						//	comp_mesh->SetComponent(ai_mesh);
+
+						//	MeshImporter mesh_importer;
+						//	char save_filename[SHORT_STRING]; sprintf_s(save_filename, SHORT_STRING, "%lu%s", comp_mesh->UUID, ".msh");
+						//	char *buf;
+						//	unsigned int size = mesh_importer.Save(&buf, &comp_mesh->mesh);
+						//	App->file_system->Save(save_filename, buf, size);
+						//	RELEASE_ARRAY(buf);
+
+						//	App->renderer3D->LoadMeshBuffer(&comp_mesh->mesh);
+
+						//	// --- MATERIAL ---
+						//	aiMaterial *ai_material = scene->mMaterials[ai_mesh->mMaterialIndex];
+						//	ComponentMaterial *comp_mat = (ComponentMaterial*)new_go->AddComponent(COMPONENT_TYPE::MATERIAL);
+						//	comp_mat->SetComponent(ai_material);
+						//}
 					}
 				}
 				else

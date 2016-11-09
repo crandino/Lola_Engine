@@ -36,6 +36,7 @@ public:
 	void GenerateUUID(Component *comp);
 
 	void SetEditorCamera(const ComponentCamera *comp_cam);
+	void RayCast(const math::LineSegment &ray_cast) const;
 
 private:
 

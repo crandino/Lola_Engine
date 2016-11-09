@@ -4,12 +4,13 @@
 //#include "ModuleFileSystem.h"
 #include "ModuleRenderer3D.h"
 #include "ModuleCameraEditor.h"
+#include "ModuleEditor.h"
 #include "ModuleInput.h"
 
 #include "GameObject.h"
 
 #include "ComponentMesh.h"
-//#include "ComponentTransform.h"
+#include "ComponentTransform.h"
 //#include "ComponentMaterial.h"
 #include "ComponentCamera.h"
 
@@ -378,4 +379,40 @@ void ModuleGameObjectManager::GenerateUUID(GameObject *go)
 void ModuleGameObjectManager::GenerateUUID(Component *comp)
 {
 	comp->UUID = UUID_generator.Int();
+}
+
+void ModuleGameObjectManager::RayCast(const math::LineSegment &ray_cast) const
+{
+	GameObject *curr_go = nullptr;
+	GameObject *selection_canditate = nullptr;
+	float min_dist = 1.0f;
+
+	for (uint i = 0; i < list_of_gos.size(); ++i)
+	{
+		curr_go = list_of_gos[i];
+		Mesh* mesh = curr_go->GetMesh();
+		
+		if (mesh)
+		{
+			for (uint j = 0; j < mesh->num_indices; j = j + 3)
+			{
+				math::Triangle tri(mesh->vertices[mesh->indices[j]],
+								   mesh->vertices[mesh->indices[j + 1]],
+								   mesh->vertices[mesh->indices[j + 2]]);
+				tri.Transform(curr_go->transform->world_transform);
+				
+				float hit_dist;
+				math::vec hit_point;
+
+				if (ray_cast.Intersects(tri, &hit_dist, &hit_point) && hit_dist < min_dist)
+				{
+					selection_canditate = curr_go;
+					min_dist = hit_dist;
+					DEBUG("%s %s %s %f", "Hit on", curr_go->GetName(), "at", hit_dist);
+				}
+			}
+		}
+	}
+
+	App->editor->ChangeSelectedGameObject(selection_canditate);
 }

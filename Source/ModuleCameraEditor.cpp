@@ -4,6 +4,7 @@
 #include "Application.h"
 #include "ModuleInput.h"
 #include "ModuleWindow.h"
+#include "ModuleRenderer3D.h"
 #include "ModuleGameObjectManager.h"
 
 #include "GameObject.h"
@@ -100,7 +101,8 @@ void ModuleCameraEditor::MousePick()
 	camera->GetFrustum(cam_frustum);
 
 	ray_cast = cam_frustum.UnProjectLineSegment(normalized_pos.x, -normalized_pos.y);
-
+	//ray_cast.Translate(-App->renderer3D->view_matrix.Transposed().TranslatePart());
+	App->gameobject_manager->RayCast(ray_cast);
 }
 
 void ModuleCameraEditor::SetAsEditorCamera(GameObject *go) { camera = go; }

@@ -21,7 +21,7 @@ class ModuleEditor : public Module
 		UPDATE_STATUS PostUpdate(float dt);
 		bool CleanUp();	
 
-
+		void ChangeSelectedGameObject(GameObject *new_go);
 
 	private:
 
@@ -48,7 +48,6 @@ class ModuleEditor : public Module
 		void ShowWarning();
 
 		void ExpandTree(const GameObject* go_to_expand);
-		void ChangeSelectedGameObject(GameObject *new_go);
 };
 
 #endif // !__MODULEIMGUI_H__
