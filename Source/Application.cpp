@@ -56,6 +56,9 @@ Application::Application()
 
 	// Console
 	console = new Console();
+
+	// Engine mode
+	engine_mode = ENGINE_MODE::EDITOR;
 }
 
 Application::~Application()
@@ -82,6 +85,7 @@ bool Application::Init()
 	app_config = config.GetNode("Application");
 	sprintf_s(app_name, SHORT_STRING, app_config.GetString("engine_name"));
 	sprintf_s(organization, SHORT_STRING, app_config.GetString("organization"));
+	engine_mode = (ENGINE_MODE)app_config.GetInt("engine_mode");
 		
 	// Call Awake() in all modules
 	modules = config.GetNode("Modules");

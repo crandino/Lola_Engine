@@ -1,9 +1,6 @@
 #include "DrawDebug.h"
 
-#include "openGL.h"
-
 #include "Globals.h"
-
 #include <stack>
 
 bool DrawDebug::show_aabb = false;
@@ -111,21 +108,21 @@ void DrawDebug::DrawFrustum(const math::Frustum &frustrum) const
 	}	
 }
 
-void DrawDebug::DrawOcTree(const OcTree &quad) const
+void DrawDebug::DrawOcTree(const OcTree &octree) const
 {	
 	if (show_octree)
 	{
-		std::vector<OcTreeNode*> nodes;
-		quad.CollectRects(nodes);
+		std::vector<math::AABB> boxes;
+		octree.CollectRects(boxes);
 
 		glLineWidth(LINE_WIDTH);
 		glBegin(GL_LINES);
 		
-		glColor3f(1.0f, 0.7f, 0.0f);
+		glColor3f(1.0f, 0.0f, 0.0f);
 
-		for (uint i = 0; i < nodes.size();++i)
+		for (uint i = 0; i < boxes.size();++i)
 		{
-			nodes[i]->box.ToEdgeList(edges);			
+			boxes[i].ToEdgeList(edges);			
 
 			for (int i = 0; i < 24; ++i)
 				glVertex3fv(edges[i].ptr());			

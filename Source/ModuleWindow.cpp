@@ -34,7 +34,7 @@ bool ModuleWindow::Awake(JSONParser &config)
 		screen_size = config.GetInt("screen_size");
 		screen_height = config.GetInt("screen_height") * screen_size;
 		screen_width = config.GetInt("screen_width") * screen_size;
-		Uint32 flags = SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN;
+		flags = SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN;
 
 		//Use OpenGL 2.1
 		/*SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
@@ -110,6 +110,21 @@ bool ModuleWindow::Load(JSONParser &module)
 	return true;
 }
 
-int ModuleWindow::GetScreenSize() const { return screen_size; }
-int ModuleWindow::GetScreenWidth() const { return screen_width; }
-int ModuleWindow::GetScreenHeight() const { return screen_height; }
+uint ModuleWindow::GetScreenSize() const { return screen_size; }
+int &ModuleWindow::GetScreenWidth() { return screen_width; }
+int &ModuleWindow::GetScreenHeight() { return screen_height; }
+
+void ModuleWindow::ChangeWindowSize()
+{
+	SDL_SetWindowSize(window, screen_width, screen_height);
+}
+
+void ModuleWindow::SetFullscreenOptions()
+{
+	if (flags & SDL_WINDOW_FULLSCREEN)
+		SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
+	else if (flags & SDL_WINDOW_FULLSCREEN_DESKTOP) 
+		SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN_DESKTOP);
+	else 
+		SDL_SetWindowFullscreen(window, 0);
+}

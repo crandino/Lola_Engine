@@ -82,12 +82,10 @@ UPDATE_STATUS ModuleCameraEditor::Update(float dt)
 	}
 
 	// Mouse picking
-	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN)
-	{
+	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN && !ImGui::IsMouseHoveringAnyWindow())
 		MousePick();
-	}
 
-	debug.DrawLineSegment(ray_cast);
+	//debug.DrawLineSegment(ray_cast);
 	
 	return UPDATE_CONTINUE;
 }

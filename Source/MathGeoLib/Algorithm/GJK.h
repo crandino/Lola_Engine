@@ -30,7 +30,6 @@ template<typename A, typename B>
 bool OwnIntersect(const A &a, const B &b)
 {
 	// Function reimplemented by CRZ!! Hold on your chair!
-
 	const unsigned int num_planes = 6;
 	const unsigned int num_corners = 8;
 
@@ -40,8 +39,24 @@ bool OwnIntersect(const A &a, const B &b)
 	math::vec corners[num_corners];
 	b.GetCornerPoints(corners);
 
-	unsigned int planes_with_corners_inside = 0;
+	//unsigned int corners_outside_plane = ;
+
 	for (unsigned int j = 0; j < num_planes; ++j)
+	{
+		unsigned int corners_inside = 8;
+		for (unsigned int k = 0; k < num_corners; ++k)
+		{
+			if (planes[j].IsOnPositiveSide(corners[k]))
+				--corners_inside;
+		}
+
+		if (corners_inside == 0)
+			return false;			
+	}
+
+	return true;
+
+	/*for (unsigned int j = 0; j < num_planes; ++j)
 	{
 		unsigned int corners_on_negative_plane = 0;
 		for (unsigned int k = 0; k < num_corners; ++k)
@@ -52,9 +67,9 @@ bool OwnIntersect(const A &a, const B &b)
 
 		if (corners_on_negative_plane > 0)
 			++planes_with_corners_inside;
-	}
+	}*/
 
-	return planes_with_corners_inside == 6 ? true : false;
+	//return planes_with_corners_inside == 6 ? true : false;
 }
 
 template<typename A, typename B>

@@ -9,7 +9,7 @@
 #include "Application.h"
 #include "ModuleGameObjectManager.h"
 
-GameObject::GameObject(uint id, const char* name, GameObject *parent)
+GameObject::GameObject(const char* name)
 {
 	active = true;
 	selected = false;
@@ -18,11 +18,7 @@ GameObject::GameObject(uint id, const char* name, GameObject *parent)
 
 	sprintf_s(this->name, SHORT_STRING, name);
 
-	this->id = id;
-	App->gameobject_manager->GenerateUUID(this);
-
-	if (parent != nullptr)
-		parent->children.push_back(this);
+	App->gameobject_manager->GenerateUUID(this);		
 }
 
 GameObject::~GameObject()

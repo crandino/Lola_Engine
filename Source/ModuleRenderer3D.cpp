@@ -172,7 +172,7 @@ UPDATE_STATUS ModuleRenderer3D::Update(float dt)
 UPDATE_STATUS ModuleRenderer3D::PostUpdate(float dt)
 {
 	// Rendering
-	glViewport(0, 0, (int)ImGui::GetIO().DisplaySize.x, (int)ImGui::GetIO().DisplaySize.y);	
+	glViewport(0, 0, App->window->GetScreenWidth(), App->window->GetScreenHeight());
 	SDL_GL_SwapWindow(App->window->window);
 
 	return UPDATE_CONTINUE;

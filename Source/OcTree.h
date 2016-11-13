@@ -37,9 +37,13 @@ public:
 	 
 	bool Insert(GameObject* go);
 	bool SharedByMoreThanXChild(GameObject *go, unsigned int X) const;
+	int CenterOnChild(GameObject *go) const;
+	void CollectRects(std::vector<math::AABB> &boxes);
+
 	template <class PRIMITIVE>
-	int CollectCandidates(std::vector<GameObject*> &nodes, const PRIMITIVE &primitive) const;
-	void CollectRects(std::vector<OcTreeNode*> &nodes);
+	int CollectCandidates(std::vector<GameObject*> &nodes, const PRIMITIVE &primitive) const;	
+	template <class PRIMITIVE>
+	void CollectRects(std::vector<math::AABB> &boxes, const PRIMITIVE &primitive) const;
 
 	bool HasChildren() const;
 	
@@ -62,10 +66,14 @@ public:
 
 	bool Insert(GameObject* go);
 	void Clear();
+
+	void CollectRects(std::vector<math::AABB> &boxes) const;
 	
 	template<class PRIMITIVE>
 	int CollectCandidates(std::vector<GameObject*> &nodes, const PRIMITIVE &primitive) const;
-	void CollectRects(std::vector<OcTreeNode*> &nodes) const;
+	template<class PRIMITIVE>
+	void CollectRects(std::vector<math::AABB> &boxes, const PRIMITIVE &primitive) const;
+	
 };
 
 template <class PRIMITIVE>
@@ -81,12 +89,28 @@ int OcTreeNode::CollectCandidates(std::vector<GameObject*> &nodes, const PRIMITI
 		for (int i = 0; i < 8; ++i)
 		{
 			if (childs[i]->box.Intersects(primitive))
-				tests += childs[i]->CollectCandidates(nodes, childs[i]->box);
+				tests += childs[i]->CollectCandidates(nodes, primitive);
 			++tests;
 		}
 	}	
 
 	return tests;
+}
+
+template <class PRIMITIVE>
+void OcTreeNode::CollectRects(std::vector<math::AABB> &boxes, const PRIMITIVE &primitive) const
+{
+	if (HasChildren())
+	{
+		for (int i = 0; i < 8; ++i)
+		{
+			if (childs[i]->box.Intersects(primitive))
+			{
+				boxes.push_back(childs[i]->box);
+				childs[i]->CollectRects(boxes, primitive);
+			}				
+		}
+	}
 }
 
 template <class PRIMITVE>
@@ -96,6 +120,13 @@ int OcTree::CollectCandidates(std::vector<GameObject*> &nodes, const PRIMITVE &p
 	if (root != nullptr && root->box.Intersects(primitive))
 		tests += root->CollectCandidates(nodes, primitive);
 	return tests;
+}
+
+template <class PRIMITVE>
+void OcTree::CollectRects(std::vector<math::AABB> &boxes, const PRIMITVE &primitive) const
+{
+	if (root != nullptr&& root->box.Intersects(primitive))
+		root->CollectRects(boxes, primitive);
 }
 
 #endif // __OcTree_H__

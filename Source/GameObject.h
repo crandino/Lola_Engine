@@ -29,7 +29,8 @@ public:
 
 	std::vector<Component*>			 components;
 	std::vector<GameObject*>         children;
-	uint						     id;
+	GameObject						 *parent = nullptr;
+
 	long unsigned int				 UUID;
 
 	bool						     active;
@@ -37,7 +38,7 @@ public:
 	bool							 to_delete;
 	bool							 bstatic;
 
-	GameObject(uint id, const char* name, GameObject *parent);
+	GameObject(const char* name);
 	~GameObject();
 
 	const Component *GetComponentByType(COMPONENT_TYPE type) const;

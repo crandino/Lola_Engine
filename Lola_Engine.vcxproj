@@ -254,6 +254,7 @@
     <ClInclude Include="Source\Timer.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Game\config.json" />
     <None Include="Source\MathGeoLib\Geometry\KDTree.inl" />
     <None Include="Source\MathGeoLib\Geometry\QuadTree.inl" />
     <None Include="Source\MathGeoLib\Geometry\TriangleMesh_IntersectRay_AVX.inl" />

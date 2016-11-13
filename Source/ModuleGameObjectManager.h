@@ -15,6 +15,8 @@ class ModuleGameObjectManager : public Module
 {
 public:
 
+	std::vector<math::LineSegment> ray_casts;
+
 	ModuleGameObjectManager(Application* app, bool start_enabled = true);
 	~ModuleGameObjectManager();
 
@@ -27,16 +29,17 @@ public:
 	const GameObject *GetRoot() const;
 
 	GameObject *CreateGameObject(const char *name, GameObject *parent = nullptr);
+	void CreateRoot();
 
 	void CreateCamera();
-	bool DeleteGameObject(const GameObject *go_to_delete);
+	bool DeleteGameObject(GameObject *go_to_delete);
 	void MarkChildToDelete(GameObject *go);
 
 	void GenerateUUID(GameObject *go);
 	void GenerateUUID(Component *comp);
 
 	void SetEditorCamera(const ComponentCamera *comp_cam);
-	void RayCast(const math::LineSegment &ray_cast) const;
+	void RayCast(const math::LineSegment &ray_cast);
 
 	void UpdateOcTree();
 
@@ -51,15 +54,13 @@ private:
 
 	math::LCG							UUID_generator;
 
-	uint								id_to_assign = 0;
 	GameObject							*root = nullptr;
 	std::vector<GameObject*>			list_of_gos;
 	std::vector<GameObject*>		    list_of_gos_to_draw;
 
-	GameObject	*GetGameObject(uint id_to_search) const;
-	GameObject  *FindParent(const GameObject* go) const;
+	GameObject	*GetGameObject(long unsigned int UUID_to_search) const;
 
-	bool DeleteGameObject(unsigned int id_to_delete);
+	bool DeleteGameObject(long unsigned int UUID_to_delete);
 
 	int FrustumCulling(const math::Frustum &frustum);
 

@@ -40,6 +40,9 @@
     <Filter Include="3rd Party\Parson">
       <UniqueIdentifier>{13093877-12ad-4ed8-bf47-78aff60d0c30}</UniqueIdentifier>
     </Filter>
+    <Filter Include="JSON files">
+      <UniqueIdentifier>{160131c7-2aae-4140-b0d5-2aaa5e573dda}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Color.cpp">
@@ -597,6 +600,9 @@
     </None>
     <None Include="Source\MathGeoLib\Geometry\TriangleMesh_IntersectRay_SSE.inl">
       <Filter>3rd Party\MahtGeoLib\src</Filter>
+    </None>
+    <None Include="Game\config.json">
+      <Filter>JSON files</Filter>
     </None>
   </ItemGroup>
 </Project>

@@ -19,11 +19,17 @@ public:
 	bool CleanUp();
 
 	void SetTitle(const char* title);
-	int GetScreenSize() const;
-	int GetScreenWidth() const;
-	int GetScreenHeight() const;
+	uint GetScreenSize() const;
+	int &GetScreenWidth();
+	int &GetScreenHeight();
+
+	void ChangeWindowSize();
+	void SetFullscreenOptions();
 
 public:
+	//Window flags
+	Uint32 flags;
+
 	//The window we'll be rendering to
 	SDL_Window* window;
 
@@ -32,8 +38,8 @@ public:
 
 private:
 
-	uint screen_width;
-	uint screen_height;
+	int screen_width;
+	int screen_height;
 	uint screen_size;
 
 	bool Save(JSONParser &module);

@@ -35,7 +35,6 @@ bool ModuleEditor::Awake(JSONParser &config)
 
 	node_flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick;
 	leaf_flags = node_flags | ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
-	item_selected_by_id = -1;
 
 	return true;
 }
@@ -194,6 +193,42 @@ void ModuleEditor::ShowConfMenu()
 		ImGui::LabelText("", "%s", "MathGeoLib Version:"); ImGui::SameLine();
 		ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.5f, 1.0f), "%s", "1.5");
 	}
+	if (ImGui::CollapsingHeader("Window"))
+	{
+		ImGui::LabelText("", "%s", "Software");
+		ImGui::Separator();
+
+		if(ImGui::SliderInt("Screen Width", &App->window->GetScreenWidth(), 600, 1920)) App->window->ChangeWindowSize();
+		if(ImGui::SliderInt("Screen Height", &App->window->GetScreenHeight(), 400, 1080)) App->window->ChangeWindowSize();
+		if(ImGui::CheckboxFlags("Fullscreen", &App->window->flags, SDL_WINDOW_FULLSCREEN)) App->window->SetFullscreenOptions();
+		ImGui::SameLine();
+		if(ImGui::CheckboxFlags("Fullscreen desktop", &App->window->flags, SDL_WINDOW_FULLSCREEN_DESKTOP)) App->window->SetFullscreenOptions();
+
+		// SDL
+		static SDL_version ver; SDL_GetVersion(&ver);
+		ImGui::LabelText("", "%s", "SDL Version:"); ImGui::SameLine();
+		ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.5f, 1.0f), "%u.%u.%u", ver.major, ver.minor, ver.patch);
+
+		// OpenGL
+		ImGui::LabelText("", "%s", "OpenGL Version:"); ImGui::SameLine();
+		ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.5f, 1.0f), "%s", App->renderer3D->gl_version);
+
+		// Glew
+		ImGui::LabelText("", "%s", "GLew Version:"); ImGui::SameLine();
+		ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.5f, 1.0f), "%s", App->renderer3D->glew_version);
+
+		// Bullet
+		ImGui::LabelText("", "%s", "Bullet Version:");// ImGui::SameLine();
+													  //ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.5f, 1.0f), "%u.%u", BT_BULLET_VERSION / 100, BT_BULLET_VERSION % 200);
+
+													  // ImGUI
+		ImGui::LabelText("", "%s", "ImGUI Version:"); ImGui::SameLine();
+		ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.5f, 1.0f), "%s", ImGui::GetVersion());
+
+		//MathGeoLib
+		ImGui::LabelText("", "%s", "MathGeoLib Version:"); ImGui::SameLine();
+		ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.5f, 1.0f), "%s", "1.5");
+	}
 
 	ImGui::End();
 }
@@ -274,7 +309,7 @@ void ModuleEditor::ExpandTree(const GameObject* go_to_expand)
 	for (int i = 0; i < num_children; ++i)
 	{
 		child = go_to_expand->children[i];
-		node_flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick | ((child->id == item_selected_by_id) ? ImGuiTreeNodeFlags_Selected : 0);
+		node_flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick | ((child->UUID == UUID_selected) ? ImGuiTreeNodeFlags_Selected : 0);
 
 		if (child->children.size() > 0)
 		{
@@ -301,15 +336,18 @@ void ModuleEditor::ExpandTree(const GameObject* go_to_expand)
 
 void ModuleEditor::ChangeSelectedGameObject(GameObject *new_go)
 {
+	// Previous GO selected becomes unselected.
+	if (go_selected)
+	{
+		go_selected->selected = false;
+		go_selected = nullptr;
+	}		
+
 	if (new_go)
 	{
-		// Previous GO selected becomes unselected.
-		if (go_selected)
-			go_selected->selected = false;
-
 		// Now, we make the new GO selected and use its ID to show highlighted
 		go_selected = new_go;
 		go_selected->selected = true;
-		item_selected_by_id = new_go->id;
+		UUID_selected = new_go->UUID;
 	}	
 }

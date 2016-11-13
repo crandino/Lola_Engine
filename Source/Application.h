@@ -9,6 +9,12 @@
 
 #include <list>
 
+enum ENGINE_MODE
+{
+	EDITOR,
+	GAME
+};
+
 class ModuleWindow;
 class ModuleTextureLoader;
 class ModuleFileSystem;
@@ -60,6 +66,8 @@ public:
 	void SaveGame(const char *file);
 		
 private:
+
+	ENGINE_MODE engine_mode;
 
 	bool	want_to_load = false;
 	bool	want_to_save = false;

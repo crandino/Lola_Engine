@@ -14,6 +14,8 @@
 //#include "ComponentMaterial.h"
 #include "ComponentCamera.h"
 
+#include "PerfTimer.h"
+
 #include <stack>
 #include <algorithm> 
 
@@ -31,8 +33,8 @@ bool ModuleGameObjectManager::Awake(JSONParser &config)
 {
 	bool ret = true;
 
-	// First gameobject of the scene (id = 0)
-	root = CreateGameObject("Root", nullptr);
+	// First gameobject of the scene (UUID = 0)
+	CreateRoot();
 
 	fake_camera = App->gameobject_manager->CreateGameObject("Fake_camera", nullptr);
 	fake_camera->AddComponent(COMPONENT_TYPE::TRANSFORM);
@@ -40,7 +42,7 @@ bool ModuleGameObjectManager::Awake(JSONParser &config)
 	c->SetComponent();
 
 	// Initializing OcTree	
-	oc_tree_boundaries.SetFromCenterAndSize({ 0.0f, 0.0f, 0.0f }, { 100.0f, 100.0f, 100.0f });
+	oc_tree_boundaries.SetFromCenterAndSize({ -0.0f, -0.0f, -0.0f }, { 100.0f, 100.0f, 100.0f });
 	oc_tree.SetBoundaries(oc_tree_boundaries);
 
 	return ret;
@@ -101,9 +103,9 @@ UPDATE_STATUS ModuleGameObjectManager::Update(float dt)
 
 	// Frustum culling
 	const GameObject *camera = App->camera->GetEditorCamera();
-	math::Frustum frustum = ((ComponentCamera*)camera->GetComponentByType(COMPONENT_TYPE::CAMERA))->cam_frustum;
+	math::Frustum frustum = ((ComponentCamera*)fake_camera->GetComponentByType(COMPONENT_TYPE::CAMERA))->cam_frustum;
 	FrustumCulling(frustum);
-	draw_debug.DrawOcTree(oc_tree);
+	draw_debug.DrawOcTree(oc_tree, frustum);
 
 	for (uint i = 0; i < list_of_gos_to_draw.size(); ++i)
 	{
@@ -120,7 +122,11 @@ UPDATE_STATUS ModuleGameObjectManager::Update(float dt)
 				break;
 			}
 		}			
-	}		
+	}	
+
+	// Raycasts draw for testing!!
+	for (uint i = 0; i < ray_casts.size(); ++i)
+		draw_debug.DrawLineSegment(ray_casts[i]);
 
 	return UPDATE_CONTINUE;
 }
@@ -171,52 +177,40 @@ const GameObject *ModuleGameObjectManager::GetRoot() const
 GameObject *ModuleGameObjectManager::CreateGameObject(const char *name, GameObject *parent)
 {
 	GameObject *new_go = nullptr;
+	new_go = new GameObject(name);
 
-	// With nullptr pointer parent, root will be the parent if it's not the first gameobject on the game.
-	if (parent == nullptr && id_to_assign != 0)
-		parent = root;				
 	
-	new_go = new GameObject(id_to_assign++, name, parent);
+	if (parent != nullptr) // With not nullptr pointer parent, argument parent will be used.
+	{
+		new_go->parent = parent;
+		parent->children.push_back(new_go);
+	}
+	else // With nullptr pointer parent, root will be the parent.
+	{
+		new_go->parent = root;
+		root->children.push_back(new_go);
+	}
+	
 	list_of_gos.push_back(new_go);
 
 	return new_go;
 }
 
-GameObject *ModuleGameObjectManager::GetGameObject(uint id_to_search) const
+void ModuleGameObjectManager::CreateRoot()
+{
+	root = new GameObject("Root");
+	root->UUID = 0;
+	list_of_gos.push_back(root);
+}
+
+GameObject *ModuleGameObjectManager::GetGameObject(long unsigned int UUID_to_search) const
 {
 	GameObject *go = nullptr;
 
 	for (uint i = 0; i < list_of_gos.size(); ++i)
 	{
-		if (list_of_gos[i]->id == id_to_search)
+		if (list_of_gos[i]->UUID == UUID_to_search)
 			return list_of_gos[i];
-	}
-
-	return nullptr;
-}
-
-GameObject *ModuleGameObjectManager::FindParent(const GameObject* go) const
-{
-	std::stack<GameObject*> go_stack;
-	go_stack.push(root);
-
-	GameObject *curr_go = nullptr;
-
-	while (!go_stack.empty())
-	{
-		curr_go = go_stack.top();
-		go_stack.pop();
-
-		if (curr_go != nullptr)
-		{
-			for (uint i = 0; i < curr_go->children.size(); ++i)
-			{
-				if (curr_go->children[i] == go)
-					return curr_go;
-
-				go_stack.push(curr_go->children[i]);
-			}
-		}		
 	}
 
 	return nullptr;
@@ -241,25 +235,28 @@ void ModuleGameObjectManager::MarkChildToDelete(GameObject *go)
 	}
 }
 
-bool ModuleGameObjectManager::DeleteGameObject(const GameObject *go_to_delete)
+bool ModuleGameObjectManager::DeleteGameObject(GameObject *go_to_delete)
 {
 	bool ret = false;
 
 	if (go_to_delete != nullptr)
 	{
-		GameObject *parent = FindParent(go_to_delete);
-
-		if (parent != nullptr)
+		// Removing child (go_to_delete) from the children parent's list.
+		if (go_to_delete->parent != nullptr)
 		{
-			for(std::vector<GameObject*>::iterator it = parent->children.begin(); it != parent->children.end(); ++it)
+			for (std::vector<GameObject*>::iterator it = go_to_delete->parent->children.begin(); it != go_to_delete->parent->children.end(); ++it)
 			{
 				if ((*it) == go_to_delete)
 				{
-					parent->children.erase(it);
+					go_to_delete->parent->children.erase(it);
 					break;
-				}				
+				}
 			}
 		}
+
+		// Removing (go_to_delete) as parent from its children.
+		for (uint i = 0; i < go_to_delete->children.size(); ++i)
+			go_to_delete->children[i]->parent = nullptr;
 
 		RELEASE(go_to_delete);
 		ret = true;		
@@ -268,7 +265,7 @@ bool ModuleGameObjectManager::DeleteGameObject(const GameObject *go_to_delete)
 	return ret;
 }
 
-bool ModuleGameObjectManager::DeleteGameObject(unsigned int id_to_delete)
+bool ModuleGameObjectManager::DeleteGameObject(long unsigned int id_to_delete)
 {
 	return DeleteGameObject(GetGameObject(id_to_delete));
 }
@@ -334,28 +331,41 @@ void ModuleGameObjectManager::GenerateUUID(Component *comp)
 	comp->UUID = UUID_generator.Int();
 }
 
-void ModuleGameObjectManager::RayCast(const math::LineSegment &ray_cast) const
+void ModuleGameObjectManager::RayCast(const math::LineSegment &ray_cast)
 {
+	PerfTimer timer;
+
+	ray_casts.clear();
+
 	GameObject *curr_go = nullptr;
 	GameObject *selection_canditate = nullptr;
 	float min_dist = 1.0f;
 
 	std::vector<GameObject*> selection;
 	oc_tree.CollectCandidates(selection, ray_cast);
+	DEBUG("Tests with Octree %d", selection.size());
+	DEBUG("Tests without Octree %d", list_of_gos.size());
 
-	for (uint i = 0; i < selection.size(); ++i)
+	for (uint i = 0; i < list_of_gos.size(); ++i)
 	{
-		curr_go = selection[i];
+		curr_go = list_of_gos[i];
+
 		Mesh* mesh = curr_go->GetMesh();
+		math::AABB bbox; curr_go->GetAABB(bbox);
+		math::Triangle tri;		
 		
-		if (mesh)
+		if (mesh && ray_cast.Intersects(bbox))
 		{
+			//math::LineSegment ray_cast_transform = ray_cast;
+			//ray_cast_transform.Transform(App->renderer3D->view_matrix);
+			//ray_casts.push_back(ray_cast_transform);
+
 			for (uint j = 0; j < mesh->num_indices; j = j + 3)
 			{
-				math::Triangle tri(mesh->vertices[mesh->indices[j]],
-								   mesh->vertices[mesh->indices[j + 1]],
-								   mesh->vertices[mesh->indices[j + 2]]);
-				tri.Transform(curr_go->transform->world_transform);
+				tri.a = mesh->vertices[mesh->indices[j]];
+				tri.b = mesh->vertices[mesh->indices[j + 1]],
+				tri.c = mesh->vertices[mesh->indices[j + 2]];								   
+				tri.Transform(curr_go->transform->world_transform);				
 				
 				float hit_dist;
 				math::vec hit_point;
@@ -370,6 +380,7 @@ void ModuleGameObjectManager::RayCast(const math::LineSegment &ray_cast) const
 	}
 
 	App->editor->ChangeSelectedGameObject(selection_canditate);
+	DEBUG("Ray Cast took %f", timer.ReadMs());
 }
 
 void ModuleGameObjectManager::UpdateOcTree()

@@ -26,7 +26,7 @@ class ModuleEditor : public Module
 	private:
 
 		int node_flags, leaf_flags;
-		int item_selected_by_id;		
+		long unsigned int UUID_selected = 0;
 		
 		//Windows variables
 		bool about_menu = false;
