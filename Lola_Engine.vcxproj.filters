@@ -604,5 +604,8 @@
     <None Include="Game\config.json">
       <Filter>JSON files</Filter>
     </None>
+    <None Include="Debug\Game\Scene\Test.json">
+      <Filter>JSON files</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -33,26 +33,7 @@ bool ModuleFileSystem::Awake(JSONParser &config)
 {
 	bool ret = true;
 
-	char *write_dir = SDL_GetPrefPath(App->GetAppName(), App->GetOrganization());
-
-	if (PHYSFS_setWriteDir(write_dir) == 0)
-	{
-		DEBUG("%s,%s","Error on setting Write Dir. Error:", PHYSFS_getLastError());
-		ret = false;
-	}
-	else
-	{
-		DEBUG("%s %s", "Write directory is ", write_dir);
-		AddSearchPath(write_dir, GetSaveDirectory());
-		AddSearchPath("Assets/Models", "Models");
-		AddSearchPath("Assets/Textures", "Textures");		
-	}
-
-	// Creating internal folders for own engine usage
-	if(PHYSFS_exists(LIBRARY_TEXTURE)) PHYSFS_mkdir(LIBRARY_TEXTURE);
-	if(PHYSFS_exists(LIBRARY_MESH)) PHYSFS_mkdir(LIBRARY_MESH);
-
-	SDL_free(write_dir);	
+	SetWriteDirectory();
 
 	// Generate IO interfaces
 	CreateAssimpIO();
@@ -72,6 +53,12 @@ bool ModuleFileSystem::CleanUp()
 bool ModuleFileSystem::AddSearchPath(const char *path_or_zip, const char *mount_point)
 {
 	bool ret = true;
+
+	if (PHYSFS_exists(path_or_zip))
+	{
+		if(PHYSFS_removeFromSearchPath(path_or_zip))
+			DEBUG("Failure removing path %s for seach path. Error: %s", path_or_zip, PHYSFS_getLastError());
+	}
 
 	if (PHYSFS_mount(path_or_zip, mount_point, 1) == 0)
 	{
@@ -231,6 +218,56 @@ const char *ModuleFileSystem::GetFileFromDirPath(const char *path) const
 const char *ModuleFileSystem::GetRealDirectory(const char *file) const
 {
 	return PHYSFS_getRealDir(file);
+}
+
+void ModuleFileSystem::SetWriteDirectory()
+{
+	switch (App->GetEngineMode())
+	{
+		case(ENGINE_MODE::EDITOR):
+		{
+			char write_dir[MEDIUM_STRING];
+			sprintf_s(write_dir, MEDIUM_STRING, "%s%s", PHYSFS_getBaseDir(), "Game");
+			if (PHYSFS_setWriteDir(write_dir) == 0)
+				DEBUG("%s,%s", "Error on setting Write Directory. Error:", PHYSFS_getLastError());
+			else
+			{
+				// Creating internal folders for own engine usage
+				AddSearchPath("Assets/Models", "Models");
+				AddSearchPath("Assets/Textures", "Textures");
+
+				char dirs[MEDIUM_STRING];
+
+				if (!PHYSFS_exists(SCENES))
+					PHYSFS_mkdir(SCENES);
+
+				if (!PHYSFS_exists(LIBRARY_TEXTURE))
+					PHYSFS_mkdir(LIBRARY_TEXTURE);
+
+				if (!PHYSFS_exists(LIBRARY_MESH))
+					PHYSFS_mkdir(LIBRARY_MESH);
+
+				DEBUG("%s %s", "On Editor Mode, write directory is ", write_dir);
+				AddSearchPath(write_dir, GetSaveDirectory());
+			}
+
+			SDL_free(write_dir);
+			break;
+		}
+		case(ENGINE_MODE::GAME):
+		{
+			char *write_dir = SDL_GetPrefPath(App->GetAppName(), App->GetOrganization());
+			if (PHYSFS_setWriteDir(write_dir) == 0)
+				DEBUG("%s,%s", "Error on setting Write Dir. Error:", PHYSFS_getLastError());
+			else
+			{
+				DEBUG("%s %s", "On Game Mode, write directory is ", write_dir);
+				AddSearchPath(write_dir, GetSaveDirectory());
+			}
+			SDL_free(write_dir);
+			break;
+		}
+	}
 }
 
 // -----------------------------------------------------

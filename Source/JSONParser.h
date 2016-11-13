@@ -26,6 +26,7 @@ public:
 
 	bool AddBoolean(const char *node_name, bool boolean);
 	bool AddInt(const char *int_name, int value);
+	bool AddUUID(long unsigned int value);
 	bool AddString(const char *string_name, const char *string_value);
 	bool AppendBoolean(const char *name_boolean, bool boolean);
 
@@ -38,6 +39,7 @@ public:
 
 	bool GetBoolean(const char *name_boolean) const;
 	int GetInt(const char *int_name) const;
+	long unsigned int GetUUID() const;
 	const char *GetString(const char *string_name) const;
 
 	// Utilities

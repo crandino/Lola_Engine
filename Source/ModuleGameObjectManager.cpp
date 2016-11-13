@@ -1,7 +1,6 @@
 #include "ModuleGameObjectManager.h"
 
 #include "Application.h"
-//#include "ModuleFileSystem.h"
 #include "ModuleRenderer3D.h"
 #include "ModuleCameraEditor.h"
 #include "ModuleEditor.h"
@@ -42,7 +41,7 @@ bool ModuleGameObjectManager::Awake(JSONParser &config)
 	c->SetComponent();
 
 	// Initializing OcTree	
-	oc_tree_boundaries.SetFromCenterAndSize({ -0.0f, -0.0f, -0.0f }, { 100.0f, 100.0f, 100.0f });
+	oc_tree_boundaries.SetFromCenterAndSize({ 0.0f, 0.0f, 0.0f }, { 100.0f, 100.0f, 100.0f });
 	oc_tree.SetBoundaries(oc_tree_boundaries);
 
 	return ret;
@@ -316,6 +315,7 @@ bool ModuleGameObjectManager::Load(JSONParser &module)
 		JSONParser go = module.GetArray("Game Objects", i);
 		go.GetBoolean("Active");
 		go.GetBoolean("Selected");
+		go.GetUUID();
 	}
 		
 	return true;

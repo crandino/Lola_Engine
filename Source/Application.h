@@ -64,6 +64,8 @@ public:
 
 	void LoadGame(const char *file);
 	void SaveGame(const char *file);
+
+	ENGINE_MODE GetEngineMode() const;
 		
 private:
 

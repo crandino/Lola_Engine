@@ -8,6 +8,7 @@
 
 #define LIBRARY_TEXTURE "Library/Textures"
 #define LIBRARY_MESH "Library/Mesh"
+#define SCENES "Scene"
 
 struct SDL_RWops;
 int close_sdl_rwops(SDL_RWops *rw);
@@ -35,6 +36,8 @@ public:
 	const char *GetRealDirectory(const char* file) const;
 	bool IsDirectory(const char *dir) const;
 	bool Exists(const char *file) const;
+
+	void SetWriteDirectory();
 
 	aiFileIO * ModuleFileSystem::GetAssimpIO();
 

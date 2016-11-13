@@ -1,5 +1,8 @@
 #include "JSONParser.h"
 
+#include <stdio.h>
+#include <stdlib.h>
+
 JSONParser::JSONParser()
 {
 	value_root = json_value_init_object();
@@ -62,6 +65,12 @@ bool JSONParser::AddInt(const char *name_int, int value)
 	return json_object_set_number(root, name_int, (int)value) == JSONSuccess;
 }
 
+bool JSONParser::AddUUID(long unsigned int value)
+{
+	char uuid[20]; sprintf_s(uuid, 20, "%lu", value);
+	return json_object_set_string(root, "UUID", uuid) == JSONSuccess;
+}
+
 bool JSONParser::AddString(const char *string_name, const char *string_value)
 {
 	return json_object_set_string(root, string_name, string_value) == JSONSuccess;
@@ -106,6 +115,11 @@ bool JSONParser::GetBoolean(const char *name_boolean) const
 int JSONParser::GetInt(const char *int_name) const
 {
 	return (int)json_object_get_number(root, int_name);
+}
+
+long unsigned int JSONParser::GetUUID() const
+{
+	return strtoul(json_object_get_string(root, "UUID"), nullptr, 0);
 }
 
 const char *JSONParser::GetString(const char *string_name) const

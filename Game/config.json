@@ -2,7 +2,7 @@
 	"Application": {
 		"engine_name": "LOLA Engine",
 		"organization": "CITM",
-		"engine_mode": 1
+		"engine_mode": 0
 	},
     "Modules": {
 		"Window": {

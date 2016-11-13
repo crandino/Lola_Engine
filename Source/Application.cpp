@@ -114,9 +114,9 @@ bool Application::Init()
 void Application::PrepareUpdate()
 {
 	if (App->input->GetKey(SDL_SCANCODE_F8) == KEY_DOWN)
-		SaveGame("Test.json");
+		SaveGame("Scene/Test.json");
 	if (App->input->GetKey(SDL_SCANCODE_F9) == KEY_DOWN)
-		LoadGame("Test.json");
+		LoadGame("Scene/Test.json");
 
 	perf_info.PreUpdate();
 }
@@ -263,6 +263,11 @@ bool Application::LoadGameNow()
 }
 
 // *************** Utilities ********************
+
+ENGINE_MODE Application::GetEngineMode() const
+{
+	return engine_mode;
+}
 
 void Application::CloseApp()
 {

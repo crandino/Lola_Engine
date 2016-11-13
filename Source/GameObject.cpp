@@ -131,6 +131,7 @@ Mesh *GameObject::GetMesh() const
 
 	 go.AddBoolean("Active", active);
 	 go.AddBoolean("Selected", selected);	
+	 go.AddUUID(UUID);
 
 	 go.AddArray("Components");
 
