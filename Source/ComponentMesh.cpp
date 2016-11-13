@@ -117,10 +117,10 @@ void ComponentMesh::ApplyTransformToAABB()
 
 bool ComponentMesh::Save(JSONParser &go)
 {
-	JSONParser component;
+	JSONParser comp_mesh;
 
-	component.AddInt("Type", type);
-	component.AddBoolean("Wire", wire);
+	comp_mesh.AddInt("Type", type);
+	comp_mesh.AddBoolean("Wire", wire);
 
 	MeshImporter mesh_importer;
 	char save_filename[SHORT_STRING]; sprintf_s(save_filename, SHORT_STRING, "%lu%s", UUID, ".msh");
@@ -130,7 +130,7 @@ bool ComponentMesh::Save(JSONParser &go)
 	App->file_system->Save(save_filename, buf, size);
 	RELEASE_ARRAY(buf);
 
-	go.AddArray(component);
+	go.AddArray(comp_mesh);
 
 	return true;
 }

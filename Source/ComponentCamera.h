@@ -13,7 +13,8 @@ private:
 	bool camera_modified;
 
 	float aspect_ratio;
-	float FOV_h, FOV_v;
+	float FOV_h; // It's not used!
+	float FOV_v;
 	float near_plane, far_plane;
 
 	float near_plane_tmp, far_plane_tmp;
@@ -27,11 +28,6 @@ public:
 	math::Frustum cam_frustum;
 	math::Frustum origin_cam_frustum;
 
-	// Move that to Transform, like Unity
-	math::float3 forward;
-	math::float3 up;
-	math::float3 left;
-
 	ComponentCamera();
 	bool Update();
 	void SetComponent();
@@ -39,6 +35,9 @@ public:
 	void ShowEditorInfo();
 	void UpdateFrustum();
 	void ApplyTransformToFrustum();
+
+	bool Save(JSONParser &go);
+	bool Load(JSONParser &comp);
 
 };
 

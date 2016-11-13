@@ -32,6 +32,7 @@ public:
 	GameObject						 *parent = nullptr;
 
 	long unsigned int				 UUID;
+	long unsigned int				 parent_UUID;  // Used when loading GOs.
 
 	bool						     active;
 	bool					         selected;
@@ -57,6 +58,7 @@ public:
 	const char *GetName() const;
 
 	bool Save(JSONParser &game_objects);
+	bool Load(JSONParser &go);
 	
 };
 

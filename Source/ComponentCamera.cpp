@@ -50,10 +50,6 @@ bool ComponentCamera::Update()
 	if (game_object->transform_applied)
 		ApplyTransformToFrustum();
 
-	forward = (game_object->transform->world_transform.RotatePart() * math::float3(0.0f, 0.0f, -1.0f)).Normalized();
-	left = (game_object->transform->world_transform.RotatePart() * math::float3(1.0f, 0.0f, 0.0f)).Normalized();
-	up = (game_object->transform->world_transform.RotatePart() * math::float3(0.0f, 1.0f, 0.0f)).Normalized();
-
 	return true;
 }
 
@@ -113,4 +109,32 @@ void ComponentCamera::ShowEditorInfo()
 	if (ImGui::DragFloat("Aspect Ratio", &aspect_ratio, 0.05f, 1.0f, 2.0f)) camera_modified = true;
 
 	ImGui::Separator();
+}
+
+bool ComponentCamera::Save(JSONParser &go)
+{
+	JSONParser comp_cam;
+
+	comp_cam.AddInt("Type", type);
+
+	comp_cam.AddFloat("Near Plane", near_plane);
+	comp_cam.AddFloat("Far Plane", far_plane);
+	comp_cam.AddFloat("FOV h", FOV_h);
+	comp_cam.AddFloat("FOV v", FOV_v);
+	comp_cam.AddFloat("Aspect ratio", aspect_ratio);
+
+	go.AddArray(comp_cam);
+
+	return true;
+}
+
+bool ComponentCamera::Load(JSONParser &comp)
+{
+	near_plane = comp.GetFloat("Near Plane");
+	far_plane = comp.GetFloat("Far Plane");
+	FOV_h = comp.GetFloat("FOV h");
+	FOV_v = comp.GetFloat("FOV v");
+	aspect_ratio = comp.GetFloat("Aspect ratio");
+
+	return true;
 }

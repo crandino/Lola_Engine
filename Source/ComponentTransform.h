@@ -48,6 +48,10 @@ public:
 
 	// Getters
 	const math::vec &GetPos() const;
+
+	// Save
+	bool Save(JSONParser &go);
+	bool Load(JSONParser &comp);
 };
 
 #endif __COMPONENTTRANSFORM_H__

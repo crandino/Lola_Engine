@@ -62,3 +62,8 @@ bool Component::Save(JSONParser &go)
 {
 	return true;
 }
+
+bool Component::Load(JSONParser &go)
+{
+	return true;
+}

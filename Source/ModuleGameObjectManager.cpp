@@ -173,24 +173,31 @@ const GameObject *ModuleGameObjectManager::GetRoot() const
 	return root;
 }
 
-GameObject *ModuleGameObjectManager::CreateGameObject(const char *name, GameObject *parent)
+GameObject *ModuleGameObjectManager::CreateGameObject(const char *name)
 {
 	GameObject *new_go = nullptr;
 	new_go = new GameObject(name);
+	list_of_gos.push_back(new_go);
 
+	return new_go;
+}
+
+GameObject *ModuleGameObjectManager::CreateGameObject(const char *name, GameObject *parent)
+{
+	GameObject *new_go = CreateGameObject(name);
 	
 	if (parent != nullptr) // With not nullptr pointer parent, argument parent will be used.
 	{
 		new_go->parent = parent;
+		new_go->parent_UUID = parent->UUID;
 		parent->children.push_back(new_go);
 	}
 	else // With nullptr pointer parent, root will be the parent.
 	{
 		new_go->parent = root;
+		new_go->parent_UUID = 0;
 		root->children.push_back(new_go);
 	}
-	
-	list_of_gos.push_back(new_go);
 
 	return new_go;
 }
@@ -202,14 +209,14 @@ void ModuleGameObjectManager::CreateRoot()
 	list_of_gos.push_back(root);
 }
 
-GameObject *ModuleGameObjectManager::GetGameObject(long unsigned int UUID_to_search) const
+GameObject *ModuleGameObjectManager::GetGameObject(long unsigned int UUID_to_search, const std::vector<GameObject*> &list_to_check) const
 {
 	GameObject *go = nullptr;
 
-	for (uint i = 0; i < list_of_gos.size(); ++i)
+	for (uint i = 0; i < list_to_check.size(); ++i)
 	{
-		if (list_of_gos[i]->UUID == UUID_to_search)
-			return list_of_gos[i];
+		if (list_to_check[i]->UUID == UUID_to_search)
+			return list_to_check[i];
 	}
 
 	return nullptr;
@@ -266,7 +273,7 @@ bool ModuleGameObjectManager::DeleteGameObject(GameObject *go_to_delete)
 
 bool ModuleGameObjectManager::DeleteGameObject(long unsigned int id_to_delete)
 {
-	return DeleteGameObject(GetGameObject(id_to_delete));
+	return DeleteGameObject(GetGameObject(id_to_delete, list_of_gos));
 }
 
 void ModuleGameObjectManager::SetEditorCamera(const ComponentCamera *comp_cam)
@@ -302,6 +309,7 @@ int ModuleGameObjectManager::FrustumCulling(const math::Frustum &frustum)
 bool ModuleGameObjectManager::Save(JSONParser &module)
 {
 	module.AddArray("Game Objects");
+
 	for (uint i = 0; i < list_of_gos.size(); ++i)
 		list_of_gos[i]->Save(module);
 
@@ -310,12 +318,31 @@ bool ModuleGameObjectManager::Save(JSONParser &module)
 
 bool ModuleGameObjectManager::Load(JSONParser &module)
 {
-	for (uint i = 0; i < module.GetArrayCount("Game Objects"); ++i)
+	std::vector<GameObject*> new_gos;
+
+	for (int i = 0; i < module.GetArrayCount("Game Objects"); ++i)
 	{
 		JSONParser go = module.GetArray("Game Objects", i);
-		go.GetBoolean("Active");
-		go.GetBoolean("Selected");
-		go.GetUUID();
+		GameObject *new_go = CreateGameObject(go.GetString("Name"));
+
+		new_go->Load(go);
+		new_gos.push_back(new_go);
+	}
+
+	// Now, linking gameobjects.
+	for (uint i = 0; i < new_gos.size(); ++i)
+	{
+		GameObject *parent = GetGameObject(new_gos[i]->parent_UUID, new_gos);
+		if (parent)
+		{
+			new_gos[i]->parent = parent;   // Assigning parent
+			parent->children.push_back(new_gos[i]);  // Assigning as child
+		}
+		else
+		{
+			new_gos[i]->parent = root;   // Assigning root as parent
+			root->children.push_back(new_gos[i]);  // Assigning a child on root
+		}			
 	}
 		
 	return true;

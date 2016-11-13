@@ -46,10 +46,10 @@ UPDATE_STATUS ModuleSceneImporter::PreUpdate(float dt)
 	static bool load_model = true;
 	if (App->input->GetKey(SDL_SCANCODE_G) == KEY_DOWN)
 	{
-		//ImportModel("Models/primitives_with_parent.fbx");
+		ImportModel("Models/primitives_with_parent.fbx");
 		//ImportModel("Models/aabb_test.fbx");
 		//ImportModel("Models/Street environment_V01.fbx");
-		ImportModel("Models/QuadTree_test3.fbx");
+		//ImportModel("Models/QuadTree_test3.fbx");
 		//ImportModel("Models/color_cubes.fbx");
 		//ImportModel("Models/conflict_octree.fbx");
 		//ImportModel("Models/a_lot_of_balls2.fbx");
@@ -139,7 +139,7 @@ void ModuleSceneImporter::ImportModel(const char *file_name, bool use_fs)
 						comp_trans->SetComponent(node_to_add);
 
 						// --- MESH ---	
-						for (int j = 0; j < node_to_add->mNumMeshes; ++j)
+						for (uint j = 0; j < node_to_add->mNumMeshes; ++j)
 						{							
 							aiMesh *ai_mesh = scene->mMeshes[node_to_add->mMeshes[j]];
 

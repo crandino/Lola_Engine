@@ -39,6 +39,7 @@ public:
 	bool IsActive() const;
 
 	virtual bool Save(JSONParser &go);
+	virtual bool Load(JSONParser &go);
 };
 
 #endif //!__COMPONENT_H__

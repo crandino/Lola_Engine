@@ -228,4 +228,26 @@ const math::vec &ComponentTransform::GetPos() const
 	return local_position;
 }
 
+bool ComponentTransform::Save(JSONParser &go)
+{
+	JSONParser comp_trans;
+
+	comp_trans.AddInt("Type", type);
+	comp_trans.AddPoints("Local position", local_position, 3);
+	comp_trans.AddPoints("World transform", world_transform, 16);
+	comp_trans.AddPoints("Quaternion", local_rotation_quat, 4);
+
+	go.AddArray(comp_trans);
+
+	return true;
+}
+
+bool ComponentTransform::Load(JSONParser &comp)
+{
+	comp.GetPoints("Local position", local_position, 3);	
+	comp.GetPoints("World transform", world_transform, 16);
+
+	return true;
+}
+
 

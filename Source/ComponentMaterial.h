@@ -34,6 +34,7 @@ public:
 	void ShowEditorInfo();
 	
 	bool Save(JSONParser &go);
+	//bool Load(JSONParser &comp);
 };
 
 #endif __COMPONENTMATERIAL_H__

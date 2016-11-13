@@ -127,20 +127,74 @@ Mesh *GameObject::GetMesh() const
 
  bool GameObject::Save(JSONParser &game_objects)
  {
-	 JSONParser go;
-
-	 go.AddBoolean("Active", active);
-	 go.AddBoolean("Selected", selected);	
-	 go.AddUUID(UUID);
-
-	 go.AddArray("Components");
-
-	 for (uint i = 0; i < components.size(); ++i)
+	 if (UUID != 0) // Root will not be saved!
 	 {
-		 components[i]->Save(go);
+		 JSONParser go;
+
+		 go.AddString("Name", name);
+
+		 go.AddBoolean("Active", active);
+		 go.AddBoolean("Selected", selected);
+		 go.AddBoolean("ToDelete", to_delete);
+		 go.AddBoolean("Static", bstatic);
+
+		 go.AddUUID("UUID", UUID);
+		 go.AddUUID("Parent UUID", parent->UUID);
+
+		 go.AddArray("Components");
+
+		 for (uint i = 0; i < components.size(); ++i)
+			 components[i]->Save(go);
+
+		 game_objects.AddArray(go);
+	 }	
+
+	 return true;
+ }
+
+ bool GameObject::Load(JSONParser &go)
+ {
+	 active = go.GetBoolean("Active");
+	 selected = go.GetBoolean("Selected");
+	 to_delete = go.GetBoolean("ToDelete");
+	 bstatic = go.GetBoolean("Static");
+
+	 UUID = go.GetUUID("UUID");
+	 parent_UUID = go.GetUUID("Parent UUID");
+	 
+	 for (int i = 0; i < go.GetArrayCount("Components"); ++i)
+	 {
+		 JSONParser component = go.GetArray("Components", i);
+		 Component *comp = nullptr;
+
+		 switch ((COMPONENT_TYPE)component.GetInt("Type"))
+		 {
+			 case COMPONENT_TYPE::TRANSFORM:
+			 {
+				 comp = (Component*)AddComponent(COMPONENT_TYPE::TRANSFORM);
+				 comp->Load(component);
+				 break;
+			 }			 
+			 case COMPONENT_TYPE::MESH:
+			 {
+				 comp = (Component*)AddComponent(COMPONENT_TYPE::MESH);
+				 comp->Load(component);
+				 break;
+			 }
+			 case COMPONENT_TYPE::MATERIAL:
+			 {
+				 comp = (Component*)AddComponent(COMPONENT_TYPE::MATERIAL);
+				 comp->Load(component);
+				 break;
+			 }
+			 case COMPONENT_TYPE::CAMERA:
+			 {
+				 comp = (Component*)AddComponent(COMPONENT_TYPE::CAMERA);
+				 comp->Load(component);
+				 break;
+			 }
+		 }
 	 }
 
-	 game_objects.AddArray(go);
-	
 	 return true;
  }

@@ -3,6 +3,8 @@
 
 #include "Parson\parson.h"
 
+#include "MathGeoLib\MathGeoLib.h"
+
 class JSONParser
 {
 
@@ -26,9 +28,25 @@ public:
 
 	bool AddBoolean(const char *node_name, bool boolean);
 	bool AddInt(const char *int_name, int value);
-	bool AddUUID(long unsigned int value);
+	bool AddUUID(const char *uuid_name, long unsigned int value);
+	bool AddFloat(const char *float_name, float value);
 	bool AddString(const char *string_name, const char *string_value);
-	bool AppendBoolean(const char *name_boolean, bool boolean);
+
+	template <class CONTAINER>
+	bool AddPoints(const char *points_name, const CONTAINER &points, unsigned int num_elements)
+	{
+		JSON_Value *v = json_value_init_array();
+		JSON_Array *array = json_value_get_array(v);
+
+		const float *m = points.ptr();
+		for (int i = 0; i < num_elements; ++i)
+		{
+			json_array_append_number(array, *m);
+			++m;
+		}
+
+		return json_object_set_value(root, points_name, v) == JSONSuccess;
+	}
 
 	void ParseBuffer(char *buffer);
 
@@ -39,8 +57,22 @@ public:
 
 	bool GetBoolean(const char *name_boolean) const;
 	int GetInt(const char *int_name) const;
-	long unsigned int GetUUID() const;
+	long unsigned int GetUUID(const char *uuid_name) const;
+	float GetFloat(const char *float_name) const;
 	const char *GetString(const char *string_name) const;
+
+	template <class CONTAINER>
+	void GetPoints(const char *points_name, CONTAINER &points, unsigned int num_elements) const
+	{
+		JSON_Array *array = json_object_get_array(root, points_name);
+
+		float *m = points.ptr();
+		for (int i = 0; i < num_elements; ++i)
+		{
+			*m = json_array_get_number(array, i);
+			++m;
+		}
+	}
 
 	// Utilities
 	bool ValueExists(const char *node_name) const;

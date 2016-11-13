@@ -65,21 +65,20 @@ bool JSONParser::AddInt(const char *name_int, int value)
 	return json_object_set_number(root, name_int, (int)value) == JSONSuccess;
 }
 
-bool JSONParser::AddUUID(long unsigned int value)
+bool JSONParser::AddUUID(const char *uuid_name, long unsigned int value)
 {
 	char uuid[20]; sprintf_s(uuid, 20, "%lu", value);
-	return json_object_set_string(root, "UUID", uuid) == JSONSuccess;
+	return json_object_set_string(root, uuid_name, uuid) == JSONSuccess;
+}
+
+bool JSONParser::AddFloat(const char *float_name, float value)
+{
+	return json_object_set_number(root, float_name, value) == JSONSuccess;
 }
 
 bool JSONParser::AddString(const char *string_name, const char *string_value)
 {
 	return json_object_set_string(root, string_name, string_value) == JSONSuccess;
-}
-
-bool JSONParser::AppendBoolean(const char *name_boolean, bool boolean)
-{
-	JSON_Object *obj = json_array_get_object(array_root,0);
-	return AddBoolean(name_boolean, boolean);	
 }
 
 // GETS
@@ -117,9 +116,16 @@ int JSONParser::GetInt(const char *int_name) const
 	return (int)json_object_get_number(root, int_name);
 }
 
-long unsigned int JSONParser::GetUUID() const
+long unsigned int JSONParser::GetUUID(const char *uuid_name) const
 {
-	return strtoul(json_object_get_string(root, "UUID"), nullptr, 0);
+	if(json_object_has_value(root, uuid_name) != 0)
+		return strtoul(json_object_get_string(root, uuid_name), nullptr, 0);
+	return 0;
+}
+
+float JSONParser::GetFloat(const char *float_name) const
+{
+	return json_object_get_number(root, float_name);
 }
 
 const char *JSONParser::GetString(const char *string_name) const

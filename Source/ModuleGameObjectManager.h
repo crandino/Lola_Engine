@@ -28,7 +28,8 @@ public:
 
 	const GameObject *GetRoot() const;
 
-	GameObject *CreateGameObject(const char *name, GameObject *parent = nullptr);
+	GameObject *CreateGameObject(const char *name);
+	GameObject *CreateGameObject(const char *name, GameObject *parent);
 	void CreateRoot();
 
 	void CreateCamera();
@@ -58,7 +59,7 @@ private:
 	std::vector<GameObject*>			list_of_gos;
 	std::vector<GameObject*>		    list_of_gos_to_draw;
 
-	GameObject	*GetGameObject(long unsigned int UUID_to_search) const;
+	GameObject *GetGameObject(long unsigned int UUID_to_search, const std::vector<GameObject*> &list_to_check) const;
 
 	bool DeleteGameObject(long unsigned int UUID_to_delete);
 
