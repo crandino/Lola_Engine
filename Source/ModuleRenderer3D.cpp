@@ -390,6 +390,15 @@ bool ModuleRenderer3D::LoadMeshBuffer(const Mesh *mesh)
 	return ret;
 }
 
+void ModuleRenderer3D::DeleteMeshBuffer(const Mesh *mesh)
+{
+	glDeleteBuffers(1, (GLuint*)&mesh->id_indices);
+	glDeleteBuffers(1, (GLuint*)&mesh->id_vertices);
+	glDeleteBuffers(1, (GLuint*)&mesh->id_colors);
+	glDeleteBuffers(1, (GLuint*)&mesh->id_tex_coord);
+	glDeleteBuffers(1, (GLuint*)&mesh->id_normals);
+}
+
 void ModuleRenderer3D::ShowGameObject(const GameObject *go)
 {
 	const ComponentMesh *comp_mesh = nullptr;

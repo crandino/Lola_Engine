@@ -54,6 +54,9 @@ UPDATE_STATUS ModuleEditor::PreUpdate(float dt)
 
 	if (App->input->GetKey(SDL_SCANCODE_DELETE) == KEY_DOWN && go_selected)
 		warning_alert = true;
+
+	if (App->input->GetKey(SDL_SCANCODE_O) == KEY_DOWN)
+		load_menu = !load_menu;
 	
 	return UPDATE_CONTINUE;
 }
@@ -68,6 +71,7 @@ UPDATE_STATUS ModuleEditor::Update(float dt)
 	if (console_menu) ShowConsole();
 	if (hierarchy_menu) ShowHierarchy();
 	if (warning_alert) ShowWarning();
+	if (load_menu) ShowLoadMenu();
 
 	ShowComponentInfo();
 
@@ -298,6 +302,44 @@ void ModuleEditor::ShowWarning()
 	ImGui::PopStyleColor(3);
 
 	ImGui::End();
+}
+
+void ModuleEditor::ShowLoadMenu()
+{
+	ImGui::OpenPopup("Load File");
+	if (ImGui::BeginPopupModal("Load File", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+	{
+		//in_modal = true;
+
+		ImGui::PushStyleVar(ImGuiStyleVar_ChildWindowRounding, 5.0f);
+		ImGui::BeginChild("File Browser", ImVec2(0, 300), true);
+		//DrawDirectoryRecursive(from_dir, filter_extension);
+		ImGui::EndChild();
+		ImGui::PopStyleVar();
+
+		ImGui::PushItemWidth(250.f);
+		/*if (ImGui::InputText("##file_selector", selected_file, FILE_MAX, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_AutoSelectAll))
+			file_dialog = ready_to_close;*/
+
+		ImGui::PopItemWidth();
+		ImGui::SameLine();
+		/*if (ImGui::Button("Ok", ImVec2(50, 20)))
+			file_dialog = ready_to_close;*/
+		ImGui::SameLine();
+
+		if (ImGui::Button("Cancel", ImVec2(50, 20)))
+		{
+			/*file_dialog = ready_to_close;
+			selected_file[0] = '\0';*/
+		}
+
+		ImGui::EndPopup();
+	}
+	else
+	{
+		//in_modal = false;
+	}
+		
 }
 
 // Expand Tree recursively shows all GameObjects on the Hierarchy Window

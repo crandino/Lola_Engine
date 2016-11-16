@@ -46,9 +46,9 @@ UPDATE_STATUS ModuleSceneImporter::PreUpdate(float dt)
 	static bool load_model = true;
 	if (App->input->GetKey(SDL_SCANCODE_G) == KEY_DOWN)
 	{
-		ImportModel("Models/primitives_with_parent.fbx");
+		//ImportModel("Models/primitives_with_parent.fbx");
 		//ImportModel("Models/aabb_test.fbx");
-		//ImportModel("Models/Street environment_V01.fbx");
+		ImportModel("Models/Street environment_V01.fbx");
 		//ImportModel("Models/QuadTree_test3.fbx");
 		//ImportModel("Models/color_cubes.fbx");
 		//ImportModel("Models/conflict_octree.fbx");

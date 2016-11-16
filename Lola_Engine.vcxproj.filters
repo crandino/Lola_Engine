@@ -255,6 +255,9 @@
     <ClCompile Include="Source\ModuleSceneImporter.cpp">
       <Filter>Source\Modules</Filter>
     </ClCompile>
+    <ClCompile Include="Source\ModuleResourceManager.cpp">
+      <Filter>Source\Modules</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Color.h">
@@ -577,6 +580,9 @@
     </ClInclude>
     <ClInclude Include="Source\ModuleSceneIntro.h">
       <Filter>Source\Modules\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ModuleResourceManager.h">
+      <Filter>Source\Modules</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

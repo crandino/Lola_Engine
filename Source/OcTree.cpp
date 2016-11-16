@@ -30,18 +30,13 @@ bool OcTreeNode::Insert(GameObject* go)
 {
 	bool item_inserted = false;
 
-	/*if (SharedByMoreThanXChild(go, 2))
+	//Whether all children share this gameobject, it's directly inserted
+	if (SharedByMoreThanXChild(go, 8))
 	{
-		int child = CenterOnChild(go);
-		if (child != -1)
-		{
-			if (childs[child]->Insert(go))
-				item_inserted = true;
-		}
+		objects.push_back(go);
+		item_inserted = true;		
 	}
-	else */
-
-	if (HasChildren())
+	else if (HasChildren())
 	{
 		for (int i = 0; i < 8; ++i)
 		{
@@ -68,25 +63,18 @@ bool OcTreeNode::Insert(GameObject* go)
 				// Items on this node will be moved downwards if they are not shared by more than one child.
 				for (std::list<GameObject*>::iterator it = objects.begin(); it != objects.end();)
 				{
-					/*if (!SharedByMoreThanXChild(*it, 2))
-					{*/
-					/*int child = CenterOnChild(*it);
-					if (child != -1)
+					if (!SharedByMoreThanXChild(*it, 2))
 					{
-					if (childs[child]->Insert(go))
-					item_inserted = true;
-					}*/
+						for (int i = 0; i < 8; ++i)
+						{
+							if (childs[i]->Insert(*it))
+								break;
+						}
 
-					for (int i = 0; i < 8; ++i)
-					{
-						if (childs[i]->Insert(*it))
-							break;
-					}
-
-					it = objects.erase(it);
-					/*}
+						it = objects.erase(it);
+					}					
 					else
-					++it;*/
+						++it;
 				}
 			}			
 

@@ -73,3 +73,8 @@ void ModuleTextureLoader::LoadTexture(const char *full_path, unsigned int &buffe
 
 	buffer = ilutGLBindTexImage();
 }
+
+void ModuleTextureLoader::DeleteBuffer(unsigned int &buffer)
+{
+	ilDeleteImages(1, &buffer);
+}

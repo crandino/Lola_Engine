@@ -23,7 +23,9 @@ ComponentMaterial::ComponentMaterial() : Component()
 }
 
 ComponentMaterial::~ComponentMaterial()
-{ }
+{ 
+	App->tex_loader->DeleteBuffer(tex_buffer);
+}
 
 bool ComponentMaterial::Update()
 {

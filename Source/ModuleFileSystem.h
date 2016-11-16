@@ -23,7 +23,7 @@ public:
 	bool Awake(JSONParser &config);
 	bool CleanUp();
 
-	bool AddSearchPath(const char *path_or_zip, const char *mount_point = NULL);
+	bool AddSearchPath(const char *path_or_zip, const char *mount_point = nullptr);
 	bool RemoveAllSearchPaths();
 	bool RemovePath(const char *path_or_zip);
 
@@ -34,8 +34,11 @@ public:
 	const char *GetFileFromDirPath(const char *path) const;
 	const char *GetSaveDirectory() const;
 	const char *GetRealDirectory(const char* file) const;
+
 	bool IsDirectory(const char *dir) const;
 	bool Exists(const char *file) const;
+
+	void DiscoverFiles(const char* directory, std::vector<std::string>& file_list, std::vector<std::string>& dir_list) const;
 
 	void SetWriteDirectory();
 

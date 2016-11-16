@@ -6,6 +6,7 @@
 
 #include "Application.h"
 #include "ModuleFileSystem.h"
+#include "ModuleRenderer3D.h"
 
 #include "MeshImporter.h"
 
@@ -30,6 +31,8 @@ ComponentMesh::~ComponentMesh()
 	RELEASE_ARRAY(mesh.colors);
 	RELEASE_ARRAY(mesh.tex_coord);
 	RELEASE_ARRAY(mesh.indices);
+
+	App->renderer3D->DeleteMeshBuffer(&mesh);
 }
 
 bool ComponentMesh::Update()

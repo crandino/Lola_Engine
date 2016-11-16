@@ -27,6 +27,7 @@ class ModuleCameraEditor;
 class ModulePhysics3D;
 class ModuleEditor;
 class ModuleGameObjectManager;
+class ModuleResourceManager;
 class ModuleRenderer3D;
 
 class Application
@@ -47,6 +48,7 @@ public:
 	ModuleCameraEditor		*camera = nullptr;
 	//ModulePhysics3D		*physics = nullptr;
 	ModuleGameObjectManager *gameobject_manager = nullptr;
+	ModuleResourceManager   *resource_manager = nullptr;
 	ModuleEditor			*editor = nullptr;
 
 	Application();

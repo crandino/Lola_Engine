@@ -23,6 +23,7 @@ public:
 public:
 
 	void LoadTexture(const char *file_name, unsigned int &buffer, ComponentMaterial *comp_mat);
+	void DeleteBuffer(unsigned int &buffer);
 };
 
 #endif // !__MODULETEXTURELOADER_H__

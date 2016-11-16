@@ -10,6 +10,7 @@
 #include "ModuleEditor.h"
 #include "ModuleTextureLoader.h"
 #include "ModuleGameObjectManager.h"
+#include "ModuleResourceManager.h"
 #include "ModuleSceneImporter.h"
 #include "ModuleRenderer3D.h"
 
@@ -27,6 +28,7 @@ Application::Application()
 	renderer3D = new ModuleRenderer3D(this, true);
 	camera = new ModuleCameraEditor(this, true);
 	//physics = new ModulePhysics3D(this, true);
+	resource_manager = new ModuleResourceManager(this, true);
 	gameobject_manager = new ModuleGameObjectManager(this, true);
 	editor = new ModuleEditor(this, true);
 

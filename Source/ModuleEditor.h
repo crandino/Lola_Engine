@@ -36,6 +36,8 @@ class ModuleEditor : public Module
 		bool component_menu = false;
 		bool warning_alert = false;
 
+		bool load_menu = false;
+
 		// Windows methods
 		void ShowMenuBar();
 		void ShowMenuFile();
@@ -46,6 +48,7 @@ class ModuleEditor : public Module
 		void ShowHierarchy();
 		void ShowComponentInfo();
 		void ShowWarning();
+		void ShowLoadMenu();
 
 		void ExpandTree(const GameObject* go_to_expand);
 };

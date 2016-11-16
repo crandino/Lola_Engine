@@ -38,6 +38,11 @@ bool ModuleFileSystem::Awake(JSONParser &config)
 	// Generate IO interfaces
 	CreateAssimpIO();
 	//SetDevilIO();
+
+	std::vector<std::string> dirs;
+	std::vector<std::string> files;
+
+	DiscoverFiles(".", files, dirs);
 	
 	return ret;
 }
@@ -54,10 +59,11 @@ bool ModuleFileSystem::AddSearchPath(const char *path_or_zip, const char *mount_
 {
 	bool ret = true;
 
+	// CRZ addition!
 	if (PHYSFS_exists(path_or_zip))
 	{
 		if(PHYSFS_removeFromSearchPath(path_or_zip))
-			DEBUG("Failure removing path %s for seach path. Error: %s", path_or_zip, PHYSFS_getLastError());
+			DEBUG("Failure on removing path %s for seach path. Error: %s", path_or_zip, PHYSFS_getLastError());
 	}
 
 	if (PHYSFS_mount(path_or_zip, mount_point, 1) == 0)
@@ -220,6 +226,25 @@ const char *ModuleFileSystem::GetRealDirectory(const char *file) const
 	return PHYSFS_getRealDir(file);
 }
 
+void ModuleFileSystem::DiscoverFiles(const char* directory, std::vector<std::string> & file_list, std::vector<std::string> & dir_list) const
+{
+	char **rc = PHYSFS_enumerateFiles(directory);
+	char **i;
+
+	//std::string dir(directory);
+
+	for (i = rc; *i != nullptr; i++)
+	{
+		// Ricard's code-> (dir + *i).c_str() instead of *i on isDirectory();
+		if (PHYSFS_isDirectory(*i))
+			dir_list.push_back(*i);
+		else
+			file_list.push_back(*i);
+	}
+
+	PHYSFS_freeList(rc);
+}
+
 void ModuleFileSystem::SetWriteDirectory()
 {
 	switch (App->GetEngineMode())
@@ -228,16 +253,15 @@ void ModuleFileSystem::SetWriteDirectory()
 		{
 			char write_dir[MEDIUM_STRING];
 			sprintf_s(write_dir, MEDIUM_STRING, "%s%s", PHYSFS_getBaseDir(), "Game");
+			//sprintf_s(write_dir, MEDIUM_STRING, "%s", ".");
 			if (PHYSFS_setWriteDir(write_dir) == 0)
 				DEBUG("%s,%s", "Error on setting Write Directory. Error:", PHYSFS_getLastError());
 			else
-			{
-				// Creating internal folders for own engine usage
+			{				
 				AddSearchPath("Assets/Models", "Models");
 				AddSearchPath("Assets/Textures", "Textures");
 
-				char dirs[MEDIUM_STRING];
-
+				// Creating internal folders for own engine usage
 				if (!PHYSFS_exists(SCENES))
 					PHYSFS_mkdir(SCENES);
 
