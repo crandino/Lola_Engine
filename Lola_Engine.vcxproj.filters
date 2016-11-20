@@ -34,14 +34,17 @@
     <Filter Include="Source\Components">
       <UniqueIdentifier>{4a652b3c-a722-483d-8951-a44ab8fdb06c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Importers">
-      <UniqueIdentifier>{fd528fed-81a4-427b-9349-2b42c30069fd}</UniqueIdentifier>
-    </Filter>
     <Filter Include="3rd Party\Parson">
       <UniqueIdentifier>{13093877-12ad-4ed8-bf47-78aff60d0c30}</UniqueIdentifier>
     </Filter>
     <Filter Include="JSON files">
       <UniqueIdentifier>{160131c7-2aae-4140-b0d5-2aaa5e573dda}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Resources">
+      <UniqueIdentifier>{18f8cc9e-6486-469e-906c-ce4d2dd86b70}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Resources\Importers">
+      <UniqueIdentifier>{fd528fed-81a4-427b-9349-2b42c30069fd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -540,10 +543,10 @@
       <Filter>Source\Components</Filter>
     </ClInclude>
     <ClInclude Include="Source\Importer.h">
-      <Filter>Importers</Filter>
+      <Filter>Source\Resources\Importers</Filter>
     </ClInclude>
     <ClInclude Include="Source\MeshImporter.h">
-      <Filter>Importers</Filter>
+      <Filter>Source\Resources\Importers</Filter>
     </ClInclude>
     <ClInclude Include="Source\Mesh.h">
       <Filter>Source\Components</Filter>
@@ -576,13 +579,19 @@
       <Filter>Source\Modules</Filter>
     </ClInclude>
     <ClInclude Include="Source\MaterialImporter.h">
-      <Filter>Importers</Filter>
+      <Filter>Source\Resources\Importers</Filter>
     </ClInclude>
     <ClInclude Include="Source\ModuleSceneIntro.h">
       <Filter>Source\Modules\Game</Filter>
     </ClInclude>
     <ClInclude Include="Source\ModuleResourceManager.h">
       <Filter>Source\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Resource.h">
+      <Filter>Source\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ResourceTexture.h">
+      <Filter>Source\Resources</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

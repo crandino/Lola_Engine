@@ -39,10 +39,10 @@ bool ModuleFileSystem::Awake(JSONParser &config)
 	CreateAssimpIO();
 	//SetDevilIO();
 
-	std::vector<std::string> dirs;
+	/*std::vector<std::string> dirs;
 	std::vector<std::string> files;
 
-	DiscoverFiles(".", files, dirs);
+	DiscoverFiles(".", files, dirs);*/
 	
 	return ret;
 }
@@ -106,6 +106,16 @@ bool ModuleFileSystem::RemovePath(const char *path_or_zip)
 	}
 
 	return ret;
+}
+
+bool ModuleFileSystem::RemoveFile(const char *file_name)
+{
+	if (PHYSFS_delete(file_name) == 0)
+	{
+		DEBUG("Error while deleting %s. %s", file_name, PHYSFS_getLastError());
+		return false;
+	}
+	return true;		
 }
 
 uint ModuleFileSystem::Load(const char* file, char **buffer) const
@@ -226,9 +236,20 @@ const char *ModuleFileSystem::GetRealDirectory(const char *file) const
 	return PHYSFS_getRealDir(file);
 }
 
-void ModuleFileSystem::DiscoverFiles(const char* directory, std::vector<std::string> & file_list, std::vector<std::string> & dir_list) const
+int ModuleFileSystem::GetLastTimeMod(const char *file, const char *dir) const
 {
-	char **rc = PHYSFS_enumerateFiles(directory);
+	char path[SHORT_STRING];
+	if(dir)
+		sprintf_s(path, SHORT_STRING, "%s%s", dir, file);
+	else
+		sprintf_s(path, SHORT_STRING, file);
+	
+	return PHYSFS_getLastModTime(path);
+}
+
+void ModuleFileSystem::ExploreFiles(const char* from_directory, std::vector<std::string> &file_list, std::vector<std::string> &directory_list, bool recursive) const
+{
+	char **rc = PHYSFS_enumerateFiles(from_directory);
 	char **i;
 
 	//std::string dir(directory);
@@ -237,7 +258,14 @@ void ModuleFileSystem::DiscoverFiles(const char* directory, std::vector<std::str
 	{
 		// Ricard's code-> (dir + *i).c_str() instead of *i on isDirectory();
 		if (PHYSFS_isDirectory(*i))
-			dir_list.push_back(*i);
+		{
+			directory_list.push_back(*i);
+			if(recursive)
+			{
+				std::string dir(from_directory);
+				ExploreFiles((dir + "/" + *i).c_str(), file_list, directory_list, recursive);
+			}
+		}						
 		else
 			file_list.push_back(*i);
 	}

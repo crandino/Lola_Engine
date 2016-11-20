@@ -43,6 +43,7 @@ Application::Application()
 	//AddModule(physics);
 
 	// Loaders	
+	AddModule(resource_manager);
 	AddModule(file_system);
 	AddModule(tex_loader);
 	AddModule(gameobject_manager);

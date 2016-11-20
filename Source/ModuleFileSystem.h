@@ -6,8 +6,8 @@
 #include "Assimp\include\cfileio.h"
 #include "Devil\include\il.h"
 
-#define LIBRARY_TEXTURE "Library/Textures"
-#define LIBRARY_MESH "Library/Mesh"
+#define LIBRARY_TEXTURE "Library/Textures/"
+#define LIBRARY_MESH "Library/Mesh/"
 #define SCENES "Scene"
 
 struct SDL_RWops;
@@ -27,6 +27,8 @@ public:
 	bool RemoveAllSearchPaths();
 	bool RemovePath(const char *path_or_zip);
 
+	bool RemoveFile(const char *file);
+
 	uint Load(const char* file, char **buffer) const;
 	SDL_RWops *Load(const char* file) const;
 	uint Save(const char *file, const char *buffer, uint size) const;
@@ -34,11 +36,12 @@ public:
 	const char *GetFileFromDirPath(const char *path) const;
 	const char *GetSaveDirectory() const;
 	const char *GetRealDirectory(const char* file) const;
+	int GetLastTimeMod(const char *file, const char *dir = nullptr) const;
 
 	bool IsDirectory(const char *dir) const;
 	bool Exists(const char *file) const;
 
-	void DiscoverFiles(const char* directory, std::vector<std::string>& file_list, std::vector<std::string>& dir_list) const;
+	void ExploreFiles(const char* directory, std::vector<std::string>& file_list, std::vector<std::string>& dir_list, bool recursive = false) const;
 
 	void SetWriteDirectory();
 
