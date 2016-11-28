@@ -6,9 +6,12 @@
 //Importers
 #include "MaterialImporter.h"
 #include "MeshImporter.h"
+#include "SceneImporter.h"
 
 // Resources
 #include "ResourceTexture.h"
+#include "ResourceMesh.h"
+#include "ResourceScene.h"
 
 ModuleResourceManager::ModuleResourceManager(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -64,6 +67,9 @@ Resource *ModuleResourceManager::CreateNewResource(RESOURCE_TYPE type, ID id, in
 	switch (type)
 	{
 	case (RESOURCE_TYPE::TEXTURE): res = (Resource*) new ResourceTexture(id, timestamp); break;
+	case (RESOURCE_TYPE::SCENE): res = (Resource*) new ResourceScene(id, timestamp); break;
+	case (RESOURCE_TYPE::MESH): res = (Resource*) new ResourceMesh(id, timestamp); break;
+	
 	/*case Resource::mesh: ret = (Resource*) new ResourceMesh(uid); break;
 	case Resource::audio: ret = (Resource*) new ResourceAudio(uid); break;
 	case Resource::scene: ret = (Resource*) new ResourceScene(uid); break;
@@ -79,20 +85,36 @@ Resource *ModuleResourceManager::CreateNewResource(RESOURCE_TYPE type, ID id, in
 
 ID ModuleResourceManager::ImportFile(std::string &new_asset_file, ID force_id)
 {
-	ID res_id = force_id == 0 ? GenerateID() : 0;
+	ID res_id = force_id == 0 ? GenerateID() : force_id;
 	int timestamp = -1;
-	std::string imported_file;
+
+	std::vector<std::string> imported_files, asset_files;
+	asset_files.push_back(new_asset_file);
+
+	std::vector<ID> IDs;
+	IDs.push_back(res_id);
+
+	std::vector<RESOURCE_TYPE> types;
+
 	bool successful_import = false;
 
 	RESOURCE_TYPE type = GetTypeOfFile(new_asset_file);
+	types.push_back(type);
 
 	switch (type)
 	{
 		case(RESOURCE_TYPE::TEXTURE):
-		{
+		{			
 			MaterialImporter mat_import;
-			successful_import = mat_import.Import(new_asset_file, imported_file, res_id);
-			if (successful_import) timestamp = App->file_system->GetLastTimeMod(new_asset_file.c_str(), "Textures/");
+			successful_import = mat_import.Import(asset_files, imported_files, IDs);
+			if (successful_import) timestamp = App->file_system->GetLastTimeMod(new_asset_file.c_str(), LIBRARY_TEXTURE);
+			break;
+		}
+		case(RESOURCE_TYPE::SCENE):
+		{			
+			SceneImporter scene_import;
+			successful_import = scene_import.Import(asset_files, imported_files, IDs, types);
+			if (successful_import) timestamp = App->file_system->GetLastTimeMod(new_asset_file.c_str(), LIBRARY_SCENES);
 			break;
 		}
 		case(RESOURCE_TYPE::UNKNOWN):
@@ -102,9 +124,12 @@ ID ModuleResourceManager::ImportFile(std::string &new_asset_file, ID force_id)
 
 	if (successful_import)
 	{
-		Resource *res = CreateNewResource(type, res_id, timestamp);
-		res->file = new_asset_file;
-		res->imported_file = imported_file;
+		for (uint i = 0; i < asset_files.size(); ++i)
+		{
+			Resource *res = CreateNewResource(types[i], IDs[i], timestamp);
+			res->file = asset_files[i];
+			res->imported_file = imported_files[i];
+		}		
 	}
 
 	return res_id;
@@ -149,6 +174,16 @@ RESOURCE_TYPE ModuleResourceManager::GetTypeOfFile(const std::string &file) cons
 				break;
 			}
 		}
+
+		// Checking scene extensions...
+		for (uint i = 0; i < sizeof(mesh_extensions) / sizeof(std::string); ++i)
+		{
+			if (mesh_extensions[i] == ext)
+			{
+				type = RESOURCE_TYPE::SCENE;
+				break;
+			}
+		}
 	}
 	
 	return type;
@@ -161,7 +196,6 @@ ID ModuleResourceManager::Find(const std::string &asset_to_find) const
 		if (!(*it).second->file.compare(asset_to_find))
 			return (*it).first;
 	}
-
 	return 0;
 }
 
@@ -178,7 +212,9 @@ bool ModuleResourceManager::IsUpdated(ID id) const
 
 	switch (res->type)
 	{
-	case(RESOURCE_TYPE::TEXTURE): timestamp = App->file_system->GetLastTimeMod(res->file.c_str(), "Textures/"); break;
+	case(RESOURCE_TYPE::TEXTURE): timestamp = App->file_system->GetLastTimeMod(res->file.c_str(), LIBRARY_TEXTURE); break;
+	case(RESOURCE_TYPE::MESH): timestamp = App->file_system->GetLastTimeMod(res->file.c_str(), LIBRARY_MESH); break;
+	case(RESOURCE_TYPE::SCENE): timestamp = App->file_system->GetLastTimeMod(res->file.c_str(), LIBRARY_SCENES); break;
 	}
 
 	if (timestamp > res->timestamp)
@@ -188,7 +224,7 @@ bool ModuleResourceManager::IsUpdated(ID id) const
 
 Resource *ModuleResourceManager::Get(ID id)
 {
-	if (id != 0)
-		return resources.at(id);
-	return nullptr;
+	//Resource *res = nullptr;
+	return  resources.at(id);	
+	//return (res != resources.) ? res : nullptr;
 }

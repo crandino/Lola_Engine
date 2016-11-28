@@ -3,8 +3,6 @@
 
 #include "Resource.h"
 
-typedef long unsigned int ID;
-
 class ResourceTexture : public Resource
 {
 

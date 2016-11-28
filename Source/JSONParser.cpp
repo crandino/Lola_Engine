@@ -55,6 +55,12 @@ bool JSONParser::AddArray(const JSONParser &block)
 	return false;
 }
 
+bool JSONParser::AddArray(const char *name_array, const JSONParser &block)
+{
+	if (AddArray(name_array))
+		return AddArray(block);
+}
+
 bool JSONParser::AddBoolean(const char *name_boolean, bool boolean)
 {
 	return json_object_set_boolean(root, name_boolean, boolean) == JSONSuccess;

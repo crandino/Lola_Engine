@@ -10,6 +10,8 @@
 #include "Devil\include\ilu.h"
 #include "Devil\include\ilut.h"
 
+#include "Assimp\include\material.h"
+
 #pragma comment (lib, "Source/Devil/libx86/DevIL.lib")
 #pragma comment (lib, "Source/Devil/libx86/ILU.lib")
 #pragma comment (lib, "Source/Devil/libx86/ILUT.lib")
@@ -39,13 +41,14 @@ public:
 		}
 	}
 
-	bool Import(std::string asset_to_import, std::string &imported_file, ID res_id)
+	bool Import(std::vector<std::string> &asset_to_import, std::vector<std::string> &imported_file, std::vector<ID> &res_id)
 	{
 		std::string asset_folder = "Textures/";
-		std::string lib_folder = LIBRARY_TEXTURE;
+		asset_to_import.back() = App->file_system->GetFileFromDirPath(asset_to_import.back().c_str());
+		std::string lib_folder = LIBRARY_TEXTURE;		
 
 		char *data;
-		uint size = App->file_system->Load((asset_folder + asset_to_import).c_str(), &data);
+		uint size = App->file_system->Load((asset_folder + asset_to_import.back()).c_str(), &data);
 		ilLoadL(IL_TYPE_UNKNOWN, data, size);
 
 		ilSetInteger(IL_DXTC_FORMAT, IL_DXT5); // To pick a specific DXT compression use
@@ -57,9 +60,9 @@ public:
 			if (ilSaveL(IL_DDS, dds_data, size) > 0) // Save to buffer with the ilSaveIL function
 			{
 				char buff[100];
-				sprintf_s(buff, sizeof(buff), "%lu%s", res_id, ".dds");
-				imported_file = buff;
-				App->file_system->Save((lib_folder + imported_file).c_str(), data, size);
+				sprintf_s(buff, sizeof(buff), "%lu%s", res_id.back(), ".dds");
+				imported_file.push_back(buff);
+				App->file_system->Save((lib_folder + imported_file.back()).c_str(), data, size);
 			}				
 
 			RELEASE_ARRAY(data);
@@ -68,9 +71,14 @@ public:
 		return false;		
 	}
 
-	uint Load(char **data)
+	bool Import(aiMaterial *ai_material, std::vector<std::string> &asset_file, std::vector<std::string> &imported_file, std::vector<ID> &res_id)
 	{
-		return 0;
+		// Loading texture to tex_buffer
+		aiString path;
+		ai_material->GetTexture(aiTextureType_DIFFUSE, 0, &path);
+
+		asset_file.push_back(path.C_Str());
+		return Import(asset_file, imported_file, res_id);
 	}
 };
 

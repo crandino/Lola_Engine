@@ -2,6 +2,7 @@
 #define __MESH_H__
 
 #include "MathGeoLib\MathGeoLib.h"
+#include "Globals.h"
 
 struct Mesh
 {
@@ -29,6 +30,15 @@ struct Mesh
 	unsigned int id_indices = 0; // id in VRAM
 	unsigned int num_indices = 0;
 	unsigned int* indices = nullptr;
+
+	~Mesh()
+	{
+		RELEASE_ARRAY(vertices);
+		RELEASE_ARRAY(normals);
+		RELEASE_ARRAY(colors);
+		RELEASE_ARRAY(tex_coord);
+		RELEASE_ARRAY(indices);
+	}
 };
 
 #endif //!__MESH_H__

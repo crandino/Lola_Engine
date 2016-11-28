@@ -25,6 +25,7 @@ public:
 	JSONParser AddNode(const char *name_node);
 	bool AddArray(const char *name_array);
 	bool AddArray(const JSONParser &block);
+	bool AddArray(const char *name_array, const JSONParser &block);
 
 	bool AddBoolean(const char *node_name, bool boolean);
 	bool AddInt(const char *int_name, int value);

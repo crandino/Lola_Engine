@@ -213,22 +213,19 @@ const char *ModuleFileSystem::GetSaveDirectory() const
 const char *ModuleFileSystem::GetFileFromDirPath(const char *path) const
 {
 	char *file = '\0';  // Empty file string 
+	const char *cursor = path;
 
-	if (path != nullptr)
+	if (cursor != nullptr)
 	{
-		while (*(path++) != '\0')
+		// We search for slash last position "\"
+		while (*(cursor++) != '\0')
 		{
-			if (*path == '\\')
-				file = (char*)path;
+			if (*cursor == '\\')
+				file = (char*)cursor;
 		}
-
-		if ((path++) != '\0')
-			++file;
-		else
-			file = '\0';
 	};	
 
-	return file;
+	return file == '\0' ? path : ++file;
 }
 
 const char *ModuleFileSystem::GetRealDirectory(const char *file) const
@@ -280,8 +277,8 @@ void ModuleFileSystem::SetWriteDirectory()
 		case(ENGINE_MODE::EDITOR):
 		{
 			char write_dir[MEDIUM_STRING];
-			sprintf_s(write_dir, MEDIUM_STRING, "%s%s", PHYSFS_getBaseDir(), "Game");
-			//sprintf_s(write_dir, MEDIUM_STRING, "%s", ".");
+			sprintf_s(write_dir, MEDIUM_STRING, "%s%s", PHYSFS_getBaseDir(), "Game");			
+
 			if (PHYSFS_setWriteDir(write_dir) == 0)
 				DEBUG("%s,%s", "Error on setting Write Directory. Error:", PHYSFS_getLastError());
 			else
@@ -290,8 +287,8 @@ void ModuleFileSystem::SetWriteDirectory()
 				AddSearchPath("Assets/Textures", "Textures");
 
 				// Creating internal folders for own engine usage
-				if (!PHYSFS_exists(SCENES))
-					PHYSFS_mkdir(SCENES);
+				if (!PHYSFS_exists(LIBRARY_SCENES))
+					PHYSFS_mkdir(LIBRARY_SCENES);
 
 				if (!PHYSFS_exists(LIBRARY_TEXTURE))
 					PHYSFS_mkdir(LIBRARY_TEXTURE);
@@ -300,7 +297,7 @@ void ModuleFileSystem::SetWriteDirectory()
 					PHYSFS_mkdir(LIBRARY_MESH);
 
 				DEBUG("%s %s", "On Editor Mode, write directory is ", write_dir);
-				AddSearchPath(write_dir, GetSaveDirectory());
+				AddSearchPath(write_dir, ".");
 			}
 
 			SDL_free(write_dir);
