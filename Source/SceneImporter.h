@@ -35,7 +35,8 @@ public:
 		imported_files.push_back(file);
 
 		std::string models = "Models/";
-
+		std::vector<std::string> unique_textures;
+		
 		const aiScene* scene = aiImportFileEx((models + assets_to_import.front()).c_str(), aiProcessPreset_TargetRealtime_MaxQuality, App->file_system->GetAssimpIO());
 
 		if (scene != nullptr)
@@ -122,26 +123,38 @@ public:
 									aiMaterial *ai_material = scene->mMaterials[ai_mesh->mMaterialIndex];
 									if (ai_material->GetTextureCount(aiTextureType_DIFFUSE) > 0)
 									{
-										JSONParser material;
+										// Where is this texture?
+										aiString path;
+										ai_material->GetTexture(aiTextureType_DIFFUSE, 0, &path);
+										std::string new_texture = App->file_system->GetFileFromDirPath(path.C_Str());
 
-										// Type material
-										material.AddInt("Type", RESOURCE_TYPE::TEXTURE);
-										types.push_back(RESOURCE_TYPE::TEXTURE);
+										//Adding new texture if there isn't something similar...
+										if (std::find(unique_textures.begin(), unique_textures.end(), new_texture) == unique_textures.end())
+										{
+											unique_textures.push_back(new_texture);
+											assets_to_import.push_back(new_texture);
 
-										// New ID for this texture
-										ID next_id = IDs.back() + 1;
-										material.AddUUID("ID", next_id);
-										IDs.push_back(next_id);										
+											JSONParser material;
 
-										// Importing meshes to own file format (.msh)
-										MaterialImporter material_importer;
-										material_importer.Import(ai_material, assets_to_import, imported_files, IDs);
-										
-										// Asset filename and imported file
-										material.AddString("File", name);										
-										material.AddString("Imported file", imported_files.back().c_str());
+											// Type material
+											material.AddInt("Type", RESOURCE_TYPE::TEXTURE);
+											types.push_back(RESOURCE_TYPE::TEXTURE);
 
-										json_scene.AddArray(material);  // Creating JSON entry for this texture	
+											// New ID for this texture
+											ID next_id = IDs.back() + 1;
+											material.AddUUID("ID", next_id);
+											IDs.push_back(next_id);
+
+											// Importing meshes to own file format (.msh)
+											MaterialImporter material_importer;
+											material_importer.Import(assets_to_import, imported_files, IDs);
+
+											// Asset filename and imported file
+											material.AddString("File", assets_to_import.back().c_str());
+											material.AddString("Imported file", imported_files.back().c_str());
+
+											json_scene.AddArray(material);  // Creating JSON entry for this texture	
+										}				
 									}									
 								}
 							}

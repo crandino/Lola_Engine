@@ -71,15 +71,15 @@ public:
 		return false;		
 	}
 
-	bool Import(aiMaterial *ai_material, std::vector<std::string> &asset_file, std::vector<std::string> &imported_file, std::vector<ID> &res_id)
-	{
-		// Loading texture to tex_buffer
-		aiString path;
-		ai_material->GetTexture(aiTextureType_DIFFUSE, 0, &path);
+	//bool Import(aiMaterial *ai_material, std::vector<std::string> &asset_file, std::vector<std::string> &imported_file, std::vector<ID> &res_id)
+	//{
+	//	// Loading texture to tex_buffer
+	//	aiString path;
+	//	ai_material->GetTexture(aiTextureType_DIFFUSE, 0, &path);
 
-		asset_file.push_back(path.C_Str());
-		return Import(asset_file, imported_file, res_id);
-	}
+	//	asset_file.push_back(path.C_Str());
+	//	return Import(asset_file, imported_file, res_id);
+	//}
 };
 
 #endif // !__MATERIALIMPORTER_H__

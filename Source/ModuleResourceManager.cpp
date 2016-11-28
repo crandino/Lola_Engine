@@ -212,9 +212,9 @@ bool ModuleResourceManager::IsUpdated(ID id) const
 
 	switch (res->type)
 	{
-	case(RESOURCE_TYPE::TEXTURE): timestamp = App->file_system->GetLastTimeMod(res->file.c_str(), LIBRARY_TEXTURE); break;
-	case(RESOURCE_TYPE::MESH): timestamp = App->file_system->GetLastTimeMod(res->file.c_str(), LIBRARY_MESH); break;
-	case(RESOURCE_TYPE::SCENE): timestamp = App->file_system->GetLastTimeMod(res->file.c_str(), LIBRARY_SCENES); break;
+		case(RESOURCE_TYPE::TEXTURE): timestamp = App->file_system->GetLastTimeMod(res->file.c_str(), LIBRARY_TEXTURE); break;
+		case(RESOURCE_TYPE::MESH): timestamp = App->file_system->GetLastTimeMod(res->file.c_str(), LIBRARY_MESH); break;
+		case(RESOURCE_TYPE::SCENE): timestamp = App->file_system->GetLastTimeMod(res->file.c_str(), LIBRARY_SCENES); break;
 	}
 
 	if (timestamp > res->timestamp)
