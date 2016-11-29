@@ -376,22 +376,23 @@ void ModuleGameObjectManager::RayCast(const math::LineSegment &ray_cast)
 	for (uint i = 0; i < list_of_gos.size(); ++i)
 	{
 		curr_go = list_of_gos[i];
-
-		Mesh* mesh = curr_go->GetMesh();
+		
 		math::AABB bbox; curr_go->GetAABB(bbox);
 		math::Triangle tri;		
+
+		Mesh mesh;
 		
-		if (mesh && ray_cast.Intersects(bbox))
+		if (curr_go->GetMesh(mesh) && ray_cast.Intersects(bbox))
 		{
 			//math::LineSegment ray_cast_transform = ray_cast;
 			//ray_cast_transform.Transform(App->renderer3D->view_matrix);
 			//ray_casts.push_back(ray_cast_transform);
 
-			for (uint j = 0; j < mesh->num_indices; j = j + 3)
+			for (uint j = 0; j < mesh.num_indices; j = j + 3)
 			{
-				tri.a = mesh->vertices[mesh->indices[j]];
-				tri.b = mesh->vertices[mesh->indices[j + 1]],
-				tri.c = mesh->vertices[mesh->indices[j + 2]];								   
+				tri.a = mesh.vertices[mesh.indices[j]];
+				tri.b = mesh.vertices[mesh.indices[j + 1]],
+				tri.c = mesh.vertices[mesh.indices[j + 2]];								   
 				tri.Transform(curr_go->transform->world_transform);				
 				
 				float hit_dist;

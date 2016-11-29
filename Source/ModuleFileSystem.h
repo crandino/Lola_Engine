@@ -8,7 +8,7 @@
 
 #define LIBRARY_TEXTURE "Library/Textures/"
 #define LIBRARY_MESH "Library/Mesh/"
-#define LIBRARY_SCENES "Scenes/"
+#define LIBRARY_SCENES "Library/Scenes/"
 
 struct SDL_RWops;
 int close_sdl_rwops(SDL_RWops *rw);

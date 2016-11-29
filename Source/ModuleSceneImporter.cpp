@@ -4,6 +4,7 @@
 #include "ModuleInput.h"
 #include "ModuleFileSystem.h"
 #include "ModuleGameObjectManager.h"
+#include "ModuleResourceManager.h"
 #include "ModuleRenderer3D.h"
 
 #include "GameObject.h"
@@ -13,6 +14,7 @@
 #include "ComponentMaterial.h"
 
 #include "MeshImporter.h"
+#include "SceneImporter.h"
 
 #include "Assimp/include/cimport.h"
 #include "Assimp/include/scene.h"
@@ -45,15 +47,15 @@ UPDATE_STATUS ModuleSceneImporter::PreUpdate(float dt)
 {
 	static bool load_model = true;
 	if (App->input->GetKey(SDL_SCANCODE_G) == KEY_DOWN)
-	{
+	{		
 		//ImportModel("Models/primitives_with_parent.fbx");
 		//ImportModel("Models/aabb_test.fbx");
-		ImportModel("Models/Street environment_V01.fbx");
+		//ImportModel("Models/Street environment_V01.fbx");
 		//ImportModel("Models/QuadTree_test3.fbx");
 		//ImportModel("Models/color_cubes.fbx");
 		//ImportModel("Models/conflict_octree.fbx");
 		//ImportModel("Models/a_lot_of_balls2.fbx");
-		App->gameobject_manager->UpdateOcTree();
+		//App->gameobject_manager->UpdateOcTree();
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_C) == KEY_DOWN)
@@ -161,14 +163,14 @@ void ModuleSceneImporter::ImportModel(const char *file_name, bool use_fs)
 								ComponentMesh *comp_mesh = (ComponentMesh*)new_go->AddComponent(COMPONENT_TYPE::MESH);
 								comp_mesh->SetComponent(ai_mesh);
 
-								MeshImporter mesh_importer;
+								/*MeshImporter mesh_importer;
 								char save_filename[SHORT_STRING]; sprintf_s(save_filename, SHORT_STRING, "%lu%s", comp_mesh->UUID, ".msh");
 								char *buf;
 								unsigned int size = mesh_importer.Save(&buf, &comp_mesh->mesh);
 								App->file_system->Save(save_filename, buf, size);
-								RELEASE_ARRAY(buf);
+								RELEASE_ARRAY(buf);*/
 
-								App->renderer3D->LoadMeshBuffer(&comp_mesh->mesh);
+								//App->renderer3D->LoadMeshBuffer(&comp_mesh->mesh);
 
 								// --- MATERIAL ---
 								aiMaterial *ai_material = scene->mMaterials[ai_mesh->mMaterialIndex];
@@ -176,27 +178,6 @@ void ModuleSceneImporter::ImportModel(const char *file_name, bool use_fs)
 								comp_mat->SetComponent(ai_material);
 							}							
 						}
-
-						//if (node_to_add->mNumMeshes != 0)
-						//{
-						//	aiMesh *ai_mesh = scene->mMeshes[*node_to_add->mMeshes];
-						//	ComponentMesh *comp_mesh = (ComponentMesh*)new_go->AddComponent(COMPONENT_TYPE::MESH);
-						//	comp_mesh->SetComponent(ai_mesh);
-
-						//	MeshImporter mesh_importer;
-						//	char save_filename[SHORT_STRING]; sprintf_s(save_filename, SHORT_STRING, "%lu%s", comp_mesh->UUID, ".msh");
-						//	char *buf;
-						//	unsigned int size = mesh_importer.Save(&buf, &comp_mesh->mesh);
-						//	App->file_system->Save(save_filename, buf, size);
-						//	RELEASE_ARRAY(buf);
-
-						//	App->renderer3D->LoadMeshBuffer(&comp_mesh->mesh);
-
-						//	// --- MATERIAL ---
-						//	aiMaterial *ai_material = scene->mMaterials[ai_mesh->mMaterialIndex];
-						//	ComponentMaterial *comp_mat = (ComponentMaterial*)new_go->AddComponent(COMPONENT_TYPE::MATERIAL);
-						//	comp_mat->SetComponent(ai_material);
-						//}
 					}
 				}
 				else

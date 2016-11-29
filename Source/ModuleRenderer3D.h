@@ -36,7 +36,6 @@ public:
 	void CalculateProjectionMatrix();
 	void CalculateViewMatrix();
 
-	bool LoadMeshBuffer(const Mesh *mesh);
 	void DeleteMeshBuffer(const Mesh *mesh);
 	void ShowGameObject(const GameObject *go);
 

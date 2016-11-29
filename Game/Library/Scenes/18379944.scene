@@ -1,0 +1,13 @@
+{
+    "ID": "18379944",
+    "File": "cube.fbx",
+    "Imported file": "18379944.scene",
+    "cube.fbx": [
+        {
+            "Type": 2,
+            "ID": "18379945",
+            "File": "pCube1",
+            "Imported file": "18379945.msh"
+        }
+    ]
+}

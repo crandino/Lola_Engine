@@ -28,6 +28,8 @@ public:
 	ID DeleteImportedFile(std::string &asset_to_delete);
 	ID GenerateID();
 
+	bool LoadFile(const char *file_to_load);
+
 private:
 
 	Timer check_timer;
@@ -40,9 +42,11 @@ private:
 	ID Find(const std::string &asset_to_find) const;
 	void DeleteEntry(ID id);
 	bool IsUpdated(ID id) const;
-	Resource* Get(ID uid);
 
+	Resource* Get(ID uid);
 	RESOURCE_TYPE GetTypeOfFile(const std::string &file) const;
+	
+	ID FindFileIdJSON(const JSONParser &json, const char *scene_name, const char *file) const;
 };
 
 #endif // !__MODULERESOURCEMANAGER_H__

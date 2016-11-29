@@ -1,8 +1,8 @@
 #ifndef __SCENEIMPORTER_H__
 #define __SCENEIMPORTER_H__
 
-#include "Importer.h"
 #include "MeshImporter.h"
+#include "MaterialImporter.h"
 
 #include "Assimp/include/cimport.h"
 #include "Assimp/include/scene.h"
@@ -11,6 +11,8 @@
 
 #include "Application.h"
 #include "ModuleFileSystem.h"
+
+#include "ResourceScene.h"
 
 #include <stack>
 
@@ -31,7 +33,7 @@ public:
 		json_scene.AddString("File", assets_to_import.front().c_str());
 		char file[SHORT_STRING];
 		sprintf_s(file, SHORT_STRING, "%lu%s", IDs.front(), ".scene");
-		json_scene.AddString("Imported file", file);
+		json_scene.AddString("Imported File", file);
 		imported_files.push_back(file);
 
 		std::string models = "Models/";
@@ -100,8 +102,8 @@ public:
 									JSONParser mesh;
 
 									// Type
-									mesh.AddInt("Type", RESOURCE_TYPE::MESH);
-									types.push_back(RESOURCE_TYPE::MESH);
+									mesh.AddInt("Type", RESOURCE_TYPE::MESHES);
+									types.push_back(RESOURCE_TYPE::MESHES);
 
 									// New ID for this mesh inside FBX
 									ID next_id = IDs.back() + 1;
@@ -115,7 +117,7 @@ public:
 									// Importing meshes to own file format (.msh)
 									MeshImporter mesh_importer;
 									mesh_importer.Import(ai_mesh, imported_files, IDs.back());
-									mesh.AddString("Imported file", imported_files.back().c_str());	
+									mesh.AddString("Imported File", imported_files.back().c_str());	
 
 									json_scene.AddArray(mesh);  // Creating JSON entry for this mesh																
 
@@ -137,8 +139,8 @@ public:
 											JSONParser material;
 
 											// Type material
-											material.AddInt("Type", RESOURCE_TYPE::TEXTURE);
-											types.push_back(RESOURCE_TYPE::TEXTURE);
+											material.AddInt("Type", RESOURCE_TYPE::TEXTURES);
+											types.push_back(RESOURCE_TYPE::TEXTURES);
 
 											// New ID for this texture
 											ID next_id = IDs.back() + 1;
@@ -151,7 +153,7 @@ public:
 
 											// Asset filename and imported file
 											material.AddString("File", assets_to_import.back().c_str());
-											material.AddString("Imported file", imported_files.back().c_str());
+											material.AddString("Imported File", imported_files.back().c_str());
 
 											json_scene.AddArray(material);  // Creating JSON entry for this texture	
 										}				
@@ -176,9 +178,13 @@ public:
 		return false;
 	}
 
-	uint Load(char **data)
+	bool Load(const std::string &imported_file, ResourceScene *scene)
 	{
-		return 0;
+		char *buf;
+		if (App->file_system->Load(imported_file.c_str(), &buf) != 0)
+		{
+			JSONParser scene(buf);
+		}
 	}
 };
 

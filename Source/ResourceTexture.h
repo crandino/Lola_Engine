@@ -8,11 +8,11 @@ class ResourceTexture : public Resource
 
 public:
 	
-	ResourceTexture(ID id, int timestamp)
+	ResourceTexture(ID id, int timestamp) : Resource()
 	{
 		this->id = id;
 		this->timestamp = timestamp;
-		type = RESOURCE_TYPE::TEXTURE;
+		type = RESOURCE_TYPE::TEXTURES;
 	}
 };
 

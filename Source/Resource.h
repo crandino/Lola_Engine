@@ -5,10 +5,10 @@
 
 enum RESOURCE_TYPE
 {
-	UNKNOWN,
-	TEXTURE, 
-	MESH, 
-	SCENE
+	NONE,
+	TEXTURES, 
+	MESHES, 
+	SCENES
 };
 
 typedef long unsigned int ID;
@@ -16,13 +16,37 @@ typedef long unsigned int ID;
 class Resource
 {
 
+protected:
+
+	bool loaded_in_memory;
+	unsigned int times_referenced;
+
 public:
 
 	RESOURCE_TYPE type;
-	ID id = 0;
+	ID id;
 	std::string file;
 	std::string imported_file;
-	int timestamp = 0;
+	int timestamp;
+
+	Resource()
+	{
+		loaded_in_memory = false;
+		times_referenced = 0;
+		timestamp = 0;
+		id = 0;
+		type = RESOURCE_TYPE::NONE;
+	}
+
+	virtual bool LoadToMemory()
+	{
+		return true;
+	}
+
+	bool LoadedInMemory() const
+	{
+		return loaded_in_memory;
+	}
 
 	/*Resource(UID uid, Resource::Type type);
 	virtual ~Resource();
@@ -31,7 +55,7 @@ public:
 	const char* GetFile() const;
 	const char* GetExportedFile() const;
 	bool IsLoadedToMemory() const;
-	bool LoadToMemory();
+	
 	uint CountReferences() const;
 
 	virtual void Save(Config& config) const;

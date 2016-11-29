@@ -2,6 +2,8 @@
 
 #include "Application.h"
 #include "ModuleFileSystem.h"
+#include "ModuleGameObjectManager.h"
+#include "ModuleInput.h"
 
 //Importers
 #include "MaterialImporter.h"
@@ -12,6 +14,11 @@
 #include "ResourceTexture.h"
 #include "ResourceMesh.h"
 #include "ResourceScene.h"
+
+//Components
+#include "ComponentTransform.h"
+#include "ComponentMaterial.h"
+#include "ComponentMesh.h"
 
 ModuleResourceManager::ModuleResourceManager(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -46,6 +53,21 @@ UPDATE_STATUS ModuleResourceManager::PreUpdate(float dt)
 
 		check_timer.Start(); // Resetting timer;
 	}	
+	
+	// Loading FBXs
+	if (App->input->GetKey(SDL_SCANCODE_G) == KEY_DOWN)
+	{
+		LoadFile("cube.fbx");
+		//LoadFile("primitives_with_parent.fbx");
+		//LoadFile("Models/aabb_test.fbx");
+		//LoadFile("Models/Street environment_V01.fbx");
+		//LoadFile("Models/QuadTree_test3.fbx");
+		//LoadFile("Models/color_cubes.fbx");
+		//LoadFile("Models/conflict_octree.fbx");
+		//LoadFile("Models/a_lot_of_balls2.fbx");
+		App->gameobject_manager->UpdateOcTree();
+	}
+
 
 	return UPDATE_CONTINUE;
 }
@@ -66,9 +88,9 @@ Resource *ModuleResourceManager::CreateNewResource(RESOURCE_TYPE type, ID id, in
 
 	switch (type)
 	{
-	case (RESOURCE_TYPE::TEXTURE): res = (Resource*) new ResourceTexture(id, timestamp); break;
-	case (RESOURCE_TYPE::SCENE): res = (Resource*) new ResourceScene(id, timestamp); break;
-	case (RESOURCE_TYPE::MESH): res = (Resource*) new ResourceMesh(id, timestamp); break;
+	case (RESOURCE_TYPE::TEXTURES): res = (Resource*) new ResourceTexture(id, timestamp); break;
+	case (RESOURCE_TYPE::SCENES): res = (Resource*) new ResourceScene(id, timestamp); break;
+	case (RESOURCE_TYPE::MESHES): res = (Resource*) new ResourceMesh(id, timestamp); break;
 	
 	/*case Resource::mesh: ret = (Resource*) new ResourceMesh(uid); break;
 	case Resource::audio: ret = (Resource*) new ResourceAudio(uid); break;
@@ -103,21 +125,21 @@ ID ModuleResourceManager::ImportFile(std::string &new_asset_file, ID force_id)
 
 	switch (type)
 	{
-		case(RESOURCE_TYPE::TEXTURE):
+		case(RESOURCE_TYPE::TEXTURES):
 		{			
 			MaterialImporter mat_import;
 			successful_import = mat_import.Import(asset_files, imported_files, IDs);
-			if (successful_import) timestamp = App->file_system->GetLastTimeMod(new_asset_file.c_str(), LIBRARY_TEXTURE);
+			if (successful_import) timestamp = App->file_system->GetLastTimeMod(new_asset_file.c_str(), "Textures/");
 			break;
 		}
-		case(RESOURCE_TYPE::SCENE):
+		case(RESOURCE_TYPE::SCENES):
 		{			
 			SceneImporter scene_import;
 			successful_import = scene_import.Import(asset_files, imported_files, IDs, types);
-			if (successful_import) timestamp = App->file_system->GetLastTimeMod(new_asset_file.c_str(), LIBRARY_SCENES);
+			if (successful_import) timestamp = App->file_system->GetLastTimeMod(new_asset_file.c_str(), "Models/");
 			break;
 		}
-		case(RESOURCE_TYPE::UNKNOWN):
+		case(RESOURCE_TYPE::NONE):
 			DEBUG("Unknwon type for file %s", new_asset_file.c_str());
 			break;
 	}
@@ -159,7 +181,7 @@ RESOURCE_TYPE ModuleResourceManager::GetTypeOfFile(const std::string &file) cons
 
 	size_t dot_pos = file.find_last_of(".");
 
-	RESOURCE_TYPE type = RESOURCE_TYPE::UNKNOWN;
+	RESOURCE_TYPE type = RESOURCE_TYPE::NONE;
 
 	if (dot_pos != std::string::npos)  // Checking dot extension existence
 	{
@@ -170,7 +192,7 @@ RESOURCE_TYPE ModuleResourceManager::GetTypeOfFile(const std::string &file) cons
 		{
 			if (tex_extensions[i] == ext)
 			{
-				type = RESOURCE_TYPE::TEXTURE;
+				type = RESOURCE_TYPE::TEXTURES;
 				break;
 			}
 		}
@@ -180,7 +202,7 @@ RESOURCE_TYPE ModuleResourceManager::GetTypeOfFile(const std::string &file) cons
 		{
 			if (mesh_extensions[i] == ext)
 			{
-				type = RESOURCE_TYPE::SCENE;
+				type = RESOURCE_TYPE::SCENES;
 				break;
 			}
 		}
@@ -196,6 +218,7 @@ ID ModuleResourceManager::Find(const std::string &asset_to_find) const
 		if (!(*it).second->file.compare(asset_to_find))
 			return (*it).first;
 	}
+
 	return 0;
 }
 
@@ -212,9 +235,9 @@ bool ModuleResourceManager::IsUpdated(ID id) const
 
 	switch (res->type)
 	{
-		case(RESOURCE_TYPE::TEXTURE): timestamp = App->file_system->GetLastTimeMod(res->file.c_str(), LIBRARY_TEXTURE); break;
-		case(RESOURCE_TYPE::MESH): timestamp = App->file_system->GetLastTimeMod(res->file.c_str(), LIBRARY_MESH); break;
-		case(RESOURCE_TYPE::SCENE): timestamp = App->file_system->GetLastTimeMod(res->file.c_str(), LIBRARY_SCENES); break;
+		case(RESOURCE_TYPE::TEXTURES): timestamp = App->file_system->GetLastTimeMod(res->file.c_str(), "Textures/"); break;
+		//case(RESOURCE_TYPE::MESHES): timestamp = App->file_system->GetLastTimeMod(res->file.c_str(), LIBRARY_MESH); break;
+		case(RESOURCE_TYPE::SCENES): timestamp = App->file_system->GetLastTimeMod(res->file.c_str(), "Models/"); break;
 	}
 
 	if (timestamp > res->timestamp)
@@ -227,4 +250,146 @@ Resource *ModuleResourceManager::Get(ID id)
 	//Resource *res = nullptr;
 	return  resources.at(id);	
 	//return (res != resources.) ? res : nullptr;
+}
+
+bool ModuleResourceManager::LoadFile(const char *file_to_load)
+{
+	ID id = Find(file_to_load);
+	if (id == 0)
+		DEBUG("File %s has not been imported!", file_to_load);
+	else
+	{
+		// Loading resources to memory
+		Resource *res = Get(Find(file_to_load));
+		
+		char *buf;
+		std::string lib_folder = LIBRARY_SCENES;
+		App->file_system->Load((lib_folder + res->imported_file).c_str(), &buf);
+		JSONParser json_scene; json_scene.ParseBuffer(buf);
+
+		for (int i = 0; i < json_scene.GetArrayCount(file_to_load); ++i)
+		{
+			JSONParser item = json_scene.GetArray(file_to_load, i);
+			
+			switch ((RESOURCE_TYPE)item.GetInt("Type"))
+			{
+			case(RESOURCE_TYPE::MESHES):
+				{
+					ResourceMesh *res_mesh = (ResourceMesh*)resources[item.GetUUID("ID")];
+					if (!res_mesh->LoadedInMemory())
+					{
+						MeshImporter mesh_importer;
+						mesh_importer.Load(item.GetString("Imported File"), res_mesh);
+						res_mesh->LoadToMemory();
+					}					
+					break;
+				}
+			case(RESOURCE_TYPE::TEXTURES):
+				{
+					MaterialImporter material_importer;
+					break;
+				}
+			}
+		}
+
+		// Creating GameObjects and their corresponding compoments
+		lib_folder = "Models/";
+		const aiScene* scene = aiImportFileEx((lib_folder + res->file).c_str(), aiProcessPreset_TargetRealtime_MaxQuality, App->file_system->GetAssimpIO());
+		
+		if (scene != nullptr)
+		{
+			if (scene->HasMeshes())
+			{
+				std::stack<aiNode*> nodes_stack;
+				std::stack<GameObject*> go_stack;
+
+				nodes_stack.push(scene->mRootNode);
+				go_stack.push((GameObject*)App->gameobject_manager->GetRoot());
+
+				aiNode *curr_node;
+				GameObject *parent;
+
+				while (!nodes_stack.empty())
+				{
+					curr_node = nodes_stack.top();
+					parent = go_stack.top();
+
+					int num_children = curr_node->mNumChildren;
+
+					if (num_children > 0)
+					{
+						nodes_stack.pop();  // Node checked is eliminated.
+						go_stack.pop();
+
+						for (int i = 0; i < num_children; ++i)
+						{
+							aiNode *node_to_add = curr_node->mChildren[i];
+
+							nodes_stack.push(node_to_add);
+							char *go_name = node_to_add->mName.data;
+
+							// I don't like! This part eliminates the strange names on Ricard's FBX,
+							// but it is exclusive for his FBX, so a better and generic option has to be implemented.						
+							for (uint i = 0; i < node_to_add->mName.length; ++i)
+							{
+								if (go_name[i] == '$')
+								{
+									go_name[i - 1] = '\0';
+									break;
+								}
+							}
+
+							GameObject *new_go = App->gameobject_manager->CreateGameObject(go_name, parent);
+							go_stack.push(new_go);
+
+							// --- TRANSFORM ---						
+							ComponentTransform *comp_trans = (ComponentTransform*)new_go->AddComponent(COMPONENT_TYPE::TRANSFORM);
+							comp_trans->SetComponent(node_to_add);
+
+							// --- MESH ---	
+							for (uint j = 0; j < node_to_add->mNumMeshes; ++j)
+							{
+								aiMesh *ai_mesh = scene->mMeshes[node_to_add->mMeshes[j]];
+							
+								ComponentMesh *comp_mesh = (ComponentMesh*)new_go->AddComponent(COMPONENT_TYPE::MESH);
+								comp_mesh->AddResource((ResourceMesh*)Get(FindFileIdJSON(json_scene, file_to_load, go_name)));									
+
+									//// --- MATERIAL ---
+									//aiMaterial *ai_material = scene->mMaterials[ai_mesh->mMaterialIndex];
+									//ComponentMaterial *comp_mat = (ComponentMaterial*)new_go->AddComponent(COMPONENT_TYPE::MATERIAL);
+									//comp_mat->SetComponent(ai_material);
+				
+							}
+						}
+					}
+					else
+					{
+						go_stack.pop();
+						nodes_stack.pop();
+					}
+				}
+			}
+
+			aiReleaseImport(scene);
+		}
+		else
+		{
+			DEBUG("Error loading scene %s: %s", file_to_load, aiGetErrorString());
+		}		
+	}	
+
+	return true;
+}
+
+ID ModuleResourceManager::FindFileIdJSON(const JSONParser &json, const char *scene_name, const char *file) const
+{
+	for (int i = 0; i < json.GetArrayCount(scene_name); ++i)
+	{
+		JSONParser item = json.GetArray(scene_name, i);
+
+		if (strcmp(item.GetString("File"), file) == 0)
+			return item.GetUUID("ID");
+	}
+
+	return 0;
 }

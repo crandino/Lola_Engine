@@ -3,7 +3,7 @@
 
 #include "Component.h"
 
-#include "Mesh.h"
+#include "ResourceMesh.h"
 
 #include "MathGeoLib\MathGeoLib.h"
 
@@ -19,13 +19,14 @@ public:
 	math::AABB initial_bounding_box;
 	math::AABB bounding_box;
 
-	Mesh mesh;
+	const ResourceMesh *resource;
 
 	ComponentMesh();
 	~ComponentMesh();
 
 	bool Update();
 	void SetComponent(const aiMesh *mesh);
+	void AddResource(const ResourceMesh *res);
 
 	void ShowEditorInfo();
 

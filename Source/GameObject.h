@@ -47,7 +47,7 @@ public:
 
 	bool GetAABB(math::AABB &aabb) const;
 	bool GetFrustum(math::Frustum &frustum) const;
-	Mesh *GetMesh() const;
+	bool GetMesh(Mesh &mesh) const;
 	bool HasMesh() const;
 
 	void ChangeActiveState(bool *state, GameObject *go = nullptr);

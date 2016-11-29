@@ -112,12 +112,13 @@ bool GameObject::GetFrustum(math::Frustum &frustum) const
 	return ret;
 }
 
-Mesh *GameObject::GetMesh() const
+bool GameObject::GetMesh(Mesh &mesh) const
 {
 	if (HasMesh())
-		return &((ComponentMesh*)GetComponentByType(COMPONENT_TYPE::MESH))->mesh;
-	else
-		return nullptr;
+	{
+		mesh = ((ComponentMesh*)GetComponentByType(COMPONENT_TYPE::MESH))->resource->mesh_data;
+	}		
+	return false;
 }
 
  bool GameObject::HasMesh() const
