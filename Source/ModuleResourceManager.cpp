@@ -34,7 +34,7 @@ ModuleResourceManager::~ModuleResourceManager()
 bool ModuleResourceManager::Awake(JSONParser &config)
 {
 	char *buf;
-	if (App->file_system->Load("Resources.dat", &buf) != 0)
+	if (App->file_system->Load("Library / Resources.dat", &buf) != 0)
 	{
 		// Creating resources for files already imported on last session
 		JSONParser resources_info(buf);
@@ -447,6 +447,6 @@ void ModuleResourceManager::CreateJSONResourceInfo()
 
 	char *serialized_string;
 	resources_info.Save(&serialized_string);
-	App->file_system->Save("Resources.dat", serialized_string, strlen(serialized_string));
+	App->file_system->Save("Library/Resources.dat", serialized_string, strlen(serialized_string));
 	resources_info.FreeBuffer(serialized_string);
 }
