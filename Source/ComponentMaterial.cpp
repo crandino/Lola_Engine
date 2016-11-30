@@ -13,8 +13,6 @@ ComponentMaterial::ComponentMaterial() : Component()
 	color_emissive.Set(0.0f, 0.0f, 0.0f);
 	color_transparent.Set(0.0f, 0.0f, 0.0f);
 
-	/*sprintf_s(tex_path, "%c", '\0');
-	tex_buffer = 0;*/
 	opacity = 1.0f;
 
 	type = COMPONENT_TYPE::MATERIAL;
@@ -49,7 +47,7 @@ void ComponentMaterial::SetComponent(aiMaterial *ai_material)
 	//	tex_buffer = 0;
 
 	aiColor3D color;
-
+	
 	ai_material->Get(AI_MATKEY_COLOR_DIFFUSE, color);
 	color_diffuse.Set(color.r, color.g, color.b);
 	ai_material->Get(AI_MATKEY_COLOR_SPECULAR, color);
