@@ -31,6 +31,28 @@ ModuleResourceManager::ModuleResourceManager(Application* app, bool start_enable
 ModuleResourceManager::~ModuleResourceManager()
 { }
 
+bool ModuleResourceManager::Awake(JSONParser &config)
+{
+	char *buf;
+	if (App->file_system->Load("Resources.dat", &buf) != 0)
+	{
+		// Creating resources for files already imported on last session
+		JSONParser resources_info(buf);
+		for (int i = 0; i < resources_info.GetArrayCount("Files"); ++i)
+		{
+			JSONParser item = resources_info.GetArray("Files", i);
+			Resource *res = CreateNewResource((RESOURCE_TYPE)item.GetInt("Type"), item.GetUUID("ID"), item.GetInt("Timestamp"));
+			res->file = item.GetString("File");
+			res->imported_file = item.GetString("Imported File");
+
+			if (res != nullptr) resources[item.GetUUID("ID")] = res;
+		}
+
+		RELEASE_ARRAY(buf);		
+	}
+	return true;
+}
+
 UPDATE_STATUS ModuleResourceManager::PreUpdate(float dt)
 {
 	if (check_timer.ReadSec() > check_interval)
@@ -58,7 +80,6 @@ UPDATE_STATUS ModuleResourceManager::PreUpdate(float dt)
 		}
 
 		if (resources_changed) CreateJSONResourceInfo();
-
 		check_timer.Start(); // Resetting timer;
 	}	
 	
@@ -411,15 +432,16 @@ ID ModuleResourceManager::FindFileIdJSON(const JSONParser &json, const char *sce
 void ModuleResourceManager::CreateJSONResourceInfo()
 {
 	JSONParser resources_info;
+	resources_info.AddArray("Files");
 
 	for (std::map<ID, Resource*>::iterator it = resources.begin(); it != resources.end(); ++it)
 	{
 		JSONParser item;
-		//item.AddString("File", (*it).second->file.c_str());
-		item.AddString("File Imported", (*it).second->imported_file.c_str());
+		item.AddString("File", (*it).second->file.c_str());
+		item.AddString("Imported File", (*it).second->imported_file.c_str());
 		item.AddUUID("ID", (*it).second->id);
-		item.AddInt("Type", (*it).second->type);
-		resources_info.AddArray((*it).second->file.c_str());
+		item.AddInt("Type", (*it).second->type);	
+		item.AddInt("Timestamp", (*it).second->timestamp);
 		resources_info.AddArray(item);
 	}
 

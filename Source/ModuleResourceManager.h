@@ -19,6 +19,7 @@ public:
 	ModuleResourceManager(Application* app, bool start_enabled = true);
 	~ModuleResourceManager();
 
+	bool Awake(JSONParser &config);
 	UPDATE_STATUS PreUpdate(float dt);
 
 	bool CleanUp();
