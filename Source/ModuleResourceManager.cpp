@@ -20,6 +20,14 @@
 #include "ComponentMaterial.h"
 #include "ComponentMesh.h"
 
+//Assimp
+#include "Assimp/include/cimport.h"
+#include "Assimp/include/scene.h"
+#include "Assimp/include/postprocess.h"
+#include "Assimp/include/cfileio.h"
+
+#pragma comment (lib, "Source/Assimp/libx86/assimp.lib")
+
 ModuleResourceManager::ModuleResourceManager(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
 	sprintf_s(name, SHORT_STRING, "Resource Manager");
@@ -50,6 +58,12 @@ bool ModuleResourceManager::Awake(JSONParser &config)
 
 		RELEASE_ARRAY(buf);		
 	}
+
+	// Stream log messages to Debug window
+	struct aiLogStream stream;
+	stream = aiGetPredefinedLogStream(aiDefaultLogStream_DEBUGGER, nullptr);
+	aiAttachLogStream(&stream);
+
 	return true;
 }
 
@@ -97,7 +111,6 @@ UPDATE_STATUS ModuleResourceManager::PreUpdate(float dt)
 		App->gameobject_manager->UpdateOcTree();
 	}
 
-
 	return UPDATE_CONTINUE;
 }
 
@@ -107,6 +120,9 @@ bool ModuleResourceManager::CleanUp()
 		RELEASE((*it).second);
 	
 	resources.clear();
+
+	// detach log stream
+	aiDetachAllLogStreams();
 
 	return true;
 }

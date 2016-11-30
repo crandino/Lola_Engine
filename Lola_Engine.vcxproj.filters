@@ -213,9 +213,6 @@
     <ClCompile Include="Source\ModuleFileSystem.cpp">
       <Filter>Source\Modules</Filter>
     </ClCompile>
-    <ClCompile Include="Source\ModuleTextureLoader.cpp">
-      <Filter>Source\Modules</Filter>
-    </ClCompile>
     <ClCompile Include="Source\ModuleGameObjectManager.cpp">
       <Filter>Source\Modules</Filter>
     </ClCompile>
@@ -254,9 +251,6 @@
     </ClCompile>
     <ClCompile Include="Source\JSONParser.cpp">
       <Filter>Source\Helpers</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ModuleSceneImporter.cpp">
-      <Filter>Source\Modules</Filter>
     </ClCompile>
     <ClCompile Include="Source\ModuleResourceManager.cpp">
       <Filter>Source\Modules</Filter>
@@ -521,9 +515,6 @@
     <ClInclude Include="Source\ModuleFileSystem.h">
       <Filter>Source\Modules</Filter>
     </ClInclude>
-    <ClInclude Include="Source\ModuleTextureLoader.h">
-      <Filter>Source\Modules</Filter>
-    </ClInclude>
     <ClInclude Include="Source\ModuleGameObjectManager.h">
       <Filter>Source\Modules</Filter>
     </ClInclude>
@@ -574,9 +565,6 @@
     </ClInclude>
     <ClInclude Include="Source\JSONParser.h">
       <Filter>Source\Helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ModuleSceneImporter.h">
-      <Filter>Source\Modules</Filter>
     </ClInclude>
     <ClInclude Include="Source\MaterialImporter.h">
       <Filter>Source\Resources\Importers</Filter>

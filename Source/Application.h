@@ -16,15 +16,12 @@ enum ENGINE_MODE
 };
 
 class ModuleWindow;
-class ModuleTextureLoader;
 class ModuleFileSystem;
 class ModuleInput;
 class ModuleAudio;
 class ModuleSceneIntro;
-class ModuleSceneImporter;
 class ModuleRenderer3D;
 class ModuleCameraEditor;
-class ModulePhysics3D;
 class ModuleEditor;
 class ModuleGameObjectManager;
 class ModuleResourceManager;
@@ -38,15 +35,12 @@ public:
 	Console					*console = nullptr;
 
 	ModuleWindow			*window = nullptr;
-	ModuleTextureLoader     *tex_loader = nullptr;
 	ModuleFileSystem		*file_system = nullptr;
 	ModuleInput				*input = nullptr;
 	ModuleAudio				*audio = nullptr;
 	ModuleSceneIntro		*scene_intro = nullptr;
-	ModuleSceneImporter	    *scene_importer = nullptr;
 	ModuleRenderer3D		*renderer3D = nullptr;
 	ModuleCameraEditor		*camera = nullptr;
-	//ModulePhysics3D		*physics = nullptr;
 	ModuleGameObjectManager *gameobject_manager = nullptr;
 	ModuleResourceManager   *resource_manager = nullptr;
 	ModuleEditor			*editor = nullptr;

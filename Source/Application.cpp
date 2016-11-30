@@ -6,12 +6,9 @@
 #include "ModuleSceneIntro.h"
 #include "ModuleFileSystem.h"
 #include "ModuleCameraEditor.h"
-//#include "ModulePhysics3D.h"
 #include "ModuleEditor.h"
-#include "ModuleTextureLoader.h"
 #include "ModuleGameObjectManager.h"
 #include "ModuleResourceManager.h"
-#include "ModuleSceneImporter.h"
 #include "ModuleRenderer3D.h"
 
 #include "JSONParser.h"
@@ -19,15 +16,12 @@
 Application::Application()
 {
 	window = new ModuleWindow(this, true);
-	tex_loader = new ModuleTextureLoader(this, true);
 	file_system = new ModuleFileSystem(this, true);
 	input = new ModuleInput(this, true);
 	audio = new ModuleAudio(this, true);
 	scene_intro = new ModuleSceneIntro(this, true);
-	//scene_importer = new ModuleSceneImporter(this, true);
 	renderer3D = new ModuleRenderer3D(this, true);
 	camera = new ModuleCameraEditor(this, true);
-	//physics = new ModulePhysics3D(this, true);
 	resource_manager = new ModuleResourceManager(this, true);
 	gameobject_manager = new ModuleGameObjectManager(this, true);
 	editor = new ModuleEditor(this, true);
@@ -40,14 +34,11 @@ Application::Application()
 	AddModule(window);		
 	AddModule(input);
 	AddModule(audio);
-	//AddModule(physics);
 
 	// Loaders		
 	AddModule(file_system);
-	AddModule(tex_loader);
 	AddModule(resource_manager);
 	AddModule(gameobject_manager);	
-	//AddModule(scene_importer);
 	
 	// Scenes
 	AddModule(camera);
@@ -96,7 +87,6 @@ bool Application::Init()
 	while(item != list_modules.end() && ret == true)
 	{
 		ret = (*item)->Awake(modules.GetNode((*item)->GetModuleName()));
-		//ret = (*item)->Awake(modules);
 		++item;
 	}
 

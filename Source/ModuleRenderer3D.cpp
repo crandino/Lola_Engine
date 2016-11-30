@@ -3,7 +3,6 @@
 #include "Application.h"
 #include "ModuleCameraEditor.h"
 #include "ModuleWindow.h"
-#include "ModuleTextureLoader.h"
 #include "Globals.h"
 
 #include "ComponentMesh.h"

@@ -1,7 +1,6 @@
 #include "ComponentMaterial.h"
 
 #include "Application.h"
-#include "ModuleTextureLoader.h"
 
 #include "Assimp\include\material.h"
 #include "imgui\imgui.h"
@@ -97,6 +96,5 @@ bool ComponentMaterial::Save(JSONParser &go)
 
 	return true;
 }
-
 
 

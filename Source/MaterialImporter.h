@@ -45,7 +45,9 @@ public:
 
 	bool static Import(const std::string &asset_to_import, std::string &imported_file, ID &res_id)
 	{
-		bool success = false;
+		ilInit();
+
+		bool success = false;		
 
 		std::string asset_folder = "Textures/";
 		std::string lib_folder = LIBRARY_TEXTURE;		
@@ -71,6 +73,8 @@ public:
 		}
 
 		RELEASE(data);
+
+		ilShutDown();
 		return success;		
 	}
 
@@ -89,6 +93,12 @@ public:
 		sprintf_s(res_mat->tex_path, SHORT_STRING, "%s%s", "Textures/", res_mat->file.c_str());
 
 		return size;
+
+		// Delete buffers
+		/*void ModuleTextureLoader::DeleteBuffer(unsigned int &buffer)
+		{
+			ilDeleteImages(1, &buffer);
+		}*/
 	}
 };
 
