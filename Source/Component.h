@@ -4,6 +4,7 @@
 #include "JSONParser.h"
 
 class GameObject;
+class Resource;
 
 enum COMPONENT_TYPE
 {
@@ -37,6 +38,8 @@ public:
 	COMPONENT_TYPE &GetType();
 	const char *GetNameByType(COMPONENT_TYPE type);
 	bool IsActive() const;
+
+	virtual void AddResource(const Resource *res) = 0;
 
 	virtual bool Save(JSONParser &go);
 	virtual bool Load(JSONParser &go);

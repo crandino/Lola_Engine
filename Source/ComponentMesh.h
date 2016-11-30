@@ -26,7 +26,7 @@ public:
 
 	bool Update();
 	void SetComponent(const aiMesh *mesh);
-	void AddResource(const ResourceMesh *res);
+	void AddResource(const Resource *res);
 
 	void ShowEditorInfo();
 

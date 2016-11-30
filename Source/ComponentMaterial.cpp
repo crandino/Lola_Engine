@@ -14,17 +14,19 @@ ComponentMaterial::ComponentMaterial() : Component()
 	color_emissive.Set(0.0f, 0.0f, 0.0f);
 	color_transparent.Set(0.0f, 0.0f, 0.0f);
 
-	sprintf_s(tex_path, "%c", '\0');
-	tex_buffer = 0;
+	/*sprintf_s(tex_path, "%c", '\0');
+	tex_buffer = 0;*/
 	opacity = 1.0f;
 
 	type = COMPONENT_TYPE::MATERIAL;
 	name = GetNameByType(type);
+
+	resource = nullptr;
 }
 
 ComponentMaterial::~ComponentMaterial()
 { 
-	App->tex_loader->DeleteBuffer(tex_buffer);
+	//App->tex_loader->DeleteBuffer(tex_buffer);
 }
 
 bool ComponentMaterial::Update()
@@ -36,16 +38,16 @@ void ComponentMaterial::SetComponent(aiMaterial *ai_material)
 {
 	unsigned int numTextures = ai_material->GetTextureCount(aiTextureType_DIFFUSE);
 
-	if (numTextures != 0)
-	{
-		// Loading texture to tex_buffer
-		aiString path;
-		ai_material->GetTexture(aiTextureType_DIFFUSE, 0, &path);
+	//if (numTextures != 0)
+	//{
+	//	// Loading texture to tex_buffer
+	//	aiString path;
+	//	ai_material->GetTexture(aiTextureType_DIFFUSE, 0, &path);
 
-		App->tex_loader->LoadTexture(path.C_Str(), tex_buffer, this);
-	}
-	else
-		tex_buffer = 0;
+	//	App->tex_loader->LoadTexture(path.C_Str(), tex_buffer, this);
+	//}
+	//else
+	//	tex_buffer = 0;
 
 	aiColor3D color;
 
@@ -63,17 +65,22 @@ void ComponentMaterial::SetComponent(aiMaterial *ai_material)
 
 }
 
+void ComponentMaterial::AddResource(const Resource *res)
+{
+	resource = (ResourceTexture*)res;
+}
+
 void ComponentMaterial::ShowEditorInfo()
 {
 	ImGui::TextColored(ImVec4(1.0f, 0.5, 0.0f, 1.0f), "Component: "); ImGui::SameLine();
 	ImGui::Text(name);
 
 	ImGui::Checkbox("Active##Mat", &active);
-	if (tex_buffer != 0)
+	if (resource->tex_buffer != 0)
 	{
 		// Showing texture image on a 200x200 frame
-		ImGui::Image((void*)tex_buffer, ImVec2(200, 200), ImVec2(0, 0), ImVec2(1, 1), ImVec4(1, 1, 1, 1), ImVec4(0.0f, 0.5f, 0.5f, 1.0f));
-		ImGui::Text("%s%s", "Path: ", tex_path);
+		ImGui::Image((void*)resource->tex_buffer, ImVec2(200, 200), ImVec2(0, 0), ImVec2(1, 1), ImVec4(1, 1, 1, 1), ImVec4(0.0f, 0.5f, 0.5f, 1.0f));
+		ImGui::Text("%s%s", "Path: ", resource->tex_path);
 	}	
 
 	ImGui::Separator();

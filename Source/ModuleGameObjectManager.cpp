@@ -10,7 +10,6 @@
 
 #include "ComponentMesh.h"
 #include "ComponentTransform.h"
-//#include "ComponentMaterial.h"
 #include "ComponentCamera.h"
 
 #include "PerfTimer.h"
@@ -380,7 +379,7 @@ void ModuleGameObjectManager::RayCast(const math::LineSegment &ray_cast)
 		math::AABB bbox; curr_go->GetAABB(bbox);
 		math::Triangle tri;		
 
-		Mesh mesh;
+		Mesh *mesh = nullptr;
 		
 		if (curr_go->GetMesh(mesh) && ray_cast.Intersects(bbox))
 		{
@@ -388,11 +387,11 @@ void ModuleGameObjectManager::RayCast(const math::LineSegment &ray_cast)
 			//ray_cast_transform.Transform(App->renderer3D->view_matrix);
 			//ray_casts.push_back(ray_cast_transform);
 
-			for (uint j = 0; j < mesh.num_indices; j = j + 3)
+			for (uint j = 0; j < mesh->num_indices; j = j + 3)
 			{
-				tri.a = mesh.vertices[mesh.indices[j]];
-				tri.b = mesh.vertices[mesh.indices[j + 1]],
-				tri.c = mesh.vertices[mesh.indices[j + 2]];								   
+				tri.a = mesh->vertices[mesh->indices[j]];
+				tri.b = mesh->vertices[mesh->indices[j + 1]],
+				tri.c = mesh->vertices[mesh->indices[j + 2]];								   
 				tri.Transform(curr_go->transform->world_transform);				
 				
 				float hit_dist;

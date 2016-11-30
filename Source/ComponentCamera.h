@@ -35,6 +35,7 @@ public:
 	void ShowEditorInfo();
 	void UpdateFrustum();
 	void ApplyTransformToFrustum();
+	void AddResource(const Resource *res) {}
 
 	bool Save(JSONParser &go);
 	bool Load(JSONParser &comp);

@@ -26,7 +26,7 @@ class SceneImporter : public Importer
 
 public:
 
-	bool Import(std::vector<std::string> &assets_to_import, std::vector<std::string> &imported_files, std::vector<ID> &IDs, std::vector<RESOURCE_TYPE> &types)
+	bool static Import(std::vector<std::string> &assets_to_import, std::vector<std::string> &imported_files, std::vector<ID> &IDs, std::vector<RESOURCE_TYPE> &types)
 	{
 		JSONParser json_scene;
 		json_scene.AddUUID("ID", IDs.front());
@@ -178,7 +178,7 @@ public:
 		return false;
 	}
 
-	bool Load(const std::string &imported_file, ResourceScene *scene)
+	bool static Load(const std::string &imported_file, ResourceScene *scene)
 	{
 		char *buf;
 		if (App->file_system->Load(imported_file.c_str(), &buf) != 0)

@@ -5,6 +5,8 @@
 #include "Globals.h"
 #include "Color.h"
 
+#include "ResourceTexture.h"
+
 #include "Assimp\include\types.h"
 
 struct aiMaterial;
@@ -14,9 +16,8 @@ class ComponentMaterial : public Component
 
 public:
 	
-	char tex_path[SHORT_STRING];	// Virtual system texture path
-	unsigned int tex_buffer;
-
+	ResourceTexture *resource;
+	
 	Color color_diffuse;
 	Color color_specular;
 	Color color_ambient;
@@ -30,6 +31,7 @@ public:
 	bool Update();
 
 	void SetComponent(aiMaterial *ai_material);
+	void AddResource(const Resource *res);
 
 	void ShowEditorInfo();
 	

@@ -7,6 +7,9 @@ class ResourceTexture : public Resource
 {
 
 public:
+
+	char tex_path[SHORT_STRING];
+	unsigned int tex_buffer;
 	
 	ResourceTexture(ID id, int timestamp) : Resource()
 	{

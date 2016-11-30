@@ -38,6 +38,9 @@ public:
 		type = RESOURCE_TYPE::NONE;
 	}
 
+	virtual ~Resource() = 0
+	{ }
+
 	virtual bool LoadToMemory()
 	{
 		return true;

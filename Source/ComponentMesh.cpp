@@ -27,10 +27,7 @@ ComponentMesh::ComponentMesh() : Component()
 }
 
 ComponentMesh::~ComponentMesh()
-{
-	RELEASE(resource);
-	//App->renderer3D->DeleteMeshBuffer(resourcemesh);
-}
+{ }
 
 bool ComponentMesh::Update()
 {
@@ -40,9 +37,9 @@ bool ComponentMesh::Update()
 	return true;
 }
 
-void ComponentMesh::AddResource(const ResourceMesh *res)
+void ComponentMesh::AddResource(const Resource *res)
 {
-	resource = res;
+	resource = (ResourceMesh*)res;
 
 	//// Calcultating AABB	
 	initial_bounding_box.Enclose((math::float3*) resource->mesh_data.vertices, resource->mesh_data.num_vertices);

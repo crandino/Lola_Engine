@@ -12,6 +12,8 @@
 
 #include "Assimp\include\material.h"
 
+#include "ResourceTexture.h"
+
 #pragma comment (lib, "Source/Devil/libx86/DevIL.lib")
 #pragma comment (lib, "Source/Devil/libx86/ILU.lib")
 #pragma comment (lib, "Source/Devil/libx86/ILUT.lib")
@@ -23,7 +25,7 @@ class MaterialImporter : public Importer
 
 public:
 
-	uint Save()
+	uint static Save()
 	{
 		ILuint size;
 		ILubyte *data;
@@ -41,45 +43,53 @@ public:
 		}
 	}
 
-	bool Import(std::vector<std::string> &asset_to_import, std::vector<std::string> &imported_file, std::vector<ID> &res_id)
+	bool static Import(std::vector<std::string> &asset_to_import, std::vector<std::string> &imported_file, std::vector<ID> &res_id)
 	{
+		bool success = false;
+
 		std::string asset_folder = "Textures/";
-		asset_to_import.back() = App->file_system->GetFileFromDirPath(asset_to_import.back().c_str());
 		std::string lib_folder = LIBRARY_TEXTURE;		
 
-		char *data;
-		uint size = App->file_system->Load((asset_folder + asset_to_import.back()).c_str(), &data);
-		ilLoadL(IL_TYPE_UNKNOWN, data, size);
-
-		ilSetInteger(IL_DXTC_FORMAT, IL_DXT5); // To pick a specific DXT compression use
-		//size = ilSaveL(IL_DDS, NULL, 0); // Get the size of the data buffer
+		char *data = nullptr;
+		uint size = App->file_system->Load((asset_folder + asset_to_import.back()).c_str(), &data);		
 
 		if (size > 0)
 		{
-			char *dds_data = new char[size]; // allocate data buffer
-			if (ilSaveL(IL_DDS, dds_data, size) > 0) // Save to buffer with the ilSaveIL function
-			{
-				char buff[100];
-				sprintf_s(buff, sizeof(buff), "%lu%s", res_id.back(), ".dds");
-				imported_file.push_back(buff);
-				App->file_system->Save((lib_folder + imported_file.back()).c_str(), data, size);
-			}				
+			ilLoadL(IL_TYPE_UNKNOWN, data, size);
+			ilSetInteger(IL_DXTC_FORMAT, IL_DXT5); // To pick a specific DXT compression use
+			uint dds_size = ilSaveL(IL_DDS, NULL, 0);
 
-			RELEASE_ARRAY(data);
-			return true;
+			char *dds_data = new char[dds_size]; // allocate data buffer
+			if (ilSaveL(IL_DDS, dds_data, dds_size) > 0) // Save to buffer with the ilSaveIL function
+			{
+				char imported_filename[100];
+				sprintf_s(imported_filename, sizeof(imported_filename), "%lu%s", res_id.back(), ".dds");
+				imported_file.push_back(imported_filename);
+				if (App->file_system->Save((lib_folder + imported_file.back()).c_str(), dds_data, dds_size) != 0) success = true;
+			}
+			RELEASE_ARRAY(dds_data);
 		}
-		return false;		
+
+		RELEASE(data);
+		return success;		
 	}
 
-	//bool Import(aiMaterial *ai_material, std::vector<std::string> &asset_file, std::vector<std::string> &imported_file, std::vector<ID> &res_id)
-	//{
-	//	// Loading texture to tex_buffer
-	//	aiString path;
-	//	ai_material->GetTexture(aiTextureType_DIFFUSE, 0, &path);
+	uint static Load(const std::string &imported_file, ResourceTexture *res_mat)
+	{
+		char *data;
+		std::string lib_folder = LIBRARY_TEXTURE;
+		uint size = App->file_system->Load((lib_folder + imported_file).c_str(), &data);
 
-	//	asset_file.push_back(path.C_Str());
-	//	return Import(asset_file, imported_file, res_id);
-	//}
+		ilutRenderer(ILUT_OPENGL);
+		ilGenImages(1, &res_mat->tex_buffer);
+		ilBindImage(res_mat->tex_buffer);
+		ilLoadL(IL_TYPE_UNKNOWN, data, size);
+		res_mat->tex_buffer = ilutGLBindTexImage();
+
+		sprintf_s(res_mat->tex_path, SHORT_STRING, "%s%s", "Textures/", res_mat->file.c_str());
+
+		return size;
+	}
 };
 
 #endif // !__MATERIALIMPORTER_H__

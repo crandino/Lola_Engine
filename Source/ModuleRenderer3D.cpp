@@ -378,8 +378,8 @@ void ModuleRenderer3D::ShowGameObject(const GameObject *go)
 			{
 				glEnable(GL_TEXTURE_2D);
 				glBindTexture(GL_TEXTURE_2D, 0); // Cleanning bind buffer;
-				glBindTexture(GL_TEXTURE_2D, comp_mat->tex_buffer);		
-				glColor3f(comp_mat->color_diffuse.r, comp_mat->color_diffuse.g, comp_mat->color_diffuse.b);
+				glBindTexture(GL_TEXTURE_2D, comp_mat->resource->tex_buffer);		
+				//glColor3f(comp_mat->color_diffuse.r, comp_mat->color_diffuse.g, comp_mat->color_diffuse.b);
 			}
 		}			
 

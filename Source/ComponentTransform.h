@@ -31,6 +31,7 @@ public:
 	ComponentTransform();
 	bool Update();
 	void SetComponent(aiNode *go);
+	void AddResource(const Resource *res) {}
 
 	void ShowEditorInfo();	
 

@@ -17,7 +17,7 @@ class MeshImporter : public Importer
 
 public:
 
-	uint Save(char **data, const Mesh *mesh)
+	uint static Save(char **data, const Mesh *mesh)
 	{
 		/* Save follows that sequence: indices, vertices, colors, normals and texture coordinates. Each component consists
 		of num_of_elements and array of that elements.*/
@@ -78,7 +78,7 @@ public:
 		return size;
 	}
 
-	uint Load(const std::string &imported_file, ResourceMesh *mesh)
+	uint static Load(const std::string &imported_file, ResourceMesh *mesh)
 	{
 		char *data;
 		std::string lib_folder = LIBRARY_MESH;
@@ -142,7 +142,7 @@ public:
 		return bytes;
 	}
 
-	void Load(const aiMesh *ai_mesh, Mesh *mesh)
+	void static Load(const aiMesh *ai_mesh, Mesh *mesh)
 	{
 		// Copying indicies (faces on Assimp)
 		if (ai_mesh->HasFaces())
@@ -182,7 +182,7 @@ public:
 		}		
 	}
 
-	bool Import(const aiMesh *ai_mesh, std::vector<std::string> &imported_files, ID res_id)
+	bool static Import(const aiMesh *ai_mesh, std::vector<std::string> &imported_files, ID res_id)
 	{
 		std::string lib_folder = LIBRARY_MESH;
 		// Loading Mesh from Assimp
