@@ -43,15 +43,15 @@ public:
 		}
 	}
 
-	bool static Import(std::vector<std::string> &asset_to_import, std::vector<std::string> &imported_file, std::vector<ID> &res_id)
+	bool static Import(const std::string &asset_to_import, std::string &imported_file, ID &res_id)
 	{
 		bool success = false;
 
 		std::string asset_folder = "Textures/";
 		std::string lib_folder = LIBRARY_TEXTURE;		
 
-		char *data = nullptr;
-		uint size = App->file_system->Load((asset_folder + asset_to_import.back()).c_str(), &data);		
+		char *data;
+		uint size = App->file_system->Load((asset_folder + asset_to_import).c_str(), &data);		
 
 		if (size > 0)
 		{
@@ -63,9 +63,9 @@ public:
 			if (ilSaveL(IL_DDS, dds_data, dds_size) > 0) // Save to buffer with the ilSaveIL function
 			{
 				char imported_filename[100];
-				sprintf_s(imported_filename, sizeof(imported_filename), "%lu%s", res_id.back(), ".dds");
-				imported_file.push_back(imported_filename);
-				if (App->file_system->Save((lib_folder + imported_file.back()).c_str(), dds_data, dds_size) != 0) success = true;
+				sprintf_s(imported_filename, sizeof(imported_filename), "%lu%s", res_id, ".dds");
+				imported_file = imported_filename;
+				if (App->file_system->Save((lib_folder + imported_file).c_str(), dds_data, dds_size) != 0) success = true;
 			}
 			RELEASE_ARRAY(dds_data);
 		}

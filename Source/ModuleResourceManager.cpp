@@ -38,18 +38,26 @@ UPDATE_STATUS ModuleResourceManager::PreUpdate(float dt)
 		std::vector<std::string> files, dirs;
 		App->file_system->ExploreFiles("Assets", files, dirs, true);
 
+		bool resources_changed = false;
+
 		// Getting new files or overwritten files
 		for (uint i = 0; i < files.size(); ++i)
 		{
 			ID id = Find(files[i]);
 			if (id == 0)
+			{
 				ImportFile(files[i]);   // Asset new -> import!
+				resources_changed = true;
+			}				
 			else if (IsUpdated(id))
 			{
 				ID id_removed = DeleteImportedFile(files[i]);  // Asset updated -> reimport!
 				ImportFile(files[i], id_removed);
+				resources_changed = true;
 			}
 		}
+
+		if (resources_changed) CreateJSONResourceInfo();
 
 		check_timer.Start(); // Resetting timer;
 	}	
@@ -104,24 +112,27 @@ ID ModuleResourceManager::ImportFile(std::string &new_asset_file, ID force_id)
 	ID res_id = force_id == 0 ? GenerateID() : force_id;
 	int timestamp = -1;
 
-	std::vector<std::string> imported_files, asset_files;
-	asset_files.push_back(new_asset_file);
-
-	std::vector<ID> IDs;
-	IDs.push_back(res_id);
+	std::vector<std::string> imported_files;
+	std::vector<std::string> asset_files;
+	std::vector<ID> IDs;	
 
 	std::vector<RESOURCE_TYPE> types;
-
-	bool successful_import = false;
-
 	RESOURCE_TYPE type = GetTypeOfFile(new_asset_file);
+
+	// Creating an entry for each new asset properties
+	asset_files.push_back(new_asset_file);
+	IDs.push_back(res_id);
 	types.push_back(type);
+
+	bool successful_import = false;	
 
 	switch (type)
 	{
 		case(RESOURCE_TYPE::TEXTURES):
 		{			
-			successful_import = MaterialImporter::Import(asset_files, imported_files, IDs);
+			imported_files.push_back("");			
+
+			successful_import = MaterialImporter::Import(asset_files.back(), imported_files.back(), IDs.back());
 			if (successful_import) timestamp = App->file_system->GetLastTimeMod(new_asset_file.c_str(), "Textures/");
 			break;
 		}
@@ -395,4 +406,25 @@ ID ModuleResourceManager::FindFileIdJSON(const JSONParser &json, const char *sce
 	}
 
 	return 0;
+}
+
+void ModuleResourceManager::CreateJSONResourceInfo()
+{
+	JSONParser resources_info;
+
+	for (std::map<ID, Resource*>::iterator it = resources.begin(); it != resources.end(); ++it)
+	{
+		JSONParser item;
+		//item.AddString("File", (*it).second->file.c_str());
+		item.AddString("File Imported", (*it).second->imported_file.c_str());
+		item.AddUUID("ID", (*it).second->id);
+		item.AddInt("Type", (*it).second->type);
+		resources_info.AddArray((*it).second->file.c_str());
+		resources_info.AddArray(item);
+	}
+
+	char *serialized_string;
+	resources_info.Save(&serialized_string);
+	App->file_system->Save("Resources.dat", serialized_string, strlen(serialized_string));
+	resources_info.FreeBuffer(serialized_string);
 }

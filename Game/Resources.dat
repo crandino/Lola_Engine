@@ -1,0 +1,135 @@
+{
+    "primitives_with_parent.fbx": [
+        {
+            "File Imported": "7449447.scene",
+            "ID": "7449447",
+            "Type": 3
+        }
+    ],
+    "pSphere1": [
+        {
+            "File Imported": "7449448.msh",
+            "ID": "7449448",
+            "Type": 2
+        }
+    ],
+    "grass.png": [
+        {
+            "File Imported": "7449449.dds",
+            "ID": "7449449",
+            "Type": 1
+        }
+    ],
+    "pCube1": [
+        {
+            "File Imported": "7449450.msh",
+            "ID": "7449450",
+            "Type": 2
+        }
+    ],
+    "Stone wall.jpg": [
+        {
+            "File Imported": "7449451.dds",
+            "ID": "7449451",
+            "Type": 1
+        }
+    ],
+    "pTorus1": [
+        {
+            "File Imported": "7449452.msh",
+            "ID": "7449452",
+            "Type": 2
+        }
+    ],
+    "scratch_metal.jpg": [
+        {
+            "File Imported": "7449453.dds",
+            "ID": "7449453",
+            "Type": 1
+        }
+    ],
+    "pPyramid1": [
+        {
+            "File Imported": "7449454.msh",
+            "ID": "7449454",
+            "Type": 2
+        }
+    ],
+    "pPyramid2": [
+        {
+            "File Imported": "7449455.msh",
+            "ID": "7449455",
+            "Type": 2
+        }
+    ],
+    "pPyramid3": [
+        {
+            "File Imported": "7449456.msh",
+            "ID": "7449456",
+            "Type": 2
+        }
+    ],
+    "building 01_c.tga": [
+        {
+            "File Imported": "66728489.dds",
+            "ID": "66728489",
+            "Type": 1
+        }
+    ],
+    "building 06_ c .tga": [
+        {
+            "File Imported": "697004208.dds",
+            "ID": "697004208",
+            "Type": 1
+        }
+    ],
+    "building05 _c.tga": [
+        {
+            "File Imported": "821617898.dds",
+            "ID": "821617898",
+            "Type": 1
+        }
+    ],
+    "Building_V01_C.png": [
+        {
+            "File Imported": "1094390660.dds",
+            "ID": "1094390660",
+            "Type": 1
+        }
+    ],
+    "building03_c.tga": [
+        {
+            "File Imported": "1184596366.dds",
+            "ID": "1184596366",
+            "Type": 1
+        }
+    ],
+    "building_025_c.tga": [
+        {
+            "File Imported": "1464825389.dds",
+            "ID": "1464825389",
+            "Type": 1
+        }
+    ],
+    "building_016_c.tga": [
+        {
+            "File Imported": "1485255166.dds",
+            "ID": "1485255166",
+            "Type": 1
+        }
+    ],
+    "building 06_ c.tga": [
+        {
+            "File Imported": "1589477556.dds",
+            "ID": "1589477556",
+            "Type": 1
+        }
+    ],
+    "Building_V02_C.png": [
+        {
+            "File Imported": "1999827947.dds",
+            "ID": "1999827947",
+            "Type": 1
+        }
+    ]
+}

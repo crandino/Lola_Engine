@@ -182,7 +182,7 @@ public:
 		}		
 	}
 
-	bool static Import(const aiMesh *ai_mesh, std::vector<std::string> &imported_files, ID res_id)
+	bool static Import(const aiMesh *ai_mesh, std::string &imported_file, ID &res_id)
 	{
 		std::string lib_folder = LIBRARY_MESH;
 		// Loading Mesh from Assimp
@@ -192,13 +192,11 @@ public:
 		// Saving Mesh to own format file
 		char file[SHORT_STRING];
 		sprintf_s(file, SHORT_STRING, "%lu%s", res_id, ".msh");
-		std::string file_name = file;
+		imported_file = file;
 
 		char *buf;
 		uint size = Save(&buf, mesh);
-		bool ret = App->file_system->Save((lib_folder + file_name).c_str(), buf, size) != 0 ? true : false;
-
-		imported_files.push_back(file);
+		bool ret = App->file_system->Save((lib_folder + imported_file).c_str(), buf, size) != 0 ? true : false;
 
 		RELEASE_ARRAY(buf);
 		RELEASE(mesh);

@@ -1,0 +1,61 @@
+{
+    "ID": "10860876",
+    "File": "primitives_with_parent.fbx",
+    "Imported File": "10860876.scene",
+    "primitives_with_parent.fbx": [
+        {
+            "Type": 2,
+            "ID": "10860877",
+            "File": "pSphere1",
+            "Imported File": "10860877.msh"
+        },
+        {
+            "Type": 1,
+            "ID": "10860878",
+            "File": "grass.png",
+            "Imported File": "10860878.dds"
+        },
+        {
+            "Type": 2,
+            "ID": "10860879",
+            "File": "pCube1",
+            "Imported File": "10860879.msh"
+        },
+        {
+            "Type": 1,
+            "ID": "10860880",
+            "File": "Stone wall.jpg",
+            "Imported File": "10860880.dds"
+        },
+        {
+            "Type": 2,
+            "ID": "10860881",
+            "File": "pTorus1",
+            "Imported File": "10860881.msh"
+        },
+        {
+            "Type": 1,
+            "ID": "10860882",
+            "File": "scratch_metal.jpg",
+            "Imported File": "10860882.dds"
+        },
+        {
+            "Type": 2,
+            "ID": "10860883",
+            "File": "pPyramid1",
+            "Imported File": "10860883.msh"
+        },
+        {
+            "Type": 2,
+            "ID": "10860884",
+            "File": "pPyramid2",
+            "Imported File": "10860884.msh"
+        },
+        {
+            "Type": 2,
+            "ID": "10860885",
+            "File": "pPyramid3",
+            "Imported File": "10860885.msh"
+        }
+    ]
+}

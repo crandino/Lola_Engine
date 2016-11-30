@@ -46,7 +46,9 @@ private:
 	Resource* Get(ID uid);
 	RESOURCE_TYPE GetTypeOfFile(const std::string &file) const;
 	
+	// JSON related...
 	ID FindFileIdJSON(const JSONParser &json, const char *scene_name, const char *file) const;
+	void CreateJSONResourceInfo();
 };
 
 #endif // !__MODULERESOURCEMANAGER_H__

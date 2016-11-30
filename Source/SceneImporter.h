@@ -28,24 +28,26 @@ public:
 
 	bool static Import(std::vector<std::string> &assets_to_import, std::vector<std::string> &imported_files, std::vector<ID> &IDs, std::vector<RESOURCE_TYPE> &types)
 	{
+		// Creating JSON scene information
+		char imported_filename[SHORT_STRING];
+		sprintf_s(imported_filename, SHORT_STRING, "%lu%s", IDs.back(), ".scene");
+
 		JSONParser json_scene;
-		json_scene.AddUUID("ID", IDs.front());
-		json_scene.AddString("File", assets_to_import.front().c_str());
-		char file[SHORT_STRING];
-		sprintf_s(file, SHORT_STRING, "%lu%s", IDs.front(), ".scene");
-		json_scene.AddString("Imported File", file);
-		imported_files.push_back(file);
+		json_scene.AddUUID("ID", IDs.back());
+		json_scene.AddString("File", assets_to_import.back().c_str());		
+		json_scene.AddString("Imported File", imported_filename);
+		imported_files.push_back(imported_filename);
 
 		std::string models = "Models/";
 		std::vector<std::string> unique_textures;
 		
-		const aiScene* scene = aiImportFileEx((models + assets_to_import.front()).c_str(), aiProcessPreset_TargetRealtime_MaxQuality, App->file_system->GetAssimpIO());
+		const aiScene* scene = aiImportFileEx((models + assets_to_import.back()).c_str(), aiProcessPreset_TargetRealtime_MaxQuality, App->file_system->GetAssimpIO());
 
 		if (scene != nullptr)
 		{
 			if (scene->HasMeshes())
 			{
-				json_scene.AddArray(assets_to_import.front().c_str());
+				json_scene.AddArray(assets_to_import.back().c_str());
 
 				std::stack<aiNode*> nodes_stack;
 				nodes_stack.push(scene->mRootNode);
@@ -98,64 +100,50 @@ public:
 
 								if (accepted)
 								{
-									// ------  MESH -------
-									JSONParser mesh;
-
-									// Type
-									mesh.AddInt("Type", RESOURCE_TYPE::MESHES);
-									types.push_back(RESOURCE_TYPE::MESHES);
-
-									// New ID for this mesh inside FBX
-									ID next_id = IDs.back() + 1;
-									mesh.AddUUID("ID", next_id);
+									// Properties
+									types.push_back(RESOURCE_TYPE::MESHES);  // Type
+									ID next_id = IDs.back() + 1;			 // Resource ID
 									IDs.push_back(next_id);
+									assets_to_import.push_back(name);		 // Asset filename	
+									imported_files.push_back(std::string()); // Imported filename
+									MeshImporter::Import(ai_mesh, imported_files.back(), IDs.back());  
 
-									// Asset filename
+									// JSON entry for this mesh
+									JSONParser mesh;									
+									mesh.AddInt("Type", RESOURCE_TYPE::MESHES);
+									mesh.AddUUID("ID", next_id);
 									mesh.AddString("File", name);
-									assets_to_import.push_back(name);								
-
-									// Importing meshes to own file format (.msh)
-									MeshImporter mesh_importer;
-									mesh_importer.Import(ai_mesh, imported_files, IDs.back());
-									mesh.AddString("Imported File", imported_files.back().c_str());	
-
-									json_scene.AddArray(mesh);  // Creating JSON entry for this mesh																
+									mesh.AddString("Imported File", imported_files.back().c_str());
+									json_scene.AddArray(mesh);																									
 
 									// ------  MATERIAL -------
 									aiMaterial *ai_material = scene->mMaterials[ai_mesh->mMaterialIndex];
 									if (ai_material->GetTextureCount(aiTextureType_DIFFUSE) > 0)
 									{
 										// Where is this texture?
-										aiString path;
-										ai_material->GetTexture(aiTextureType_DIFFUSE, 0, &path);
+										aiString path; ai_material->GetTexture(aiTextureType_DIFFUSE, 0, &path);
 										std::string new_texture = App->file_system->GetFileFromDirPath(path.C_Str());
 
 										//Adding new texture if there isn't something similar...
 										if (std::find(unique_textures.begin(), unique_textures.end(), new_texture) == unique_textures.end())
 										{
 											unique_textures.push_back(new_texture);
-											assets_to_import.push_back(new_texture);
 
-											JSONParser material;
-
-											// Type material
-											material.AddInt("Type", RESOURCE_TYPE::TEXTURES);
-											types.push_back(RESOURCE_TYPE::TEXTURES);
-
-											// New ID for this texture
-											ID next_id = IDs.back() + 1;
-											material.AddUUID("ID", next_id);
+											// Properties
+											types.push_back(RESOURCE_TYPE::TEXTURES);  // Type
+											ID next_id = IDs.back() + 1;			   // Resource ID
 											IDs.push_back(next_id);
+											assets_to_import.push_back(new_texture);   // Asset filename	
+											imported_files.push_back(std::string());   // Imported filename
+											MaterialImporter::Import(assets_to_import.back(), imported_files.back(), IDs.back());
 
-											// Importing meshes to own file format (.msh)
-											MaterialImporter material_importer;
-											material_importer.Import(assets_to_import, imported_files, IDs);
-
-											// Asset filename and imported file
+											// JSON entry for this texture
+											JSONParser material;									
+											material.AddInt("Type", RESOURCE_TYPE::TEXTURES);
+											material.AddUUID("ID", next_id);
 											material.AddString("File", assets_to_import.back().c_str());
 											material.AddString("Imported File", imported_files.back().c_str());
-
-											json_scene.AddArray(material);  // Creating JSON entry for this texture	
+											json_scene.AddArray(material);							
 										}				
 									}									
 								}
@@ -172,6 +160,7 @@ public:
 				App->file_system->Save((lib_folder + imported_files.front()).c_str(), serialized_string, strlen(serialized_string));
 				json_scene.FreeBuffer(serialized_string);
 			}
+
 			aiReleaseImport(scene);
 			return true;
 		}	
