@@ -359,13 +359,13 @@ void ModuleRenderer3D::ShowGameObject(const GameObject *go)
 		glEnableClientState(GL_NORMAL_ARRAY);
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
-		glBindBuffer(GL_ARRAY_BUFFER, comp_mesh->resource->mesh_data.id_vertices);
+		glBindBuffer(GL_ARRAY_BUFFER, comp_mesh->resource->mesh_data->id_vertices);
 		glVertexPointer(3, GL_FLOAT, 0, NULL);
 
-		glBindBuffer(GL_ARRAY_BUFFER, comp_mesh->resource->mesh_data.id_normals);
+		glBindBuffer(GL_ARRAY_BUFFER, comp_mesh->resource->mesh_data->id_normals);
 		glNormalPointer(GL_FLOAT, 0, NULL);
 
-		glBindBuffer(GL_ARRAY_BUFFER, comp_mesh->resource->mesh_data.id_tex_coord);
+		glBindBuffer(GL_ARRAY_BUFFER, comp_mesh->resource->mesh_data->id_tex_coord);
 		glTexCoordPointer(2, GL_FLOAT, 0, NULL);		
 
 		if (comp_mesh->wire)
@@ -382,8 +382,8 @@ void ModuleRenderer3D::ShowGameObject(const GameObject *go)
 			}
 		}			
 
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, comp_mesh->resource->mesh_data.id_indices);
-		glDrawElements(GL_TRIANGLES, comp_mesh->resource->mesh_data.num_indices, GL_UNSIGNED_INT, NULL);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, comp_mesh->resource->mesh_data->id_indices);
+		glDrawElements(GL_TRIANGLES, comp_mesh->resource->mesh_data->num_indices, GL_UNSIGNED_INT, NULL);
 		glColor3f(1.0f, 1.0f, 1.0f);
 
 		 //Is this GO selected?
@@ -392,7 +392,7 @@ void ModuleRenderer3D::ShowGameObject(const GameObject *go)
 			glLineWidth(1.5f);
 			glColor3f(1.0f, 1.0f, 0.0f);
 			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-			glDrawElements(GL_TRIANGLES, comp_mesh->resource->mesh_data.num_indices, GL_UNSIGNED_INT, NULL);
+			glDrawElements(GL_TRIANGLES, comp_mesh->resource->mesh_data->num_indices, GL_UNSIGNED_INT, NULL);
 			glColor3f(1.0f, 1.0f, 1.0f);
 			glLineWidth(1.0f);
 		}

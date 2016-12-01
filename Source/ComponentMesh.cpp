@@ -36,7 +36,7 @@ void ComponentMesh::AddResource(const Resource *res)
 	resource = (ResourceMesh*)res;
 
 	//// Calcultating AABB	
-	initial_bounding_box.Enclose((math::float3*) resource->mesh_data.vertices, resource->mesh_data.num_vertices);
+	initial_bounding_box.Enclose((math::float3*) resource->mesh_data->vertices, resource->mesh_data->num_vertices);
 	ApplyTransformToAABB();
 }
 
@@ -98,10 +98,10 @@ void ComponentMesh::ShowEditorInfo()
 
 	ImGui::Checkbox("Active##Mesh", &active);
 	ImGui::Checkbox("Wireframe##Mesh", &wire);
-	ImGui::Text("Number of vertices: %d", resource->mesh_data.num_vertices);
-	ImGui::Text("Number of normals: %d", resource->mesh_data.num_normals);
-	ImGui::Text("Number of texture coordinates: %d", resource->mesh_data.num_tex_coord);
-	ImGui::Text("Number of indices: %d", resource->mesh_data.num_indices);
+	ImGui::Text("Number of vertices: %d", resource->mesh_data->num_vertices);
+	ImGui::Text("Number of normals: %d", resource->mesh_data->num_normals);
+	ImGui::Text("Number of texture coordinates: %d", resource->mesh_data->num_tex_coord);
+	ImGui::Text("Number of indices: %d", resource->mesh_data->num_indices);
 
 	ImGui::Separator();
 }

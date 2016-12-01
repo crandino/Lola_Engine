@@ -46,6 +46,11 @@ public:
 		return true;
 	}
 
+	virtual bool UnloadFromMemory()
+	{
+		return true;
+	}
+
 	bool LoadedInMemory() const
 	{
 		return loaded_in_memory;
