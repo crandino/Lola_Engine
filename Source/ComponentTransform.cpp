@@ -233,9 +233,16 @@ bool ComponentTransform::Save(JSONParser &go)
 	JSONParser comp_trans;
 
 	comp_trans.AddInt("Type", type);
+
 	comp_trans.AddPoints("Local position", local_position, 3);
-	comp_trans.AddPoints("World transform", world_transform, 16);
-	comp_trans.AddPoints("Quaternion", local_rotation_quat, 4);
+	comp_trans.AddPoints("Local scale", local_scale, 3);
+	comp_trans.AddPoints("Local rotation", local_rotation_quat, 4);
+
+	comp_trans.AddPoints("Parent transform", parent_transform, 16);
+
+	comp_trans.AddPoints("Forward", forward, 3);
+	comp_trans.AddPoints("Left", left, 3);
+	comp_trans.AddPoints("Up", up, 3);
 
 	go.AddArray(comp_trans);
 
@@ -244,8 +251,22 @@ bool ComponentTransform::Save(JSONParser &go)
 
 bool ComponentTransform::Load(JSONParser &comp)
 {
-	comp.GetPoints("Local position", local_position, 3);	
-	comp.GetPoints("World transform", world_transform, 16);
+	comp.GetPoints("Local position", local_position, 3);
+	comp.GetPoints("Local scale", local_scale, 3);
+	comp.GetPoints("Local rotation", local_rotation_quat, 4);
+
+	comp.GetPoints("Parent transform", parent_transform, 16);
+
+	comp.GetPoints("Forward", forward, 3);
+	comp.GetPoints("Left", left, 3);
+	comp.GetPoints("Up", up, 3);
+
+	CalcWorldTransformMatrix();
+
+	// Inspector will show Euler representation on degrees to be more understandable.
+	local_rotation_euler_deg.x = math::RadToDeg(local_rotation_euler_rad.x);
+	local_rotation_euler_deg.y = math::RadToDeg(local_rotation_euler_rad.y);
+	local_rotation_euler_deg.z = math::RadToDeg(local_rotation_euler_rad.z);
 
 	return true;
 }

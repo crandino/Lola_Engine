@@ -132,24 +132,6 @@ UPDATE_STATUS ModuleGameObjectManager::Update(float dt)
 // PostUpdate present buffer to screen
 UPDATE_STATUS ModuleGameObjectManager::PostUpdate(float dt)
 {
-	if (App->input->GetKey(SDL_SCANCODE_6))
-	{
-		for (uint i = 0; i < list_of_gos.size(); ++i)
-		{
-			const GameObject *curr_go = list_of_gos[i];
-
-			for (uint i = 0; i < curr_go->components.size(); ++i)
-			{
-				switch (curr_go->components[i]->GetType())
-				{
-				case(COMPONENT_TYPE::MESH):
-					((ComponentMesh*)curr_go->components[i])->Load();
-					break;
-				}
-			}
-		}
-	}
-
 	return UPDATE_CONTINUE;
 }
 
@@ -317,7 +299,7 @@ bool ModuleGameObjectManager::Save(JSONParser &module)
 
 bool ModuleGameObjectManager::Load(JSONParser &module)
 {
-	std::vector<GameObject*> new_gos;
+	std::vector<GameObject*> list_of_gos_loaded;
 
 	for (int i = 0; i < module.GetArrayCount("Game Objects"); ++i)
 	{
@@ -325,22 +307,22 @@ bool ModuleGameObjectManager::Load(JSONParser &module)
 		GameObject *new_go = CreateGameObject(go.GetString("Name"));
 
 		new_go->Load(go);
-		new_gos.push_back(new_go);
+		list_of_gos_loaded.push_back(new_go);
 	}
 
 	// Now, linking gameobjects.
-	for (uint i = 0; i < new_gos.size(); ++i)
+	for (uint i = 0; i < list_of_gos_loaded.size(); ++i)
 	{
-		GameObject *parent = GetGameObject(new_gos[i]->parent_UUID, new_gos);
+		GameObject *parent = GetGameObject(list_of_gos_loaded[i]->parent_UUID, list_of_gos_loaded);
 		if (parent)
 		{
-			new_gos[i]->parent = parent;   // Assigning parent
-			parent->children.push_back(new_gos[i]);  // Assigning as child
+			list_of_gos_loaded[i]->parent = parent;   // Assigning parent
+			parent->children.push_back(list_of_gos_loaded[i]);  // Assigning as child
 		}
 		else
 		{
-			new_gos[i]->parent = root;   // Assigning root as parent
-			root->children.push_back(new_gos[i]);  // Assigning a child on root
+			list_of_gos_loaded[i]->parent = root;   // Assigning root as parent
+			root->children.push_back(list_of_gos_loaded[i]);  // Assigning a child on root
 		}			
 	}
 		

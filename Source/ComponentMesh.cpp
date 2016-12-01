@@ -4,12 +4,6 @@
 #include "GameObject.h"
 #include "ComponentTransform.h"
 
-#include "Application.h"
-#include "ModuleFileSystem.h"
-#include "ModuleRenderer3D.h"
-
-#include "MeshImporter.h"
-
 #include "Assimp\include\mesh.h"
 #include "imgui\imgui.h"
 
@@ -125,26 +119,17 @@ bool ComponentMesh::Save(JSONParser &go)
 
 	comp_mesh.AddInt("Type", type);
 	comp_mesh.AddBoolean("Wire", wire);
-
-	MeshImporter mesh_importer;
-	char save_filename[SHORT_STRING]; sprintf_s(save_filename, SHORT_STRING, "%lu%s", UUID, ".msh");
-	char *buf;
-	unsigned int size = mesh_importer.Save(&buf, &resource->mesh_data);
-
-	App->file_system->Save(save_filename, buf, size);
-	RELEASE_ARRAY(buf);
+	comp_mesh.AddUUID("Resource ID", resource->id);
 
 	go.AddArray(comp_mesh);
 
 	return true;
 }
 
-void ComponentMesh::Load()
+bool ComponentMesh::Load(JSONParser &comp)
 {
-	MeshImporter mesh_importer;
-	char save_filename[SHORT_STRING]; sprintf_s(save_filename, SHORT_STRING, "%s%lu%s", App->file_system->GetSaveDirectory(), UUID, ".msh");
-	char *buf;
-	App->file_system->Load(save_filename, &buf);
-	//Mesh test;
-	//unsigned int size = mesh_importer.Load(&buf, &resource->mesh_data);
+	wire = comp.GetBoolean("Wire");
+	AddResource(App->resource_manager->Get(comp.GetUUID("Resource ID")));
+
+	return true;
 }

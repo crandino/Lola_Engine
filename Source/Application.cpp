@@ -107,9 +107,9 @@ bool Application::Init()
 void Application::PrepareUpdate()
 {
 	if (App->input->GetKey(SDL_SCANCODE_F8) == KEY_DOWN)
-		SaveGame("Scene/Test.json");
+		SaveGame("Test.json");
 	if (App->input->GetKey(SDL_SCANCODE_F9) == KEY_DOWN)
-		LoadGame("Scene/Test.json");
+		LoadGame("Test.json");
 
 	perf_info.PreUpdate();
 }
@@ -192,8 +192,9 @@ void Application::LoadConfig(const char *file_config, JSONParser &root)
 
 void Application::LoadGame(const char *file)
 {
-	want_to_load = true;
-	sprintf_s(load_game, SHORT_STRING, "%s%s", App->file_system->GetSaveDirectory(), file);
+	want_to_load = true;	
+	//sprintf_s(load_game, SHORT_STRING, "%s%s", App->file_system->GetSaveDirectory(), file);
+	sprintf_s(load_game, SHORT_STRING, "%s", file);
 }
 
 void Application::SaveGame(const char *file)

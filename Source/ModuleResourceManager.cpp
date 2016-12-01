@@ -42,7 +42,7 @@ ModuleResourceManager::~ModuleResourceManager()
 bool ModuleResourceManager::Awake(JSONParser &config)
 {
 	char *buf;
-	if (App->file_system->Load("Library / Resources.dat", &buf) != 0)
+	if (App->file_system->Load("Library/Resources.dat", &buf) != 0)
 	{
 		// Creating resources for files already imported on last session
 		JSONParser resources_info(buf);
@@ -93,7 +93,8 @@ UPDATE_STATUS ModuleResourceManager::PreUpdate(float dt)
 			}
 		}
 
-		if (resources_changed) CreateJSONResourceInfo();
+		if (resources_changed)
+			CreateJSONResourceInfo();
 		check_timer.Start(); // Resetting timer;
 	}	
 	

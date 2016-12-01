@@ -90,7 +90,30 @@ bool ComponentMaterial::Save(JSONParser &go)
 	component.AddInt("Type", type);
 	component.AddInt("Opacity", opacity);
 
+	component.AddPoints("Color diffuse", color_diffuse, 3);
+	component.AddPoints("Color specular", color_specular, 3);
+	component.AddPoints("Color ambient", color_ambient, 3);
+	component.AddPoints("Color emissive", color_emissive, 3);
+	component.AddPoints("Color transparent", color_transparent, 3);
+
+	component.AddUUID("Resource ID", resource->id);
+
 	go.AddArray(component);
+
+	return true;
+}
+
+bool ComponentMaterial::Load(JSONParser &comp)
+{
+	opacity = comp.GetInt("Opacity");
+
+	comp.GetPoints("Color diffuse", color_diffuse, 3);
+	comp.GetPoints("Color specular", color_specular, 3);
+	comp.GetPoints("Color ambient", color_ambient, 3);
+	comp.GetPoints("Color emissive", color_emissive, 3);
+	comp.GetPoints("Color transparent", color_transparent, 3);
+	
+	AddResource(App->resource_manager->Get(comp.GetUUID("Resource ID")));
 
 	return true;
 }

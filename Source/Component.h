@@ -3,6 +3,9 @@
 
 #include "JSONParser.h"
 
+#include "Application.h"
+#include "ModuleResourceManager.h"
+
 class GameObject;
 class Resource;
 
@@ -42,7 +45,7 @@ public:
 	virtual void AddResource(const Resource *res) = 0;
 
 	virtual bool Save(JSONParser &go);
-	virtual bool Load(JSONParser &go);
+	virtual bool Load(JSONParser &component);
 };
 
 #endif //!__COMPONENT_H__

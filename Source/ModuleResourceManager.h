@@ -29,6 +29,8 @@ public:
 	ID DeleteImportedFile(std::string &asset_to_delete);
 	ID GenerateID();
 
+	Resource* Get(ID uid);
+
 	bool LoadFile(const char *file_to_load);
 
 private:
@@ -43,8 +45,7 @@ private:
 	ID Find(const std::string &asset_to_find) const;
 	void DeleteEntry(ID id);
 	bool IsUpdated(ID id) const;
-
-	Resource* Get(ID uid);
+	
 	RESOURCE_TYPE GetTypeOfFile(const std::string &file) const;
 	
 	// JSON related...

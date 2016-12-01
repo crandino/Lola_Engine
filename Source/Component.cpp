@@ -63,7 +63,7 @@ bool Component::Save(JSONParser &go)
 	return true;
 }
 
-bool Component::Load(JSONParser &go)
+bool Component::Load(JSONParser &component)
 {
 	return true;
 }

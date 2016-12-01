@@ -18,11 +18,11 @@ public:
 	
 	ResourceTexture *resource;
 	
-	Color color_diffuse;
-	Color color_specular;
-	Color color_ambient;
-	Color color_emissive;
-	Color color_transparent;
+	math::float3  color_diffuse;
+	math::float3  color_specular;
+	math::float3  color_ambient;
+	math::float3  color_emissive;
+	math::float3  color_transparent;
 	float opacity;
 
 	ComponentMaterial();
@@ -36,7 +36,7 @@ public:
 	void ShowEditorInfo();
 	
 	bool Save(JSONParser &go);
-	//bool Load(JSONParser &comp);
+	bool Load(JSONParser &comp);
 };
 
 #endif __COMPONENTMATERIAL_H__

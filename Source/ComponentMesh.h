@@ -4,7 +4,6 @@
 #include "Component.h"
 
 #include "ResourceMesh.h"
-
 #include "MathGeoLib\MathGeoLib.h"
 
 struct aiMesh;
@@ -33,7 +32,7 @@ public:
 	void ApplyTransformToAABB();
 
 	bool Save(JSONParser &go);
-	void Load(); // TESTING!!!
+	bool Load(JSONParser &comp);
 };
 
 #endif __COMPONENTMESH_H__
