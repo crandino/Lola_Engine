@@ -7,13 +7,13 @@
 
 ComponentMaterial::ComponentMaterial() : Component()
 {
-	color_diffuse.Set(0.0f, 0.0f, 0.0f);
+	/*color_diffuse.Set(0.0f, 0.0f, 0.0f);
 	color_specular.Set(0.0f, 0.0f, 0.0f);
 	color_ambient.Set(0.0f, 0.0f, 0.0f);
 	color_emissive.Set(0.0f, 0.0f, 0.0f);
 	color_transparent.Set(0.0f, 0.0f, 0.0f);
 
-	opacity = 1.0f;
+	opacity = 1.0f;*/
 
 	type = COMPONENT_TYPE::MATERIAL;
 	name = GetNameByType(type);
@@ -46,7 +46,7 @@ void ComponentMaterial::SetComponent(aiMaterial *ai_material)
 	//else
 	//	tex_buffer = 0;
 
-	aiColor3D color;
+	/*aiColor3D color;
 	
 	ai_material->Get(AI_MATKEY_COLOR_DIFFUSE, color);
 	color_diffuse.Set(color.r, color.g, color.b);
@@ -58,7 +58,7 @@ void ComponentMaterial::SetComponent(aiMaterial *ai_material)
 	color_emissive.Set(color.r, color.g, color.b);
 	ai_material->Get(AI_MATKEY_COLOR_TRANSPARENT, color);
 	color_transparent.Set(color.r, color.g, color.b);
-	ai_material->Get(AI_MATKEY_OPACITY, opacity);
+	ai_material->Get(AI_MATKEY_OPACITY, opacity);*/
 
 }
 
@@ -88,13 +88,14 @@ bool ComponentMaterial::Save(JSONParser &go)
 	JSONParser component;
 
 	component.AddInt("Type", type);
-	component.AddInt("Opacity", opacity);
+	component.AddInt("Opacity", resource->opacity);
 
-	component.AddPoints("Color diffuse", color_diffuse, 3);
-	component.AddPoints("Color specular", color_specular, 3);
-	component.AddPoints("Color ambient", color_ambient, 3);
-	component.AddPoints("Color emissive", color_emissive, 3);
-	component.AddPoints("Color transparent", color_transparent, 3);
+	// Colors and opacity is loaded into Resource, so if the resource exists, it will have these information
+	component.AddPoints("Color diffuse", resource->color_diffuse, 3);
+	component.AddPoints("Color specular", resource->color_specular, 3);
+	component.AddPoints("Color ambient", resource->color_ambient, 3);
+	component.AddPoints("Color emissive", resource->color_emissive, 3);
+	component.AddPoints("Color transparent", resource->color_transparent, 3);
 
 	component.AddUUID("Resource ID", resource->id);
 
@@ -105,13 +106,13 @@ bool ComponentMaterial::Save(JSONParser &go)
 
 bool ComponentMaterial::Load(JSONParser &comp)
 {
-	opacity = comp.GetInt("Opacity");
+	resource->opacity = comp.GetInt("Opacity");
 
-	comp.GetPoints("Color diffuse", color_diffuse, 3);
-	comp.GetPoints("Color specular", color_specular, 3);
-	comp.GetPoints("Color ambient", color_ambient, 3);
-	comp.GetPoints("Color emissive", color_emissive, 3);
-	comp.GetPoints("Color transparent", color_transparent, 3);
+	comp.GetPoints("Color diffuse", resource->color_diffuse, 3);
+	comp.GetPoints("Color specular", resource->color_specular, 3);
+	comp.GetPoints("Color ambient", resource->color_ambient, 3);
+	comp.GetPoints("Color emissive", resource->color_emissive, 3);
+	comp.GetPoints("Color transparent", resource->color_transparent, 3);
 	
 	AddResource(App->resource_manager->Get(comp.GetUUID("Resource ID")));
 

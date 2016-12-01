@@ -18,12 +18,12 @@ public:
 	
 	ResourceTexture *resource;
 	
-	math::float3  color_diffuse;
-	math::float3  color_specular;
-	math::float3  color_ambient;
-	math::float3  color_emissive;
-	math::float3  color_transparent;
-	float opacity;
+	//math::float3  color_diffuse;
+	//math::float3  color_specular;
+	//math::float3  color_ambient;
+	//math::float3  color_emissive;
+	//math::float3  color_transparent;
+	//float opacity;
 
 	ComponentMaterial();
 	~ComponentMaterial();

@@ -319,8 +319,7 @@ bool ModuleResourceManager::LoadFile(const char *file_to_load)
 					ResourceMesh *res_mesh = (ResourceMesh*)resources[item.GetUUID("ID")];
 					if (!res_mesh->LoadedInMemory())
 					{
-						MeshImporter mesh_importer;
-						mesh_importer.Load(item.GetString("Imported File"), res_mesh);
+						MeshImporter::Load(item.GetString("Imported File"), res_mesh);
 						res_mesh->LoadToMemory();
 					}					
 					break;
@@ -329,10 +328,9 @@ bool ModuleResourceManager::LoadFile(const char *file_to_load)
 				{
 					ResourceTexture *res_mat = (ResourceTexture*)resources[item.GetUUID("ID")];
 					if (!res_mat->LoadedInMemory())
-					{
-						MaterialImporter material_importer;
-						material_importer.Load(item.GetString("Imported File"), res_mat);
-						res_mat->LoadToMemory(); // No lo hace!
+					{					
+						MaterialImporter::Load(item.GetString("Imported File"), res_mat);
+						res_mat->LoadToMemory();
 						break; 
 					}					
 				}

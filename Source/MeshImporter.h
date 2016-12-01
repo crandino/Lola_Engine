@@ -94,7 +94,9 @@ public:
 		bytes = sizeof(ranges);
 		memcpy(ranges, cursor, bytes);
 
-		if (mesh->mesh_data == nullptr) mesh->mesh_data = new Mesh();
+		// Allocating memory for Mesh data structure
+		if (mesh->mesh_data == nullptr) 
+			mesh->mesh_data = new Mesh();
 
 		mesh->mesh_data->num_indices = ranges[0];
 		mesh->mesh_data->num_vertices = ranges[1];

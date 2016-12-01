@@ -138,11 +138,10 @@ public:
 				char imported_filename[100];
 				sprintf_s(imported_filename, sizeof(imported_filename), "%lu%s", res_id, ".dds");
 				imported_file = imported_filename;
-				if (App->file_system->Save((lib_folder + imported_file).c_str(), dds_data, dds_size) != 0) success = true;
+				if (App->file_system->Save((lib_folder + imported_file).c_str(), dds_data, dds_size + color_size) != 0) success = true;
 			}
 			RELEASE_ARRAY(dds_data);
 		}
-
 		RELEASE(data);
 
 		ilShutDown();
@@ -153,23 +152,39 @@ public:
 	{
 		char *data;
 		std::string lib_folder = LIBRARY_TEXTURE;
-		uint size = App->file_system->Load((lib_folder + imported_file).c_str(), &data);
+		uint data_size = App->file_system->Load((lib_folder + imported_file).c_str(), &data);
 
-		ilutRenderer(ILUT_OPENGL);
-		ilGenImages(1, &res_mat->tex_buffer);
-		ilBindImage(res_mat->tex_buffer);
-		ilLoadL(IL_TYPE_UNKNOWN, data, size);
-		res_mat->tex_buffer = ilutGLBindTexImage();
-
-		sprintf_s(res_mat->tex_path, SHORT_STRING, "%s%s", "Textures/", res_mat->file.c_str());
-
-		return size;
-
-		// Delete buffers
-		/*void ModuleTextureLoader::DeleteBuffer(unsigned int &buffer)
+		if (data_size > 0)
 		{
-			ilDeleteImages(1, &buffer);
-		}*/
+			sprintf_s(res_mat->tex_path, SHORT_STRING, "%s%s", "Textures/", res_mat->file.c_str());
+
+			uint color_size = sizeof(math::float3) * 5 + sizeof(float); // Size for colors and opacity
+			char *cursor = data;
+			
+			res_mat->texture_size = data_size - color_size;
+			res_mat->texture_data = new char[res_mat->texture_size];
+			memcpy(res_mat->texture_data, cursor, data_size - color_size);
+			cursor += res_mat->texture_size;
+
+			memcpy(&res_mat->color_diffuse, cursor, sizeof(math::float3));
+			cursor += sizeof(math::float3);
+
+			memcpy(&res_mat->color_specular, cursor, sizeof(math::float3));
+			cursor += sizeof(math::float3);
+
+			memcpy(&res_mat->color_ambient, cursor, sizeof(math::float3));
+			cursor += sizeof(math::float3);
+
+			memcpy(&res_mat->color_transparent, cursor, sizeof(math::float3));
+			cursor += sizeof(math::float3);
+
+			memcpy(&res_mat->color_emissive, cursor, sizeof(math::float3));
+			cursor += sizeof(math::float3);
+
+			memcpy(&res_mat->opacity, cursor, sizeof(float));
+		}		
+		
+		return data_size;
 	}
 };
 
