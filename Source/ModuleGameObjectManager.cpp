@@ -104,7 +104,7 @@ UPDATE_STATUS ModuleGameObjectManager::Update(float dt)
 
 	// Frustum culling
 	const GameObject *camera = App->camera->GetEditorCamera();
-	math::Frustum frustum = ((ComponentCamera*)camera->GetComponentByType(COMPONENT_TYPE::CAMERA))->cam_frustum;
+	math::Frustum frustum = ((ComponentCamera*)fake_camera->GetComponentByType(COMPONENT_TYPE::CAMERA))->cam_frustum;
 	FrustumCulling(frustum);
 	draw_debug.DrawOcTree(oc_tree, frustum);
 

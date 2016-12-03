@@ -19,17 +19,16 @@ public:
 
 	uint static Save(char **data, const Mesh *mesh)
 	{
-		/* Save follows that sequence: indices, vertices, colors, normals and texture coordinates. Each component consists
+		/* Save follows that sequence: indices, vertices, normals and texture coordinates. Each component consists
 		of num_of_elements and array of that elements.*/
 
 		uint size = 0;
 
-		unsigned int ranges[5] = { mesh->num_indices, mesh->num_vertices, (mesh->colors) ? mesh->num_vertices : 0,
+		unsigned int ranges[4] = { mesh->num_indices, mesh->num_vertices,
 		(mesh->normals) ? mesh->num_vertices : 0, (mesh->num_tex_coord) ? mesh->num_vertices : 0 };
 
 		size = sizeof(ranges) + sizeof(uint) * mesh->num_indices + sizeof(float) * mesh->num_vertices * 3;
 
-		if (mesh->colors != nullptr) size += sizeof(float) * mesh->num_vertices * 4;
 		if (mesh->normals != nullptr) size += sizeof(float) * mesh->num_vertices * 3;
 		if (mesh->tex_coord != nullptr) size += sizeof(float) * mesh->num_vertices * 2;
 
@@ -51,14 +50,6 @@ public:
 		bytes = sizeof(float) * mesh->num_vertices * 3 ;
 		memcpy(cursor, mesh->vertices, bytes);
 		cursor += bytes;
-
-		// Storing colors...
-		if (mesh->colors != nullptr)
-		{
-			bytes = sizeof(float) * mesh->num_colors * 4;
-			memcpy(cursor, mesh->colors, bytes);
-			cursor += bytes;
-		}
 
 		// Storing normals...
 		if (mesh->normals != nullptr)
@@ -91,7 +82,7 @@ public:
 			char *cursor = data;
 
 			// Ranges: Number of indices, vertices, colors, normals and texture coordinates.
-			unsigned int ranges[5];
+			unsigned int ranges[4];
 			bytes = sizeof(ranges);
 			memcpy(ranges, cursor, bytes);
 
@@ -101,9 +92,8 @@ public:
 
 			mesh->mesh_data->num_indices = ranges[0];
 			mesh->mesh_data->num_vertices = ranges[1];
-			mesh->mesh_data->num_colors = ranges[2];
-			mesh->mesh_data->num_normals = ranges[3];
-			mesh->mesh_data->num_tex_coord = ranges[4];
+			mesh->mesh_data->num_normals = ranges[2];
+			mesh->mesh_data->num_tex_coord = ranges[3];
 			cursor += bytes;
 
 			// Loading indices...
@@ -116,16 +106,7 @@ public:
 			bytes = sizeof(float) * mesh->mesh_data->num_vertices * 3;
 			mesh->mesh_data->vertices = new math::float3[bytes];
 			memcpy(mesh->mesh_data->vertices, cursor, bytes);
-			cursor += bytes;
-
-			// Loading colors...
-			if (mesh->mesh_data->num_colors > 0)
-			{
-				bytes = sizeof(float) * mesh->mesh_data->num_colors * 4;
-				mesh->mesh_data->colors = new math::float4[bytes];
-				memcpy(mesh->mesh_data->colors, cursor, bytes);
-				cursor += bytes;
-			}
+			cursor += bytes;			
 
 			// Loading normals...
 			if (mesh->mesh_data->num_normals > 0)
@@ -165,11 +146,6 @@ public:
 		mesh->num_vertices = ai_mesh->mNumVertices;
 		mesh->vertices = new math::float3[mesh->num_vertices];
 		memcpy(mesh->vertices, ai_mesh->mVertices, sizeof(math::float3) * mesh->num_vertices);
-
-		// Copying colors...
-		mesh->num_colors = ai_mesh->mNumVertices;
-		mesh->colors = new math::float4[mesh->num_vertices];
-		memcpy(mesh->colors, ai_mesh->mColors, sizeof(math::float4) * mesh->num_vertices);
 
 		// Copying normals...
 		mesh->num_normals = ai_mesh->mNumVertices;

@@ -101,10 +101,9 @@ UPDATE_STATUS ModuleResourceManager::PreUpdate(float dt)
 	if (App->input->GetKey(SDL_SCANCODE_G) == KEY_DOWN)
 	{
 		//LoadFile("cube.fbx");
-		LoadFile("sphere.fbx");
 		//LoadFile("primitives_with_parent.fbx");
 		//LoadFile("Models/aabb_test.fbx");
-		//LoadFile("Street environment_V01.FBX");
+		LoadFile("Street environment_V01.FBX");
 		//LoadFile("Models/QuadTree_test3.fbx");
 		//LoadFile("Models/color_cubes.fbx");
 		//LoadFile("Models/conflict_octree.fbx");

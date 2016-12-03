@@ -93,7 +93,6 @@ public:
 
 			glDeleteBuffers(1, (GLuint*)&mesh_data->id_indices);
 			glDeleteBuffers(1, (GLuint*)&mesh_data->id_vertices);
-			glDeleteBuffers(1, (GLuint*)&mesh_data->id_colors);
 			glDeleteBuffers(1, (GLuint*)&mesh_data->id_tex_coord);
 			glDeleteBuffers(1, (GLuint*)&mesh_data->id_normals);
 		}

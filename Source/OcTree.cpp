@@ -31,12 +31,12 @@ bool OcTreeNode::Insert(GameObject* go)
 	bool item_inserted = false;
 
 	//Whether all children share this gameobject, it's directly inserted
-	if (SharedByMoreThanXChild(go, 8))
+	/*if (SharedByMoreThanXChild(go, 8))
 	{
 		objects.push_back(go);
 		item_inserted = true;		
-	}
-	else if (HasChildren())
+	}*/
+	/*else if (HasChildren())
 	{
 		for (int i = 0; i < 8; ++i)
 		{
@@ -46,8 +46,9 @@ bool OcTreeNode::Insert(GameObject* go)
 				break;
 			}				
 		}
-	}
-	else if(Intersects(go, box))
+	}*/
+	//else 
+	if(Intersects(go, box))
 	{
 		if (objects.size() < OCTREE_MAX_ITEMS || SharedByMoreThanXChild(go, 2))
 		{

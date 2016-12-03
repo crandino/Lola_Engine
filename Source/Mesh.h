@@ -16,10 +16,10 @@ struct Mesh
 	unsigned int num_normals = 0;
 	math::float3 *normals = nullptr;
 
-	// Colors
-	unsigned int id_colors = 0; // id in VRAM
-	unsigned int num_colors = 0;
-	math::float4 *colors = nullptr;
+	//// Colors
+	//unsigned int id_colors = 0; // id in VRAM
+	//unsigned int num_colors = 0;
+	//math::float4 *colors = nullptr;
 
 	// Tex coordinates
 	unsigned int id_tex_coord = 0; // id in VRAM
@@ -35,7 +35,6 @@ struct Mesh
 	{
 		RELEASE_ARRAY(vertices);
 		RELEASE_ARRAY(normals);
-		RELEASE_ARRAY(colors);
 		RELEASE_ARRAY(tex_coord);
 		RELEASE_ARRAY(indices);
 	}
