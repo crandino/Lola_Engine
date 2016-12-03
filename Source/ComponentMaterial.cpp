@@ -7,14 +7,6 @@
 
 ComponentMaterial::ComponentMaterial() : Component()
 {
-	/*color_diffuse.Set(0.0f, 0.0f, 0.0f);
-	color_specular.Set(0.0f, 0.0f, 0.0f);
-	color_ambient.Set(0.0f, 0.0f, 0.0f);
-	color_emissive.Set(0.0f, 0.0f, 0.0f);
-	color_transparent.Set(0.0f, 0.0f, 0.0f);
-
-	opacity = 1.0f;*/
-
 	type = COMPONENT_TYPE::MATERIAL;
 	name = GetNameByType(type);
 
@@ -23,7 +15,8 @@ ComponentMaterial::ComponentMaterial() : Component()
 
 ComponentMaterial::~ComponentMaterial()
 { 
-	//App->tex_loader->DeleteBuffer(tex_buffer);
+	if (resource->texture_data != nullptr)
+		resource->DecrReferences();		
 }
 
 bool ComponentMaterial::Update()
@@ -31,39 +24,9 @@ bool ComponentMaterial::Update()
 	return true;
 }
 
-void ComponentMaterial::SetComponent(aiMaterial *ai_material)
+void ComponentMaterial::AddResource(Resource *res)
 {
-	unsigned int numTextures = ai_material->GetTextureCount(aiTextureType_DIFFUSE);
-
-	//if (numTextures != 0)
-	//{
-	//	// Loading texture to tex_buffer
-	//	aiString path;
-	//	ai_material->GetTexture(aiTextureType_DIFFUSE, 0, &path);
-
-	//	App->tex_loader->LoadTexture(path.C_Str(), tex_buffer, this);
-	//}
-	//else
-	//	tex_buffer = 0;
-
-	/*aiColor3D color;
-	
-	ai_material->Get(AI_MATKEY_COLOR_DIFFUSE, color);
-	color_diffuse.Set(color.r, color.g, color.b);
-	ai_material->Get(AI_MATKEY_COLOR_SPECULAR, color);
-	color_specular.Set(color.r, color.g, color.b);
-	ai_material->Get(AI_MATKEY_COLOR_AMBIENT, color);
-	color_ambient.Set(color.r, color.g, color.b);
-	ai_material->Get(AI_MATKEY_COLOR_EMISSIVE, color);
-	color_emissive.Set(color.r, color.g, color.b);
-	ai_material->Get(AI_MATKEY_COLOR_TRANSPARENT, color);
-	color_transparent.Set(color.r, color.g, color.b);
-	ai_material->Get(AI_MATKEY_OPACITY, opacity);*/
-
-}
-
-void ComponentMaterial::AddResource(const Resource *res)
-{
+	res->IncrReferences();
 	resource = (ResourceTexture*)res;
 }
 
@@ -106,15 +69,15 @@ bool ComponentMaterial::Save(JSONParser &go)
 
 bool ComponentMaterial::Load(JSONParser &comp)
 {
+	AddResource(App->resource_manager->Get(comp.GetUUID("Resource ID")));
+
 	resource->opacity = comp.GetInt("Opacity");
 
 	comp.GetPoints("Color diffuse", resource->color_diffuse, 3);
 	comp.GetPoints("Color specular", resource->color_specular, 3);
 	comp.GetPoints("Color ambient", resource->color_ambient, 3);
 	comp.GetPoints("Color emissive", resource->color_emissive, 3);
-	comp.GetPoints("Color transparent", resource->color_transparent, 3);
-	
-	AddResource(App->resource_manager->Get(comp.GetUUID("Resource ID")));
+	comp.GetPoints("Color transparent", resource->color_transparent, 3);	
 
 	return true;
 }

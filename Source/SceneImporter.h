@@ -135,16 +135,16 @@ public:
 											IDs.push_back(next_id);
 											assets_to_import.push_back(new_texture);   // Asset filename	
 											imported_files.push_back(std::string());   // Imported filename
-											MaterialImporter::Import(ai_material, assets_to_import.back(), imported_files.back(), IDs.back());
+											MaterialImporter::Import(ai_material, assets_to_import.back(), imported_files.back(), IDs.back());		
 
 											// JSON entry for this texture
-											JSONParser material;									
+											JSONParser material;
 											material.AddInt("Type", RESOURCE_TYPE::TEXTURES);
 											material.AddUUID("ID", next_id);
 											material.AddString("File", assets_to_import.back().c_str());
 											material.AddString("Imported File", imported_files.back().c_str());
-											json_scene.AddArray(material);							
-										}				
+											json_scene.AddArray(material);
+										}											
 									}									
 								}
 							}

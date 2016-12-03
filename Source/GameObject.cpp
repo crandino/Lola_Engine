@@ -112,12 +112,11 @@ bool GameObject::GetFrustum(math::Frustum &frustum) const
 	return ret;
 }
 
-bool GameObject::GetMesh(const Mesh *mesh) const
+const Mesh *GameObject::GetMesh() const
 {
 	if (HasMesh())
-		mesh = ((ComponentMesh*)GetComponentByType(COMPONENT_TYPE::MESH))->resource->mesh_data;	
-
-	return mesh != nullptr ? true : false;
+		return ((ComponentMesh*)GetComponentByType(COMPONENT_TYPE::MESH))->resource->mesh_data;	
+	return nullptr;
 }
 
  bool GameObject::HasMesh() const
@@ -169,31 +168,12 @@ bool GameObject::GetMesh(const Mesh *mesh) const
 
 		 switch ((COMPONENT_TYPE)component.GetInt("Type"))
 		 {
-			 case COMPONENT_TYPE::TRANSFORM:
-			 {
-				 comp = (Component*)AddComponent(COMPONENT_TYPE::TRANSFORM);
-				 comp->Load(component);
-				 break;
-			 }			 
-			 case COMPONENT_TYPE::MESH:
-			 {
-				 comp = (Component*)AddComponent(COMPONENT_TYPE::MESH);
-				 comp->Load(component);
-				 break;
-			 }
-			 case COMPONENT_TYPE::MATERIAL:
-			 {
-				 comp = (Component*)AddComponent(COMPONENT_TYPE::MATERIAL);
-				 comp->Load(component);
-				 break;
-			 }
-			 case COMPONENT_TYPE::CAMERA:
-			 {
-				 comp = (Component*)AddComponent(COMPONENT_TYPE::CAMERA);
-				 comp->Load(component);
-				 break;
-			 }
+			 case COMPONENT_TYPE::TRANSFORM: comp = (Component*)AddComponent(COMPONENT_TYPE::TRANSFORM); break;					 
+			 case COMPONENT_TYPE::MESH: comp = (Component*)AddComponent(COMPONENT_TYPE::MESH); break;			 
+			 case COMPONENT_TYPE::MATERIAL: comp = (Component*)AddComponent(COMPONENT_TYPE::MATERIAL); break;
+			 case COMPONENT_TYPE::CAMERA: comp = (Component*)AddComponent(COMPONENT_TYPE::CAMERA); break;
 		 }
+		comp->Load(component);
 	 }
 
 	 return true;

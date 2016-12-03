@@ -32,8 +32,8 @@ ModuleResourceManager::ModuleResourceManager(Application* app, bool start_enable
 {
 	sprintf_s(name, SHORT_STRING, "Resource Manager");
 
-	check_timer.Start();
 	check_interval = 2.0f;
+	check_timer.Start();	
 }
 
 ModuleResourceManager::~ModuleResourceManager()
@@ -95,22 +95,46 @@ UPDATE_STATUS ModuleResourceManager::PreUpdate(float dt)
 
 		if (resources_changed)
 			CreateJSONResourceInfo();
-		check_timer.Start(); // Resetting timer;
 	}	
 	
 	// Loading FBXs
 	if (App->input->GetKey(SDL_SCANCODE_G) == KEY_DOWN)
 	{
 		//LoadFile("cube.fbx");
-		LoadFile("primitives_with_parent.fbx");
+		LoadFile("sphere.fbx");
+		//LoadFile("primitives_with_parent.fbx");
 		//LoadFile("Models/aabb_test.fbx");
-		//LoadFile("Models/Street environment_V01.fbx");
+		//LoadFile("Street environment_V01.FBX");
 		//LoadFile("Models/QuadTree_test3.fbx");
 		//LoadFile("Models/color_cubes.fbx");
 		//LoadFile("Models/conflict_octree.fbx");
 		//LoadFile("Models/a_lot_of_balls2.fbx");
 		App->gameobject_manager->UpdateOcTree();
 	}
+
+	return UPDATE_CONTINUE;
+}
+
+UPDATE_STATUS ModuleResourceManager::PostUpdate(float dt)
+{
+	for (std::map<ID, Resource*>::iterator it = resources.begin(); it != resources.end();)
+	{
+		if ((*it).second->to_delete)
+		{
+			RELEASE((*it).second);
+			it = resources.erase(it);
+		}
+		else
+			++it;
+	}
+
+	if (check_timer.ReadSec() > check_interval)
+	{
+		FreeInactiveBuffers();
+		check_timer.Start(); // Resetting timer!
+	}
+
+
 
 	return UPDATE_CONTINUE;
 }
@@ -288,19 +312,20 @@ bool ModuleResourceManager::IsUpdated(ID id) const
 
 Resource *ModuleResourceManager::Get(ID id)
 {
-	//Resource *res = nullptr;
-	return  resources.at(id);	
-	//return (res != resources.) ? res : nullptr;
+	std::map<ID, Resource*>::iterator it = resources.find(id);
+	if (it != resources.end())
+		return resources.at(id);
+	return nullptr;
 }
 
 bool ModuleResourceManager::LoadFile(const char *file_to_load)
 {
 	ID id = Find(file_to_load);
 	if (id == 0)
-		DEBUG("File %s has not been imported!", file_to_load);
+		DEBUG("File %s has not been imported! Could not be loaded", file_to_load);
 	else
 	{
-		// Loading resources to memory
+		// Getting Scene Resource in order to load all of its components
 		Resource *res = Get(Find(file_to_load));
 		
 		char *buf;
@@ -318,21 +343,19 @@ bool ModuleResourceManager::LoadFile(const char *file_to_load)
 				{
 					ResourceMesh *res_mesh = (ResourceMesh*)resources[item.GetUUID("ID")];
 					if (!res_mesh->LoadedInMemory())
-					{
-						MeshImporter::Load(item.GetString("Imported File"), res_mesh);
-						res_mesh->LoadToMemory();
-					}					
+						MeshImporter::Load(item.GetString("Imported File"), res_mesh);						
+							
+					res_mesh->LoadToMemory();
 					break;
 				}
 			case(RESOURCE_TYPE::TEXTURES):
 				{
 					ResourceTexture *res_mat = (ResourceTexture*)resources[item.GetUUID("ID")];
-					if (!res_mat->LoadedInMemory())
-					{					
+					if (!res_mat->LoadedInMemory())				
 						MaterialImporter::Load(item.GetString("Imported File"), res_mat);
-						res_mat->LoadToMemory();
-						break; 
-					}					
+					
+					res_mat->LoadToMemory();
+					break; 					
 				}
 			}
 		}
@@ -431,6 +454,15 @@ bool ModuleResourceManager::LoadFile(const char *file_to_load)
 	return true;
 }
 
+void ModuleResourceManager::FreeInactiveBuffers()
+{
+	for (std::map<ID, Resource*>::iterator it = resources.begin(); it != resources.end(); ++it)
+	{
+		if ((*it).second->GetNumReferences() == 0 && (*it).second->LoadedInMemory())
+			(*it).second->UnloadFromMemory();
+	}
+}
+
 ID ModuleResourceManager::FindFileIdJSON(const JSONParser &json, const char *scene_name, const char *file) const
 {
 	for (int i = 0; i < json.GetArrayCount(scene_name); ++i)
@@ -457,6 +489,7 @@ void ModuleResourceManager::CreateJSONResourceInfo()
 		item.AddUUID("ID", (*it).second->id);
 		item.AddInt("Type", (*it).second->type);	
 		item.AddInt("Timestamp", (*it).second->timestamp);
+		item.AddInt("Times referenced", (*it).second->GetNumReferences());
 		resources_info.AddArray(item);
 	}
 
@@ -464,4 +497,75 @@ void ModuleResourceManager::CreateJSONResourceInfo()
 	resources_info.Save(&serialized_string);
 	App->file_system->Save("Library/Resources.dat", serialized_string, strlen(serialized_string));
 	resources_info.FreeBuffer(serialized_string);
+}
+
+bool ModuleResourceManager::Save(JSONParser &module)
+{
+	module.AddArray("Resources");
+
+	for (std::map<ID, Resource*>::iterator it = resources.begin(); it != resources.end(); ++it)
+	{
+		JSONParser item;
+		item.AddString("File", (*it).second->file.c_str());
+		item.AddString("Imported File", (*it).second->imported_file.c_str());
+		item.AddUUID("ID", (*it).second->id);
+		item.AddInt("Type", (*it).second->type);
+		item.AddInt("Timestamp", (*it).second->timestamp);
+		item.AddBoolean("Loaded in memory", (*it).second->LoadedInMemory());
+		item.AddInt("Times referenced", (*it).second->GetNumReferences());
+
+		module.AddArray(item);
+	}
+
+	return true;
+}
+
+bool ModuleResourceManager::Load(JSONParser &module)
+{
+	// Cleaning all current resources...
+	for (std::map<ID, Resource*>::iterator it = resources.begin(); it != resources.end(); ++it)
+	{
+		(*it).second->UnloadFromMemory();
+		(*it).second->to_delete = true;
+		/*RELEASE((*it).second);
+		it = resources.erase(it);*/
+	}
+		
+	resources.clear();
+
+	// Loading new resources...
+	for (int i = 0; i < module.GetArrayCount("Resources"); ++i)
+	{
+		JSONParser item = module.GetArray("Resources", i);
+			
+		Resource *res = CreateNewResource((RESOURCE_TYPE)item.GetInt("Type"), item.GetUUID("ID"), item.GetInt("Timestamp"));			
+		res->file = item.GetString("File");
+		res->imported_file = item.GetString("Imported File");				
+
+		switch (res->type)
+		{
+		case(RESOURCE_TYPE::MESHES):
+			{
+				if (item.GetBoolean("Loaded in memory"))
+				{
+					MeshImporter::Load((std::string)item.GetString("Imported File"), (ResourceMesh*)res);
+					res->LoadToMemory();
+				}				
+				break;
+			}
+		case(RESOURCE_TYPE::TEXTURES):
+			{
+				if (item.GetBoolean("Loaded in memory"))
+				{
+					MaterialImporter::Load((std::string)item.GetString("Imported File"), (ResourceTexture*)res);
+					res->LoadToMemory();
+				}
+				break;
+			}
+		}		
+	}
+
+	CreateJSONResourceInfo();
+
+	return true;
 }

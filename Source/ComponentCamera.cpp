@@ -6,6 +6,7 @@
 #include "Application.h"
 #include "ModuleRenderer3D.h"
 #include "ModuleGameObjectManager.h"
+#include "ModuleCameraEditor.h"
 
 #include "imgui\imgui.h"
 
@@ -123,6 +124,8 @@ bool ComponentCamera::Save(JSONParser &go)
 	comp_cam.AddFloat("FOV v", FOV_v);
 	comp_cam.AddFloat("Aspect ratio", aspect_ratio);
 
+	comp_cam.AddBoolean("Camera editor", editor_camera);
+
 	go.AddArray(comp_cam);
 
 	return true;
@@ -135,6 +138,11 @@ bool ComponentCamera::Load(JSONParser &comp)
 	FOV_h = comp.GetFloat("FOV h");
 	FOV_v = comp.GetFloat("FOV v");
 	aspect_ratio = comp.GetFloat("Aspect ratio");
+
+	editor_camera = comp.GetBoolean("Camera editor");
+	if (editor_camera) App->camera->SetAsEditorCamera(game_object);
+
+	camera_modified = true;
 
 	return true;
 }

@@ -330,15 +330,6 @@ void ModuleRenderer3D::DrawDirectMode()
 	glDisableClientState(GL_VERTEX_ARRAY);
 }
 
-void ModuleRenderer3D::DeleteMeshBuffer(const Mesh *mesh)
-{
-	glDeleteBuffers(1, (GLuint*)&mesh->id_indices);
-	glDeleteBuffers(1, (GLuint*)&mesh->id_vertices);
-	glDeleteBuffers(1, (GLuint*)&mesh->id_colors);
-	glDeleteBuffers(1, (GLuint*)&mesh->id_tex_coord);
-	glDeleteBuffers(1, (GLuint*)&mesh->id_normals);
-}
-
 void ModuleRenderer3D::ShowGameObject(const GameObject *go)
 {
 	const ComponentMesh *comp_mesh = nullptr;
@@ -378,7 +369,7 @@ void ModuleRenderer3D::ShowGameObject(const GameObject *go)
 				glEnable(GL_TEXTURE_2D);
 				glBindTexture(GL_TEXTURE_2D, 0); // Cleanning bind buffer;
 				glBindTexture(GL_TEXTURE_2D, comp_mat->resource->tex_buffer);		
-				//glColor3f(comp_mat->color_diffuse.r, comp_mat->color_diffuse.g, comp_mat->color_diffuse.b);
+				glColor3f(comp_mat->resource->color_diffuse.x, comp_mat->resource->color_diffuse.y, comp_mat->resource->color_diffuse.z);
 			}
 		}			
 

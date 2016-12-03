@@ -80,69 +80,73 @@ public:
 
 	uint static Load(const std::string &imported_file, ResourceMesh *mesh)
 	{
+		uint bytes = 0;
+
 		char *data;
 		std::string lib_folder = LIBRARY_MESH;
-		App->file_system->Load((lib_folder + imported_file).c_str(), &data);		
-
-		/* Load follows that sequence: indices, vertices, colors, normals and texture coordinates. Each component consists
-		of num_of_elements and array of that elements.*/
-		uint bytes = 0;
-		char *cursor = data;
-
-		// Ranges: Number of indices, vertices, colors, normals and texture coordinates.
-		unsigned int ranges[5];
-		bytes = sizeof(ranges);
-		memcpy(ranges, cursor, bytes);
-
-		// Allocating memory for Mesh data structure
-		if (mesh->mesh_data == nullptr) 
-			mesh->mesh_data = new Mesh();
-
-		mesh->mesh_data->num_indices = ranges[0];
-		mesh->mesh_data->num_vertices = ranges[1];
-		mesh->mesh_data->num_colors = ranges[2];
-		mesh->mesh_data->num_normals = ranges[3];
-		mesh->mesh_data->num_tex_coord = ranges[4];
-		cursor += bytes;
-
-		// Loading indices...
-		bytes = sizeof(uint) * mesh->mesh_data->num_indices;
-		mesh->mesh_data->indices = new unsigned int[bytes];
-		memcpy(mesh->mesh_data->indices, cursor, bytes);
-		cursor += bytes;
-
-		// Loading vertices...
-		bytes = sizeof(float) * mesh->mesh_data->num_vertices * 3;
-		mesh->mesh_data->vertices = new math::float3[bytes];
-		memcpy(mesh->mesh_data->vertices, cursor, bytes);
-		cursor += bytes;
-
-		// Loading colors...
-		if (mesh->mesh_data->num_colors > 0)
+		if (App->file_system->Load((lib_folder + imported_file).c_str(), &data) != 0)
 		{
-			bytes = sizeof(float) * mesh->mesh_data->num_colors * 4;
-			mesh->mesh_data->colors = new math::float4[bytes];
-			memcpy(mesh->mesh_data->colors, cursor, bytes);
+			/* Load follows that sequence: indices, vertices, colors, normals and texture coordinates. Each component consists
+			of num_of_elements and array of that elements.*/			
+			char *cursor = data;
+
+			// Ranges: Number of indices, vertices, colors, normals and texture coordinates.
+			unsigned int ranges[5];
+			bytes = sizeof(ranges);
+			memcpy(ranges, cursor, bytes);
+
+			// Allocating memory for Mesh data structure
+			if (mesh->mesh_data == nullptr)
+				mesh->mesh_data = new Mesh();
+
+			mesh->mesh_data->num_indices = ranges[0];
+			mesh->mesh_data->num_vertices = ranges[1];
+			mesh->mesh_data->num_colors = ranges[2];
+			mesh->mesh_data->num_normals = ranges[3];
+			mesh->mesh_data->num_tex_coord = ranges[4];
 			cursor += bytes;
-		}
 
-		// Loading normals...
-		if (mesh->mesh_data->num_normals > 0)
-		{
-			bytes = sizeof(float) * mesh->mesh_data->num_normals * 3;
-			mesh->mesh_data->normals = new math::float3[bytes];
-			memcpy(mesh->mesh_data->normals, cursor, bytes);
+			// Loading indices...
+			bytes = sizeof(uint) * mesh->mesh_data->num_indices;
+			mesh->mesh_data->indices = new unsigned int[bytes];
+			memcpy(mesh->mesh_data->indices, cursor, bytes);
 			cursor += bytes;
-		}
 
-		// Loading texture coordinates...
-		if (mesh->mesh_data->num_tex_coord > 0)
-		{
-			bytes = sizeof(float) * mesh->mesh_data->num_tex_coord * 2;
-			mesh->mesh_data->tex_coord = new math::float2[bytes];
-			memcpy(mesh->mesh_data->tex_coord, cursor, bytes);
-		}
+			// Loading vertices...
+			bytes = sizeof(float) * mesh->mesh_data->num_vertices * 3;
+			mesh->mesh_data->vertices = new math::float3[bytes];
+			memcpy(mesh->mesh_data->vertices, cursor, bytes);
+			cursor += bytes;
 
+			// Loading colors...
+			if (mesh->mesh_data->num_colors > 0)
+			{
+				bytes = sizeof(float) * mesh->mesh_data->num_colors * 4;
+				mesh->mesh_data->colors = new math::float4[bytes];
+				memcpy(mesh->mesh_data->colors, cursor, bytes);
+				cursor += bytes;
+			}
+
+			// Loading normals...
+			if (mesh->mesh_data->num_normals > 0)
+			{
+				bytes = sizeof(float) * mesh->mesh_data->num_normals * 3;
+				mesh->mesh_data->normals = new math::float3[bytes];
+				memcpy(mesh->mesh_data->normals, cursor, bytes);
+				cursor += bytes;
+			}
+
+			// Loading texture coordinates...
+			if (mesh->mesh_data->num_tex_coord > 0)
+			{
+				bytes = sizeof(float) * mesh->mesh_data->num_tex_coord * 2;
+				mesh->mesh_data->tex_coord = new math::float2[bytes];
+				memcpy(mesh->mesh_data->tex_coord, cursor, bytes);
+			}
+
+			RELEASE_ARRAY(data);
+		}
+		
 		return bytes;
 	}
 

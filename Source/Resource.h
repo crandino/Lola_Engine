@@ -1,8 +1,6 @@
 #ifndef __RESOURCES_H__
 #define __RESOURCES_H__
 
-#include <map>
-
 enum RESOURCE_TYPE
 {
 	NONE,
@@ -19,7 +17,7 @@ class Resource
 protected:
 
 	bool loaded_in_memory;
-	unsigned int times_referenced;
+	int times_referenced;
 
 public:
 
@@ -29,8 +27,11 @@ public:
 	std::string imported_file;
 	int timestamp;
 
+	bool to_delete;
+
 	Resource()
 	{
+		to_delete = false;
 		loaded_in_memory = false;
 		times_referenced = 0;
 		timestamp = 0;
@@ -38,8 +39,9 @@ public:
 		type = RESOURCE_TYPE::NONE;
 	}
 
-	virtual ~Resource() = 0
-	{ }
+	virtual ~Resource()
+	{
+	}
 
 	virtual bool LoadToMemory()
 	{
@@ -56,22 +58,25 @@ public:
 		return loaded_in_memory;
 	}
 
-	/*Resource(UID uid, Resource::Type type);
-	virtual ~Resource();
-	Resource::Type GetType() const;
-	UID GetUID() const;
-	const char* GetFile() const;
-	const char* GetExportedFile() const;
-	bool IsLoadedToMemory() const;
-	
-	uint CountReferences() const;
+	int GetNumReferences() const
+	{
+		return times_referenced;
+	}
 
-	virtual void Save(Config& config) const;
-	virtual void Load(const Config& config);
-	virtual bool LoadInMemory() = 0;*/
+	void SetNumReferences(int times)
+	{
+		times_referenced = times;
+	}
 
+	void IncrReferences()
+	{
+		++times_referenced;
+	}
 
-
+	void DecrReferences()
+	{
+		if(times_referenced > 0) --times_referenced;
+	}
 };
 
 #endif __RESOURCES_H__

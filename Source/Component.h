@@ -42,7 +42,8 @@ public:
 	const char *GetNameByType(COMPONENT_TYPE type);
 	bool IsActive() const;
 
-	virtual void AddResource(const Resource *res) = 0;
+	virtual void AddResource(Resource *res)
+	{ }
 
 	virtual bool Save(JSONParser &go);
 	virtual bool Load(JSONParser &component);

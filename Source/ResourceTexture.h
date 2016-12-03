@@ -43,18 +43,23 @@ public:
 		opacity = 0;
 	}
 
+	~ResourceTexture()
+	{
+		RELEASE_ARRAY(texture_data);  // Freeing texture data
+	}
+
 	bool ResourceTexture::LoadToMemory()
 	{
 		if (!loaded_in_memory)
 		{
+			loaded_in_memory = true;
+
 			ilutRenderer(ILUT_OPENGL);
 			ilGenImages(1, &tex_buffer);
 			ilBindImage(tex_buffer);
 			ilLoadL(IL_TYPE_UNKNOWN, texture_data, texture_size);
 			tex_buffer = ilutGLBindTexImage();
-
-			loaded_in_memory = true;
-		}		
+		}
 
 		return loaded_in_memory;
 	}
@@ -63,10 +68,10 @@ public:
 	{
 		if (loaded_in_memory)
 		{			
-			ilDeleteImages(1, &tex_buffer);
-			RELEASE_ARRAY(texture_data);
-			texture_size = 0;
 			loaded_in_memory = false;
+
+			ilDeleteImages(1, &tex_buffer);
+			texture_size = 0;
 		}
 
 		return !loaded_in_memory;

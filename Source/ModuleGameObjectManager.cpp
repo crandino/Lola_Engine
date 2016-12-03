@@ -12,8 +12,6 @@
 #include "ComponentTransform.h"
 #include "ComponentCamera.h"
 
-#include "PerfTimer.h"
-
 #include <stack>
 #include <algorithm> 
 
@@ -49,6 +47,8 @@ bool ModuleGameObjectManager::Awake(JSONParser &config)
 // PreUpdate: clear buffer
 UPDATE_STATUS ModuleGameObjectManager::PreUpdate(float dt)
 {
+	bool update_needed = false;
+
 	// Looking GameObject to delete...
 	std::vector<GameObject*>::iterator it;
 	
@@ -58,6 +58,7 @@ UPDATE_STATUS ModuleGameObjectManager::PreUpdate(float dt)
 		{
 			DeleteGameObject((*it));
 			(*it) = nullptr;
+			update_needed = true;
 		}
 	}
 
@@ -69,6 +70,8 @@ UPDATE_STATUS ModuleGameObjectManager::PreUpdate(float dt)
 		else
 			++it;
 	}
+
+	if (update_needed) UpdateOcTree();
 
 	return UPDATE_CONTINUE;
 }
@@ -101,7 +104,7 @@ UPDATE_STATUS ModuleGameObjectManager::Update(float dt)
 
 	// Frustum culling
 	const GameObject *camera = App->camera->GetEditorCamera();
-	math::Frustum frustum = ((ComponentCamera*)fake_camera->GetComponentByType(COMPONENT_TYPE::CAMERA))->cam_frustum;
+	math::Frustum frustum = ((ComponentCamera*)camera->GetComponentByType(COMPONENT_TYPE::CAMERA))->cam_frustum;
 	FrustumCulling(frustum);
 	draw_debug.DrawOcTree(oc_tree, frustum);
 
@@ -121,10 +124,6 @@ UPDATE_STATUS ModuleGameObjectManager::Update(float dt)
 			}
 		}			
 	}	
-
-	// Raycasts draw for testing!!
-	for (uint i = 0; i < ray_casts.size(); ++i)
-		draw_debug.DrawLineSegment(ray_casts[i]);
 
 	return UPDATE_CONTINUE;
 }
@@ -299,6 +298,10 @@ bool ModuleGameObjectManager::Save(JSONParser &module)
 
 bool ModuleGameObjectManager::Load(JSONParser &module)
 {
+	// Deleting all current GameObjects;
+	for (uint i = 1; i < list_of_gos.size(); ++i)
+		list_of_gos[i]->to_delete = true;
+
 	std::vector<GameObject*> list_of_gos_loaded;
 
 	for (int i = 0; i < module.GetArrayCount("Game Objects"); ++i)
@@ -341,45 +344,38 @@ void ModuleGameObjectManager::GenerateUUID(Component *comp)
 
 void ModuleGameObjectManager::RayCast(const math::LineSegment &ray_cast)
 {
-	PerfTimer timer;
-
-	ray_casts.clear();
-
 	GameObject *curr_go = nullptr;
 	GameObject *selection_canditate = nullptr;
 	float min_dist = 1.0f;
 
 	std::vector<GameObject*> selection;
 	oc_tree.CollectCandidates(selection, ray_cast);
-	DEBUG("Tests with Octree %d", selection.size());
-	DEBUG("Tests without Octree %d", list_of_gos.size());
-
-	for (uint i = 0; i < list_of_gos.size(); ++i)
+	
+	for (uint i = 0; i < selection.size(); ++i)
 	{
-		curr_go = list_of_gos[i];
+		curr_go = selection[i];
 		
 		math::AABB bbox; curr_go->GetAABB(bbox);
 		math::Triangle tri;		
 
-		Mesh *mesh = nullptr;
+		const Mesh *mesh = curr_go->GetMesh();		
 		
-		if (curr_go->GetMesh(mesh) && ray_cast.Intersects(bbox))
+		if ( mesh && ray_cast.Intersects(bbox))
 		{
-			//math::LineSegment ray_cast_transform = ray_cast;
-			//ray_cast_transform.Transform(App->renderer3D->view_matrix);
-			//ray_casts.push_back(ray_cast_transform);
+			math::LineSegment ray_cast_transformed = ray_cast;
+			ray_cast_transformed.Transform(curr_go->transform->world_transform.Inverted());
 
 			for (uint j = 0; j < mesh->num_indices; j = j + 3)
 			{
 				tri.a = mesh->vertices[mesh->indices[j]];
 				tri.b = mesh->vertices[mesh->indices[j + 1]],
 				tri.c = mesh->vertices[mesh->indices[j + 2]];								   
-				tri.Transform(curr_go->transform->world_transform);				
+				//tri.Transform(curr_go->transform->world_transform);				
 				
 				float hit_dist;
 				math::vec hit_point;
 
-				if (ray_cast.Intersects(tri, &hit_dist, &hit_point) && hit_dist < min_dist)
+				if (ray_cast_transformed.Intersects(tri, &hit_dist, &hit_point) && hit_dist < min_dist)
 				{
 					selection_canditate = curr_go;
 					min_dist = hit_dist;
@@ -389,7 +385,6 @@ void ModuleGameObjectManager::RayCast(const math::LineSegment &ray_cast)
 	}
 
 	App->editor->ChangeSelectedGameObject(selection_canditate);
-	DEBUG("Ray Cast took %f", timer.ReadMs());
 }
 
 void ModuleGameObjectManager::UpdateOcTree()

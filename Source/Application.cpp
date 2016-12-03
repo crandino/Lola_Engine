@@ -37,8 +37,8 @@ Application::Application()
 
 	// Loaders		
 	AddModule(file_system);
-	AddModule(resource_manager);
-	AddModule(gameobject_manager);	
+	AddModule(resource_manager);	
+	AddModule(gameobject_manager);		
 	
 	// Scenes
 	AddModule(camera);
@@ -234,6 +234,8 @@ bool Application::SaveGameNow()
 bool Application::LoadGameNow()
 {
 	bool ret = true;
+
+	DEBUG("Loading Game State on %s...", load_game);
 
 	char* buf;
 	uint size = App->file_system->Load(load_game, &buf);

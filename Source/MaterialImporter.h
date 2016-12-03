@@ -70,9 +70,8 @@ public:
 				if (App->file_system->Save((lib_folder + imported_file).c_str(), dds_data, dds_size) != 0) success = true;
 			}
 			RELEASE_ARRAY(dds_data);
-		}
-
-		RELEASE(data);
+			RELEASE_ARRAY(data);
+		}		
 
 		ilShutDown();
 		return success;		
@@ -163,7 +162,7 @@ public:
 			
 			res_mat->texture_size = data_size - color_size;
 			res_mat->texture_data = new char[res_mat->texture_size];
-			memcpy(res_mat->texture_data, cursor, data_size - color_size);
+			memcpy(res_mat->texture_data, cursor, res_mat->texture_size);
 			cursor += res_mat->texture_size;
 
 			memcpy(&res_mat->color_diffuse, cursor, sizeof(math::float3));
@@ -182,6 +181,8 @@ public:
 			cursor += sizeof(math::float3);
 
 			memcpy(&res_mat->opacity, cursor, sizeof(float));
+
+			RELEASE_ARRAY(data);
 		}		
 		
 		return data_size;

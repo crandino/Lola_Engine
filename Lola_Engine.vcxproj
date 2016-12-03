@@ -260,6 +260,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Game\config.json" />
+    <None Include="Game\Library\Resources.dat" />
     <None Include="Game\Test.json" />
     <None Include="Source\MathGeoLib\Geometry\KDTree.inl" />
     <None Include="Source\MathGeoLib\Geometry\QuadTree.inl" />

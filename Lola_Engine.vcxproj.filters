@@ -619,5 +619,8 @@
     <None Include="Game\Test.json">
       <Filter>JSON files</Filter>
     </None>
+    <None Include="Game\Library\Resources.dat">
+      <Filter>JSON files</Filter>
+    </None>
   </ItemGroup>
 </Project>

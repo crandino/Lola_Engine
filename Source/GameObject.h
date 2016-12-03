@@ -45,9 +45,10 @@ public:
 	const Component *GetComponentByType(COMPONENT_TYPE type) const;
 	const Component *AddComponent(COMPONENT_TYPE type);
 
+	// Getters!
 	bool GetAABB(math::AABB &aabb) const;
 	bool GetFrustum(math::Frustum &frustum) const;
-	bool GetMesh(const Mesh *mesh) const;
+	const Mesh *GetMesh() const;
 	bool HasMesh() const;
 
 	void ChangeActiveState(bool *state, GameObject *go = nullptr);

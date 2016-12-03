@@ -6,8 +6,6 @@
 #include "ResourceMesh.h"
 #include "MathGeoLib\MathGeoLib.h"
 
-struct aiMesh;
-
 class ComponentMesh : public Component
 {
 
@@ -18,14 +16,13 @@ public:
 	math::AABB initial_bounding_box;
 	math::AABB bounding_box;
 
-	const ResourceMesh *resource;
+	ResourceMesh *resource;
 
 	ComponentMesh();
 	~ComponentMesh();
 
 	bool Update();
-	void SetComponent(const aiMesh *mesh);
-	void AddResource(const Resource *res);
+	void AddResource(Resource *res);
 
 	void ShowEditorInfo();
 

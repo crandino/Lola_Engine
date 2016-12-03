@@ -15,8 +15,6 @@ class ModuleGameObjectManager : public Module
 {
 public:
 
-	std::vector<math::LineSegment> ray_casts;
-
 	ModuleGameObjectManager(Application* app, bool start_enabled = true);
 	~ModuleGameObjectManager();
 

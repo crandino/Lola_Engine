@@ -36,7 +36,6 @@ public:
 	void CalculateProjectionMatrix();
 	void CalculateViewMatrix();
 
-	void DeleteMeshBuffer(const Mesh *mesh);
 	void ShowGameObject(const GameObject *go);
 
 	void DrawDirectMode();

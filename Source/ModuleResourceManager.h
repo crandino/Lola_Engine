@@ -4,10 +4,11 @@
 #include "Module.h"
 
 #include "Resource.h"
-
 #include "Timer.h"
 
 #include "MathGeoLib\MathGeoLib.h"
+
+#include <map>
 
 typedef long unsigned int ID;
 
@@ -21,6 +22,7 @@ public:
 
 	bool Awake(JSONParser &config);
 	UPDATE_STATUS PreUpdate(float dt);
+	UPDATE_STATUS PostUpdate(float dt);
 
 	bool CleanUp();
 
@@ -45,12 +47,17 @@ private:
 	ID Find(const std::string &asset_to_find) const;
 	void DeleteEntry(ID id);
 	bool IsUpdated(ID id) const;
+
+	void FreeInactiveBuffers();
 	
 	RESOURCE_TYPE GetTypeOfFile(const std::string &file) const;
 	
 	// JSON related...
 	ID FindFileIdJSON(const JSONParser &json, const char *scene_name, const char *file) const;
 	void CreateJSONResourceInfo();
+
+	bool Save(JSONParser &module);
+	bool Load(JSONParser &module);
 };
 
 #endif // !__MODULERESOURCEMANAGER_H__
