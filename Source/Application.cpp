@@ -226,7 +226,7 @@ bool Application::SaveGameNow()
 	char *serialized_string;
 	parser.Save(&serialized_string);	
 	App->file_system->Save(save_game, serialized_string, strlen(serialized_string));
-	parser.FreeBuffer(serialized_string);
+	parser.FreeBuffer(&serialized_string);
 
 	want_to_save = false;
 
@@ -251,7 +251,7 @@ bool Application::LoadGameNow()
 		for (; it != list_modules.end() && ret != false; ++it)			
 			(*it)->Load(modules.GetNode((*it)->GetModuleName()));
 
-		parser.FreeBuffer(buf);
+		parser.FreeBuffer(&buf);
 	}
 	else
 		DEBUG("Could not load game state xml file %s", load_game);

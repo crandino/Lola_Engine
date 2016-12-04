@@ -26,6 +26,8 @@
 #include "Assimp/include/postprocess.h"
 #include "Assimp/include/cfileio.h"
 
+#include <fstream>
+
 #pragma comment (lib, "Source/Assimp/libx86/assimp.lib")
 
 ModuleResourceManager::ModuleResourceManager(Application* app, bool start_enabled) : Module(app, start_enabled)
@@ -308,7 +310,9 @@ bool ModuleResourceManager::LoadFile(const char *file_to_load)
 {
 	ID id = Find(file_to_load);
 	if (id == 0)
+	{
 		DEBUG("File %s has not been imported! Could not be loaded", file_to_load);
+	}		
 	else
 	{
 		// Getting Scene Resource in order to load all of its components
@@ -449,6 +453,7 @@ void ModuleResourceManager::FreeInactiveResources()
 			(*it).second->UnloadFromMemory();
 	}
 
+	// Deleting resources marked as "to delete"
 	for (uint i = 0; i < resources_to_delete.size(); ++i)
 		RELEASE(resources_to_delete[i]);
 
@@ -488,7 +493,7 @@ void ModuleResourceManager::CreateJSONResourceInfo()
 	char *serialized_string;
 	resources_info.Save(&serialized_string);
 	App->file_system->Save("Library/Resources.dat", serialized_string, strlen(serialized_string));
-	resources_info.FreeBuffer(serialized_string);
+	resources_info.FreeBuffer(&serialized_string);
 }
 
 bool ModuleResourceManager::Save(JSONParser &module)

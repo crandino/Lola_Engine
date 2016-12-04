@@ -21,6 +21,7 @@ ModuleFileSystem::ModuleFileSystem(Application* app, bool start_enabled) : Modul
 
 		AddSearchPath(".");
 	}	
+
 }
 
 ModuleFileSystem::~ModuleFileSystem()
@@ -38,11 +39,6 @@ bool ModuleFileSystem::Awake(JSONParser &config)
 	// Generate IO interfaces
 	CreateAssimpIO();
 	//SetDevilIO();
-
-	/*std::vector<std::string> dirs;
-	std::vector<std::string> files;
-
-	DiscoverFiles(".", files, dirs);*/
 	
 	return ret;
 }
@@ -133,8 +129,8 @@ uint ModuleFileSystem::Load(const char* file, char **buffer) const
 			if (bytes_readed != size)
 			{
 				DEBUG("File system error while reading from file %s: %s", file, PHYSFS_getLastError());
-				if (buffer != nullptr)
-					delete buffer;
+				if (*buffer != nullptr)
+					delete *buffer;
 			}
 			else
 				ret = (uint)size;
@@ -244,6 +240,11 @@ int ModuleFileSystem::GetLastTimeMod(const char *file, const char *dir) const
 	return PHYSFS_getLastModTime(path);
 }
 
+const char *ModuleFileSystem::GetWorkingDirectory() const
+{
+	return SDL_GetBasePath();
+}
+
 void ModuleFileSystem::ExploreFiles(const char* from_directory, std::vector<std::string> &file_list, std::vector<std::string> &directory_list, bool recursive) const
 {
 	char **rc = PHYSFS_enumerateFiles(from_directory);
@@ -277,8 +278,8 @@ void ModuleFileSystem::SetWriteDirectory()
 		case(ENGINE_MODE::EDITOR):
 		{
 			char write_dir[MEDIUM_STRING];
-			sprintf_s(write_dir, MEDIUM_STRING, "%s%s", PHYSFS_getBaseDir(), "Game");	
-			//sprintf_s(write_dir, MEDIUM_STRING, "%s", PHYSFS_getBaseDir());
+			//sprintf_s(write_dir, MEDIUM_STRING, "%s%s", PHYSFS_getBaseDir(), "Game");	
+			sprintf_s(write_dir, MEDIUM_STRING, "%s", PHYSFS_getBaseDir());
 
 			if (PHYSFS_setWriteDir(write_dir) == 0)
 				DEBUG("%s,%s", "Error on setting Write Directory. Error:", PHYSFS_getLastError());

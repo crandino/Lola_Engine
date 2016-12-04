@@ -37,6 +37,7 @@ public:
 	const char *GetSaveDirectory() const;
 	const char *GetRealDirectory(const char* file) const;
 	int GetLastTimeMod(const char *file, const char *dir = nullptr) const;
+	const char *GetWorkingDirectory() const;
 
 	bool IsDirectory(const char *dir) const;
 	bool Exists(const char *file) const;

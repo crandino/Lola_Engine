@@ -8,6 +8,7 @@
 
 #include "Application.h"
 #include "ModuleGameObjectManager.h"
+#include "ModuleEditor.h"
 
 GameObject::GameObject(const char* name)
 {
@@ -155,6 +156,8 @@ const Mesh *GameObject::GetMesh() const
  {
 	 active = go.GetBoolean("Active");
 	 selected = go.GetBoolean("Selected");
+	 if (selected)
+		 App->editor->ChangeSelectedGameObject(this);
 	 to_delete = go.GetBoolean("ToDelete");
 	 bstatic = go.GetBoolean("Static");
 

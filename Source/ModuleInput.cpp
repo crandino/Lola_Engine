@@ -3,6 +3,7 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleWindow.h"
+#include "ModuleResourceManager.h"
 
 #include "Imgui\imgui_impl_sdl_gl3.h"
 
@@ -113,7 +114,7 @@ UPDATE_STATUS ModuleInput::PreUpdate(float dt)
 			case SDL_DROPFILE:
 			{
 				char *dropped_filedir = e.drop.file;
-				//App->scene_importer->ImportModel(dropped_filedir, false);
+				App->resource_manager->LoadFile(dropped_filedir);
 				SDL_free(dropped_filedir);    // Free dropped_filedir memory
 			}				
 			break;

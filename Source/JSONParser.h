@@ -82,7 +82,7 @@ public:
 	void Save(char **buf);
 
 	// Free
-	void FreeBuffer(char *buff);
+	void FreeBuffer(char **buff);
 
 };
 

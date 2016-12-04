@@ -155,11 +155,11 @@ bool JSONParser::ValueExists(const char *node_name) const
 }
 
 
-void JSONParser::FreeBuffer(char *buff)
+void JSONParser::FreeBuffer(char **buff)
 {
-	if (buff != nullptr)
+	if (*buff != nullptr)
 	{
-		delete[] buff;
-		buff = nullptr;
+		delete[] *buff;
+		*buff = nullptr;
 	}
 }

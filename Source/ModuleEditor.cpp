@@ -366,8 +366,10 @@ void ModuleEditor::ShowTimeControl()
 	if (ImGui::Button("PLAY"))
 		App->ChangeEngineMode();
 	ImGui::SameLine();
-	ImGui::Button("PAUSE"); ImGui::SameLine();
-	ImGui::Button("STOP"); ImGui::SameLine();
+	ImGui::Button("PAUSE");
+	ImGui::SameLine();
+	ImGui::Button("NEXT FRAME");
+	ImGui::SameLine();
 
 	ImGui::PopStyleColor(3);
 
@@ -417,11 +419,12 @@ void ModuleEditor::ChangeSelectedGameObject(GameObject *new_go)
 		go_selected = nullptr;
 	}		
 
+	go_selected = new_go;
+
 	if (new_go)
 	{
-		// Now, we make the new GO selected and use its ID to show highlighted
-		go_selected = new_go;
+		// Now, we make the new GO selected and use its ID to show highlighted		
 		go_selected->selected = true;
 		UUID_selected = new_go->UUID;
-	}	
+	}
 }

@@ -213,7 +213,7 @@ void ComponentTransform::SetPos(const math::vec &pos)
 
 void ComponentTransform::RotateAngleAxis(float angle_rad, const math::vec &axis)
 {
-	math::Quat rot_quat; rot_quat = rot_quat.RotateAxisAngle(axis, angle_rad);
+	math::Quat rot_quat = math::Quat::RotateAxisAngle(axis, angle_rad);
 	local_rotation_quat = local_rotation_quat.Mul(rot_quat);
 	game_object->transform_applied = true;
 

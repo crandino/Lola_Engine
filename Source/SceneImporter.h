@@ -158,7 +158,7 @@ public:
 				json_scene.Save(&serialized_string);
 				std::string lib_folder = LIBRARY_SCENES;
 				App->file_system->Save((lib_folder + imported_files.front()).c_str(), serialized_string, strlen(serialized_string));
-				json_scene.FreeBuffer(serialized_string);
+				json_scene.FreeBuffer(&serialized_string);
 			}
 
 			aiReleaseImport(scene);

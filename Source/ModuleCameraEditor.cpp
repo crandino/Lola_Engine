@@ -73,12 +73,12 @@ UPDATE_STATUS ModuleCameraEditor::Update(float dt)
 	if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT)
 	{
 		int dx = -App->input->GetMouseXMotion();
-		int dy = -App->input->GetMouseYMotion();
+		int dy = App->input->GetMouseYMotion();
 
 		float sensitivity = 0.025f;
-
-		camera->transform->RotateAngleAxis(dx * sensitivity, camera->transform->up);
-		//main_camera->transform->RotateAngleAxis(dy * sensitivity, main_camera->transform->left);
+		
+		if(dx != 0) camera->transform->RotateAngleAxis(dx * sensitivity, math::vec(0.0f, 1.0f, 0.0f));
+		if(dy != 0) camera->transform->RotateAngleAxis(dy * sensitivity, math::vec(1.0f, 0.0f, 0.0f));
 	}
 
 	// Mouse picking

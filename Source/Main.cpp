@@ -21,7 +21,6 @@ int main(int argc, char ** argv)
 {
 	int main_return = EXIT_FAILURE;
 	MAIN_STATES state = MAIN_CREATION;
-	//Application* App = NULL;	
 
 	while (state != MAIN_EXIT)
 	{
@@ -84,7 +83,7 @@ int main(int argc, char ** argv)
 	}
 
 	DEBUG("Exiting Engine");
-	delete App;
+	RELEASE(App);
 	
 	return main_return;
 }

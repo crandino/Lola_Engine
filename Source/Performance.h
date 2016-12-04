@@ -20,23 +20,13 @@ private:
 	// Timers and DT
 	Timer real_time_timer;
 	Timer game_time_timer;
-	uint32 real_time_delta_time;
-	uint32 game_time_delta_time;
-
-	float game_time_scale;
-	Uint32 frame_count;
-	//float real_time_since_startup;
-
-	/*PerfTimer	dt_timer;
-	Timer		total_timer;
-	float		ms_dt;
-	float		sec_dt;*/
+	Uint32 real_time_delta_time;
+	Uint32 game_time_delta_time;
+	float game_time_scale;	
 
 	int			frame_rate;					// Current framerate
-	//uint		avg_fps;
-	//float		seconds_since_startup;
+	Uint32      frame_count;
 	Uint32		frames_on_last_update;
-	//uint64		frame_count;
 	Uint32		last_real_time;
 	Uint32		last_game_time;
 	Uint32		hist_last_update;
