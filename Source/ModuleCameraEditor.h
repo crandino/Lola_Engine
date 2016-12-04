@@ -17,9 +17,6 @@ private:
 	GameObject *camera = nullptr;
 	math::LineSegment ray_cast;
 
-	// DELETE
-	DrawDebug debug;
-
 	void MousePick();
 
 public:	

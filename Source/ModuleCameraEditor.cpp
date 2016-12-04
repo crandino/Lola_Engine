@@ -47,7 +47,6 @@ bool ModuleCameraEditor::Start()
 bool ModuleCameraEditor::CleanUp()
 {
 	DEBUG("Cleaning camera");
-
 	return true;
 }
 
@@ -84,8 +83,6 @@ UPDATE_STATUS ModuleCameraEditor::Update(float dt)
 	// Mouse picking
 	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN && !ImGui::IsMouseHoveringAnyWindow())
 		MousePick();
-
-	//debug.DrawLineSegment(ray_cast);
 	
 	return UPDATE_CONTINUE;
 }
@@ -99,7 +96,6 @@ void ModuleCameraEditor::MousePick()
 	camera->GetFrustum(cam_frustum);
 
 	ray_cast = cam_frustum.UnProjectLineSegment(normalized_pos.x, -normalized_pos.y);
-	//ray_cast.Transform(App->renderer3D->view_matrix.Transposed());
 	App->gameobject_manager->RayCast(ray_cast);
 }
 
