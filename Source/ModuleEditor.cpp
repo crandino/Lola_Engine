@@ -366,9 +366,10 @@ void ModuleEditor::ShowTimeControl()
 	if (ImGui::Button("PLAY"))
 		App->ChangeEngineMode();
 	ImGui::SameLine();
-	ImGui::Button("PAUSE");
+	if (ImGui::Button("PAUSE"))
+		App->PausePlayMode();
 	ImGui::SameLine();
-	ImGui::Button("NEXT FRAME");
+	ImGui::Button("NEXT FRAME"); // Not requiered for Assigment 2, only Play, Stop and Pause.
 	ImGui::SameLine();
 
 	ImGui::PopStyleColor(3);

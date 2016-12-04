@@ -255,6 +255,18 @@
     <ClCompile Include="Source\ModuleResourceManager.cpp">
       <Filter>Source\Modules</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Performance.cpp">
+      <Filter>Source\Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\MaterialImporter.cpp">
+      <Filter>Source\Resources\Importers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\SceneImporter.cpp">
+      <Filter>Source\Resources\Importers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\MeshImporter.cpp">
+      <Filter>Source\Resources\Importers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Color.h">
@@ -532,9 +544,6 @@
     </ClInclude>
     <ClInclude Include="Source\ComponentMaterial.h">
       <Filter>Source\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Importer.h">
-      <Filter>Source\Resources\Importers</Filter>
     </ClInclude>
     <ClInclude Include="Source\MeshImporter.h">
       <Filter>Source\Resources\Importers</Filter>

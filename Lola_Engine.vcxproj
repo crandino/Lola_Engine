@@ -92,6 +92,7 @@
     <ClCompile Include="Source\Light.cpp" />
     <ClCompile Include="Source\log.cpp" />
     <ClCompile Include="Source\Main.cpp" />
+    <ClCompile Include="Source\MaterialImporter.cpp" />
     <ClCompile Include="Source\MathGeoLib\Algorithm\GJK.cpp" />
     <ClCompile Include="Source\MathGeoLib\Algorithm\Random\LCG.cpp" />
     <ClCompile Include="Source\MathGeoLib\Geometry\AABB.cpp" />
@@ -128,6 +129,7 @@
     <ClCompile Include="Source\MathGeoLib\Math\SSEMath.cpp" />
     <ClCompile Include="Source\MathGeoLib\Math\TransformOps.cpp" />
     <ClCompile Include="Source\MathGeoLib\Time\Clock.cpp" />
+    <ClCompile Include="Source\MeshImporter.cpp" />
     <ClCompile Include="Source\ModuleAudio.cpp" />
     <ClCompile Include="Source\ModuleCameraEditor.cpp" />
     <ClCompile Include="Source\ModuleEditor.cpp" />
@@ -139,10 +141,12 @@
     <ClCompile Include="Source\ModuleSceneIntro.cpp" />
     <ClCompile Include="Source\ModuleWindow.cpp" />
     <ClCompile Include="Source\Parson\parson.c" />
+    <ClCompile Include="Source\Performance.cpp" />
     <ClCompile Include="Source\PerfTimer.cpp" />
     <ClCompile Include="Source\PhysBody3D.cpp" />
     <ClCompile Include="Source\Primitive.cpp" />
     <ClCompile Include="Source\OcTree.cpp" />
+    <ClCompile Include="Source\SceneImporter.cpp" />
     <ClCompile Include="Source\Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -164,7 +168,6 @@
     <ClInclude Include="Source\imgui\stb_rect_pack.h" />
     <ClInclude Include="Source\imgui\stb_textedit.h" />
     <ClInclude Include="Source\imgui\stb_truetype.h" />
-    <ClInclude Include="Source\Importer.h" />
     <ClInclude Include="Source\JSONParser.h" />
     <ClInclude Include="Source\Light.h" />
     <ClInclude Include="Source\MaterialImporter.h" />

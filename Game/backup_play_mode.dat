@@ -469,7 +469,7 @@
                     "Selected": false,
                     "ToDelete": false,
                     "Static": true,
-                    "UUID": "1094390660",
+                    "UUID": "1755347777",
                     "Parent UUID": "0",
                     "Components": [
                         {
@@ -541,15 +541,15 @@
                     "Selected": false,
                     "ToDelete": false,
                     "Static": true,
-                    "UUID": "697004208",
+                    "UUID": "1065500634",
                     "Parent UUID": "0",
                     "Components": [
                         {
                             "Type": 1,
                             "Local position": [
-                                -3.385780,
-                                2.446042,
-                                13.331157
+                                -3.281006,
+                                2.112001,
+                                -15.456901
                             ],
                             "Local scale": [
                                 1,
@@ -558,9 +558,9 @@
                             ],
                             "Local rotation": [
                                 0,
-                                -0.994133,
                                 0,
-                                0.108084
+                                0,
+                                1
                             ],
                             "Parent transform": [
                                 1,
@@ -581,14 +581,14 @@
                                 1
                             ],
                             "Forward": [
-                                -0.214907,
                                 0,
-                                -0.976635
+                                0,
+                                1
                             ],
                             "Left": [
-                                -0.976635,
+                                1,
                                 0,
-                                0.214907
+                                0
                             ],
                             "Up": [
                                 0,
@@ -613,7 +613,7 @@
                     "Selected": false,
                     "ToDelete": false,
                     "Static": true,
-                    "UUID": "821617898",
+                    "UUID": "1624551027",
                     "Parent UUID": "0",
                     "Components": [
                         {
@@ -708,10 +708,10 @@
                 {
                     "Name": "pCube1",
                     "Active": true,
-                    "Selected": true,
+                    "Selected": false,
                     "ToDelete": false,
                     "Static": true,
-                    "UUID": "1816425127",
+                    "UUID": "1134649056",
                     "Parent UUID": "0",
                     "Components": [
                         {
@@ -809,7 +809,7 @@
                     "Selected": false,
                     "ToDelete": false,
                     "Static": true,
-                    "UUID": "1671576043",
+                    "UUID": "1550751982",
                     "Parent UUID": "0",
                     "Components": [
                         {
@@ -907,8 +907,8 @@
                     "Selected": false,
                     "ToDelete": false,
                     "Static": true,
-                    "UUID": "2005721149",
-                    "Parent UUID": "821617898",
+                    "UUID": "483697477",
+                    "Parent UUID": "1624551027",
                     "Components": [
                         {
                             "Type": 1,
@@ -1005,8 +1005,8 @@
                     "Selected": false,
                     "ToDelete": false,
                     "Static": true,
-                    "UUID": "1038563574",
-                    "Parent UUID": "2005721149",
+                    "UUID": "1641850110",
+                    "Parent UUID": "483697477",
                     "Components": [
                         {
                             "Type": 1,
@@ -1103,8 +1103,8 @@
                     "Selected": false,
                     "ToDelete": false,
                     "Static": true,
-                    "UUID": "1809950333",
-                    "Parent UUID": "1038563574",
+                    "UUID": "1982165407",
+                    "Parent UUID": "1641850110",
                     "Components": [
                         {
                             "Type": 1,

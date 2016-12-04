@@ -64,6 +64,7 @@ public:
 	// Engine mode related...
 	ENGINE_MODE GetEngineMode() const;
 	void ChangeEngineMode();
+	void PausePlayMode();
 		
 private:
 

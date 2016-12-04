@@ -271,15 +271,26 @@ void Application::ChangeEngineMode()
 {
 	if (engine_mode == ENGINE_MODE::EDITOR)
 	{
-		engine_mode = ENGINE_MODE::GAME;
 		SaveGame("backup_play_mode.dat");
+		engine_mode = ENGINE_MODE::GAME;
 		perf_info.GameStart();
 	}
 	else
 	{
-		engine_mode = ENGINE_MODE::EDITOR;
 		LoadGame("backup_play_mode.dat");
+		engine_mode = ENGINE_MODE::EDITOR;
 		perf_info.GameStop();
+	}
+}
+
+void Application::PausePlayMode()
+{
+	if (engine_mode == ENGINE_MODE::GAME)
+	{
+		if (!perf_info.IsGamePaused())
+			perf_info.PauseGame();
+		else
+			perf_info.UnpauseGame();
 	}
 }
 
