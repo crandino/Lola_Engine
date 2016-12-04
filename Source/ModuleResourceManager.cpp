@@ -308,24 +308,25 @@ Resource *ModuleResourceManager::Get(ID id)
 
 bool ModuleResourceManager::LoadFile(const char *file_to_load)
 {
-	ID id = Find(file_to_load);
+	const char *file = App->file_system->GetFileFromDirPath(file_to_load);
+	ID id = Find(file);
 	if (id == 0)
 	{
-		DEBUG("File %s has not been imported! Could not be loaded", file_to_load);
+		DEBUG("File %s has not been imported! Could not be loaded", file);
 	}		
 	else
 	{
 		// Getting Scene Resource in order to load all of its components
-		Resource *res = Get(Find(file_to_load));
+		Resource *res = Get(Find(file));
 		
 		char *buf;
 		std::string lib_folder = LIBRARY_SCENES;
 		App->file_system->Load((lib_folder + res->imported_file).c_str(), &buf);
 		JSONParser json_scene; json_scene.ParseBuffer(buf);
 
-		for (int i = 0; i < json_scene.GetArrayCount(file_to_load); ++i)
+		for (int i = 0; i < json_scene.GetArrayCount(file); ++i)
 		{
-			JSONParser item = json_scene.GetArray(file_to_load, i);
+			JSONParser item = json_scene.GetArray(file, i);
 			
 			switch ((RESOURCE_TYPE)item.GetInt("Type"))
 			{
@@ -410,7 +411,7 @@ bool ModuleResourceManager::LoadFile(const char *file_to_load)
 								aiMesh *ai_mesh = scene->mMeshes[node_to_add->mMeshes[j]];
 							
 								ComponentMesh *comp_mesh = (ComponentMesh*)new_go->AddComponent(COMPONENT_TYPE::MESH);
-								comp_mesh->AddResource((ResourceMesh*)Get(FindFileIdJSON(json_scene, file_to_load, go_name)));	
+								comp_mesh->AddResource((ResourceMesh*)Get(FindFileIdJSON(json_scene, file, go_name)));	
 
 								// --- MATERIAL ---	
 								aiMaterial *ai_material = scene->mMaterials[ai_mesh->mMaterialIndex];
@@ -420,7 +421,7 @@ bool ModuleResourceManager::LoadFile(const char *file_to_load)
 									aiString path;
 									ai_material->GetTexture(aiTextureType_DIFFUSE, 0, &path);
 									ComponentMaterial *comp_mat = (ComponentMaterial*)new_go->AddComponent(COMPONENT_TYPE::MATERIAL);
-									comp_mat->AddResource((ResourceTexture*)Get(FindFileIdJSON(json_scene, file_to_load, App->file_system->GetFileFromDirPath(path.C_Str()))));
+									comp_mat->AddResource((ResourceTexture*)Get(FindFileIdJSON(json_scene, file, App->file_system->GetFileFromDirPath(path.C_Str()))));
 								}				
 							}
 						}
@@ -437,7 +438,7 @@ bool ModuleResourceManager::LoadFile(const char *file_to_load)
 		}
 		else
 		{
-			DEBUG("Error loading scene %s: %s", file_to_load, aiGetErrorString());
+			DEBUG("Error loading scene %s: %s", file, aiGetErrorString());
 		}		
 	}	
 

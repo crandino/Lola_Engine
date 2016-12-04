@@ -4,6 +4,7 @@
 #include "Application.h"
 #include "ModuleWindow.h"
 #include "ModuleResourceManager.h"
+#include "ModuleGameObjectManager.h"
 
 #include "Imgui\imgui_impl_sdl_gl3.h"
 
@@ -115,6 +116,7 @@ UPDATE_STATUS ModuleInput::PreUpdate(float dt)
 			{
 				char *dropped_filedir = e.drop.file;
 				App->resource_manager->LoadFile(dropped_filedir);
+				App->gameobject_manager->UpdateOcTree();
 				SDL_free(dropped_filedir);    // Free dropped_filedir memory
 			}				
 			break;

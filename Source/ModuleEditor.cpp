@@ -55,8 +55,8 @@ UPDATE_STATUS ModuleEditor::PreUpdate(float dt)
 	if (App->input->GetKey(SDL_SCANCODE_DELETE) == KEY_DOWN && go_selected)
 		warning_alert = true;
 
-	if (App->input->GetKey(SDL_SCANCODE_O) == KEY_DOWN)
-		load_menu = !load_menu;
+	/*if (App->input->GetKey(SDL_SCANCODE_O) == KEY_DOWN)
+		load_menu = !load_menu;*/
 	
 	return UPDATE_CONTINUE;
 }
@@ -72,7 +72,7 @@ UPDATE_STATUS ModuleEditor::Update(float dt)
 	if (console_menu) ShowConsole();
 	if (hierarchy_menu) ShowHierarchy();
 	if (warning_alert) ShowWarning();
-	if (load_menu) ShowLoadMenu();
+	//if (load_menu) ShowLoadMenu();
 
 	ShowComponentInfo();
 

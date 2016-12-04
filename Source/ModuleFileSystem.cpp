@@ -278,8 +278,8 @@ void ModuleFileSystem::SetWriteDirectory()
 		case(ENGINE_MODE::EDITOR):
 		{
 			char write_dir[MEDIUM_STRING];
-			//sprintf_s(write_dir, MEDIUM_STRING, "%s%s", PHYSFS_getBaseDir(), "Game");	
-			sprintf_s(write_dir, MEDIUM_STRING, "%s", PHYSFS_getBaseDir());
+			sprintf_s(write_dir, MEDIUM_STRING, "%s%s", PHYSFS_getBaseDir(), "Game");	
+			//sprintf_s(write_dir, MEDIUM_STRING, "%s", PHYSFS_getBaseDir());
 
 			if (PHYSFS_setWriteDir(write_dir) == 0)
 				DEBUG("%s,%s", "Error on setting Write Directory. Error:", PHYSFS_getLastError());
