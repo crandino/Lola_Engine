@@ -27,11 +27,8 @@ public:
 	std::string imported_file;
 	int timestamp;
 
-	bool to_delete;
-
 	Resource()
 	{
-		to_delete = false;
 		loaded_in_memory = false;
 		times_referenced = 0;
 		timestamp = 0;

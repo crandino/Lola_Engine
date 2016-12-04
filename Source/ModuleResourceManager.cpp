@@ -101,9 +101,9 @@ UPDATE_STATUS ModuleResourceManager::PreUpdate(float dt)
 	if (App->input->GetKey(SDL_SCANCODE_G) == KEY_DOWN)
 	{
 		//LoadFile("cube.fbx");
-		//LoadFile("primitives_with_parent.fbx");
+		LoadFile("primitives_with_parent.fbx");
 		//LoadFile("Models/aabb_test.fbx");
-		LoadFile("Street environment_V01.FBX");
+		//LoadFile("Street environment_V01.FBX");
 		//LoadFile("Models/QuadTree_test3.fbx");
 		//LoadFile("Models/color_cubes.fbx");
 		//LoadFile("Models/conflict_octree.fbx");
@@ -116,24 +116,11 @@ UPDATE_STATUS ModuleResourceManager::PreUpdate(float dt)
 
 UPDATE_STATUS ModuleResourceManager::PostUpdate(float dt)
 {
-	for (std::map<ID, Resource*>::iterator it = resources.begin(); it != resources.end();)
-	{
-		if ((*it).second->to_delete)
-		{
-			RELEASE((*it).second);
-			it = resources.erase(it);
-		}
-		else
-			++it;
-	}
-
 	if (check_timer.ReadSec() > check_interval)
 	{
-		FreeInactiveBuffers();
+		FreeInactiveResources();
 		check_timer.Start(); // Resetting timer!
 	}
-
-
 
 	return UPDATE_CONTINUE;
 }
@@ -453,13 +440,19 @@ bool ModuleResourceManager::LoadFile(const char *file_to_load)
 	return true;
 }
 
-void ModuleResourceManager::FreeInactiveBuffers()
+void ModuleResourceManager::FreeInactiveResources()
 {
+	// Freeing buffers that are not used right now.
 	for (std::map<ID, Resource*>::iterator it = resources.begin(); it != resources.end(); ++it)
 	{
 		if ((*it).second->GetNumReferences() == 0 && (*it).second->LoadedInMemory())
 			(*it).second->UnloadFromMemory();
 	}
+
+	for (uint i = 0; i < resources_to_delete.size(); ++i)
+		RELEASE(resources_to_delete[i]);
+
+	resources_to_delete.clear();
 }
 
 ID ModuleResourceManager::FindFileIdJSON(const JSONParser &json, const char *scene_name, const char *file) const
@@ -525,9 +518,7 @@ bool ModuleResourceManager::Load(JSONParser &module)
 	for (std::map<ID, Resource*>::iterator it = resources.begin(); it != resources.end(); ++it)
 	{
 		(*it).second->UnloadFromMemory();
-		(*it).second->to_delete = true;
-		/*RELEASE((*it).second);
-		it = resources.erase(it);*/
+		resources_to_delete.push_back((*it).second);
 	}
 		
 	resources.clear();

@@ -61,7 +61,9 @@ public:
 	void LoadGame(const char *file);
 	void SaveGame(const char *file);
 
+	// Engine mode related...
 	ENGINE_MODE GetEngineMode() const;
+	void ChangeEngineMode();
 		
 private:
 

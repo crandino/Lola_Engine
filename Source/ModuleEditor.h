@@ -48,7 +48,8 @@ class ModuleEditor : public Module
 		void ShowHierarchy();
 		void ShowComponentInfo();
 		void ShowWarning();
-		void ShowLoadMenu();
+		void ShowLoadMenu(); // Incompleted!
+		void ShowTimeControl();
 
 		void ExpandTree(const GameObject* go_to_expand);
 };

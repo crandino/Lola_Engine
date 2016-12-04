@@ -43,12 +43,13 @@ private:
 	math::LCG id_generator;
 
 	std::map<ID, Resource*> resources;
+	std::vector<Resource*> resources_to_delete;
 
 	ID Find(const std::string &asset_to_find) const;
 	void DeleteEntry(ID id);
 	bool IsUpdated(ID id) const;
 
-	void FreeInactiveBuffers();
+	void FreeInactiveResources();
 	
 	RESOURCE_TYPE GetTypeOfFile(const std::string &file) const;
 	

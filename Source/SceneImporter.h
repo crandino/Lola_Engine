@@ -135,7 +135,7 @@ public:
 											IDs.push_back(next_id);
 											assets_to_import.push_back(new_texture);   // Asset filename	
 											imported_files.push_back(std::string());   // Imported filename
-											MaterialImporter::Import(ai_material, assets_to_import.back(), imported_files.back(), IDs.back());		
+											MaterialImporter::Import( assets_to_import.back(), imported_files.back(), IDs.back(), ai_material);
 
 											// JSON entry for this texture
 											JSONParser material;

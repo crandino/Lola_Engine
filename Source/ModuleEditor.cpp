@@ -64,6 +64,7 @@ UPDATE_STATUS ModuleEditor::PreUpdate(float dt)
 UPDATE_STATUS ModuleEditor::Update(float dt)
 {
 	ShowMenuBar();
+	ShowTimeControl();
 	//ImGui::ShowTestWindow();
 
 	if (about_menu) ShowAboutMenu();
@@ -340,6 +341,37 @@ void ModuleEditor::ShowLoadMenu()
 		//in_modal = false;
 	}
 		
+}
+
+void ModuleEditor::ShowTimeControl()
+{
+	ImGuiWindowFlags window_flags = (ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize |
+									 ImGuiWindowFlags_NoResize | ImGuiWindowFlags_ShowBorders);
+	ImGui::SetNextWindowPos(ImVec2(App->window->GetScreenWidth() / 2.0f, 30.0f), ImGuiSetCond_FirstUseEver);
+	ImGui::Begin("Time Control", nullptr, window_flags);
+
+	if (App->GetEngineMode() == ENGINE_MODE::EDITOR)
+	{
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.75f, 0.0f, 0.0f, 0.8f));
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.75f, 0.1f, 0.1f, 0.9f));
+		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.9f, 0.0f, 0.0f, 0.9f));
+	}		
+	else
+	{
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.0f, 0.75f, 0.0f, 0.8f));
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.1f, 0.75f, 0.1f, 0.9f));
+		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.0f, 0.9f, 0.0f, 0.9f));
+	}		
+
+	if (ImGui::Button("PLAY"))
+		App->ChangeEngineMode();
+	ImGui::SameLine();
+	ImGui::Button("PAUSE"); ImGui::SameLine();
+	ImGui::Button("STOP"); ImGui::SameLine();
+
+	ImGui::PopStyleColor(3);
+
+	ImGui::End();
 }
 
 // Expand Tree recursively shows all GameObjects on the Hierarchy Window

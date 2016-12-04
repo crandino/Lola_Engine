@@ -128,12 +128,14 @@ UPDATE_STATUS Application::Update()
 {
 	UPDATE_STATUS ret = UPDATE_CONTINUE;
 	PrepareUpdate();
+
+	float dt = perf_info.getSecDt();
 	
 	std::list<Module*>::iterator item = list_modules.begin();
 	
 	while(item != list_modules.end() && ret == UPDATE_CONTINUE)
 	{
-		ret = (*item)->IsEnabled() ? (*item)->PreUpdate(perf_info.getSecDt()) : UPDATE_CONTINUE;
+		ret = (*item)->IsEnabled() ? (*item)->PreUpdate(dt) : UPDATE_CONTINUE;
 		++item;
 	}
 
@@ -141,7 +143,7 @@ UPDATE_STATUS Application::Update()
 
 	while(item != list_modules.end() && ret == UPDATE_CONTINUE)
 	{
-		ret = (*item)->IsEnabled() ? (*item)->Update(perf_info.getSecDt()) : UPDATE_CONTINUE;
+		ret = (*item)->IsEnabled() ? (*item)->Update(dt) : UPDATE_CONTINUE;
 		++item;
 	}
 
@@ -149,7 +151,7 @@ UPDATE_STATUS Application::Update()
 
 	while(item != list_modules.end() && ret == UPDATE_CONTINUE)
 	{
-		ret = (*item)->IsEnabled() ? (*item)->PostUpdate(perf_info.getSecDt()) : UPDATE_CONTINUE;
+		ret = (*item)->IsEnabled() ? (*item)->PostUpdate(dt) : UPDATE_CONTINUE;
 		++item;
 	}
 
@@ -263,6 +265,22 @@ bool Application::LoadGameNow()
 ENGINE_MODE Application::GetEngineMode() const
 {
 	return engine_mode;
+}
+
+void Application::ChangeEngineMode()
+{
+	if (engine_mode == ENGINE_MODE::EDITOR)
+	{
+		engine_mode = ENGINE_MODE::GAME;
+		SaveGame("backup_play_mode.dat");
+		perf_info.GameStart();
+	}
+	else
+	{
+		engine_mode = ENGINE_MODE::EDITOR;
+		LoadGame("backup_play_mode.dat");
+		perf_info.GameStop();
+	}
 }
 
 void Application::CloseApp()
