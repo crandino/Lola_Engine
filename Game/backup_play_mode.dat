@@ -469,7 +469,7 @@
                     "Selected": false,
                     "ToDelete": false,
                     "Static": true,
-                    "UUID": "1755347777",
+                    "UUID": "853744374",
                     "Parent UUID": "0",
                     "Components": [
                         {
@@ -541,15 +541,15 @@
                     "Selected": false,
                     "ToDelete": false,
                     "Static": true,
-                    "UUID": "1065500634",
+                    "UUID": "1709473271",
                     "Parent UUID": "0",
                     "Components": [
                         {
                             "Type": 1,
                             "Local position": [
-                                -3.281006,
-                                2.112001,
-                                -15.456901
+                                7.483073,
+                                3.598365,
+                                -17.176167
                             ],
                             "Local scale": [
                                 1,
@@ -557,10 +557,10 @@
                                 1
                             ],
                             "Local rotation": [
-                                0,
-                                0,
-                                0,
-                                1
+                                0.173043,
+                                -0.256385,
+                                -0.002722,
+                                0.950953
                             ],
                             "Parent transform": [
                                 1,
@@ -581,19 +581,19 @@
                                 1
                             ],
                             "Forward": [
-                                0,
-                                0,
-                                1
+                                -0.488563,
+                                -0.327716,
+                                0.808646
                             ],
                             "Left": [
-                                1,
-                                0,
-                                0
+                                0.868519,
+                                -0.093908,
+                                0.486678
                             ],
                             "Up": [
-                                0,
-                                1,
-                                0
+                                -0.083554,
+                                0.940098,
+                                0.330507
                             ]
                         },
                         {
@@ -613,7 +613,7 @@
                     "Selected": false,
                     "ToDelete": false,
                     "Static": true,
-                    "UUID": "1624551027",
+                    "UUID": "690914857",
                     "Parent UUID": "0",
                     "Components": [
                         {
@@ -708,10 +708,10 @@
                 {
                     "Name": "pCube1",
                     "Active": true,
-                    "Selected": false,
+                    "Selected": true,
                     "ToDelete": false,
                     "Static": true,
-                    "UUID": "1134649056",
+                    "UUID": "248204481",
                     "Parent UUID": "0",
                     "Components": [
                         {
@@ -806,10 +806,10 @@
                 {
                     "Name": "pTorus1",
                     "Active": true,
-                    "Selected": false,
+                    "Selected": true,
                     "ToDelete": false,
                     "Static": true,
-                    "UUID": "1550751982",
+                    "UUID": "473444724",
                     "Parent UUID": "0",
                     "Components": [
                         {
@@ -907,8 +907,8 @@
                     "Selected": false,
                     "ToDelete": false,
                     "Static": true,
-                    "UUID": "483697477",
-                    "Parent UUID": "1624551027",
+                    "UUID": "307135415",
+                    "Parent UUID": "690914857",
                     "Components": [
                         {
                             "Type": 1,
@@ -1005,8 +1005,8 @@
                     "Selected": false,
                     "ToDelete": false,
                     "Static": true,
-                    "UUID": "1641850110",
-                    "Parent UUID": "483697477",
+                    "UUID": "1567114263",
+                    "Parent UUID": "307135415",
                     "Components": [
                         {
                             "Type": 1,
@@ -1103,8 +1103,8 @@
                     "Selected": false,
                     "ToDelete": false,
                     "Static": true,
-                    "UUID": "1982165407",
-                    "Parent UUID": "1641850110",
+                    "UUID": "2111320282",
+                    "Parent UUID": "1567114263",
                     "Components": [
                         {
                             "Type": 1,
@@ -1199,7 +1199,17 @@
         },
         "Camera Editor": {},
         "Scene": {},
-        "Editor": {},
+        "Editor": {
+            "About menu": false,
+            "Configuration menu": false,
+            "Console menu": false,
+            "Hierarchy menu": false,
+            "Component menu": false,
+            "Warning alert": false,
+            "Gameobject selected": true,
+            "Gameobject selected ID": "473444724",
+            "ID selected": "473444724"
+        },
         "Renderer3D": {}
     }
 }

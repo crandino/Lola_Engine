@@ -51,6 +51,7 @@ bool ComponentMaterial::Save(JSONParser &go)
 	JSONParser component;
 
 	component.AddInt("Type", type);
+	component.AddBoolean("Active", active);
 	component.AddInt("Opacity", resource->opacity);
 
 	// Colors and opacity is loaded into Resource, so if the resource exists, it will have these information
@@ -71,6 +72,7 @@ bool ComponentMaterial::Load(JSONParser &comp)
 {
 	AddResource(App->resource_manager->Get(comp.GetUUID("Resource ID")));
 
+	active = comp.GetBoolean("Active");
 	resource->opacity = comp.GetInt("Opacity");
 
 	comp.GetPoints("Color diffuse", resource->color_diffuse, 3);

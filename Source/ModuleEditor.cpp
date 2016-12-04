@@ -419,13 +419,51 @@ void ModuleEditor::ChangeSelectedGameObject(GameObject *new_go)
 		go_selected->selected = false;
 		go_selected = nullptr;
 	}		
-
-	go_selected = new_go;
-
-	if (new_go)
+	
+	if (new_go != nullptr)
 	{
-		// Now, we make the new GO selected and use its ID to show highlighted		
+		// Now, we make the new GO selected and use its ID to show highlighted	
+		go_selected = new_go;
 		go_selected->selected = true;
 		UUID_selected = new_go->UUID;
 	}
+}
+
+bool ModuleEditor::Save(JSONParser &module)
+{
+	module.AddBoolean("About menu", about_menu);
+	module.AddBoolean("Configuration menu", conf_menu);
+	module.AddBoolean("Console menu", console_menu);
+	module.AddBoolean("Hierarchy menu", hierarchy_menu);
+	module.AddBoolean("Component menu", component_menu);
+	module.AddBoolean("Warning alert", warning_alert);
+
+	if (go_selected != nullptr)
+	{
+		module.AddBoolean("Gameobject selected", true);
+		module.AddUUID("Gameobject selected ID", go_selected->UUID);
+		module.AddUUID("ID selected", UUID_selected);
+	}
+	else
+		module.AddBoolean("Gameobject selected", false);	
+
+	return true;
+}
+
+bool ModuleEditor::Load(JSONParser &module)
+{
+	about_menu = module.GetBoolean("About menu");
+	conf_menu = module.GetBoolean("Configuration menu");
+	console_menu = module.GetBoolean("Console menu");
+	hierarchy_menu = module.GetBoolean("Hierarchy menu");
+	component_menu = module.GetBoolean("Component menu");
+	warning_alert = module.GetBoolean("Warning alert");
+
+	if (module.GetBoolean("Gameobject selected"))
+	{
+		ChangeSelectedGameObject(App->gameobject_manager->Get(module.GetUUID("Gameobject selected ID")));
+		/*UUID_selected = module.GetUUID("ID selected");*/
+	}
+	
+	return true;
 }

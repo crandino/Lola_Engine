@@ -52,6 +52,9 @@ class ModuleEditor : public Module
 		void ShowTimeControl();
 
 		void ExpandTree(const GameObject* go_to_expand);
+
+		bool Save(JSONParser &module);
+		bool Load(JSONParser &module);
 };
 
 #endif // !__MODULEIMGUI_H__

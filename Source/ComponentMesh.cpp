@@ -73,6 +73,7 @@ bool ComponentMesh::Save(JSONParser &go)
 	comp_mesh.AddInt("Type", type);
 	comp_mesh.AddBoolean("Wire", wire);
 	comp_mesh.AddUUID("Resource ID", resource->id);
+	comp_mesh.AddBoolean("Active", active);
 
 	go.AddArray(comp_mesh);
 
@@ -83,6 +84,7 @@ bool ComponentMesh::Load(JSONParser &comp)
 {
 	AddResource(App->resource_manager->Get(comp.GetUUID("Resource ID")));
 	wire = comp.GetBoolean("Wire");	
+	active = comp.GetBoolean("Active");
 
 	return true;
 }

@@ -32,11 +32,6 @@ bool ModuleGameObjectManager::Awake(JSONParser &config)
 	// First gameobject of the scene (UUID = 0)
 	CreateRoot();
 
-	fake_camera = App->gameobject_manager->CreateGameObject("Fake_camera", nullptr);
-	fake_camera->AddComponent(COMPONENT_TYPE::TRANSFORM);
-	ComponentCamera *c = (ComponentCamera*)fake_camera->AddComponent(COMPONENT_TYPE::CAMERA);
-	c->SetComponent();
-
 	// Initializing OcTree	
 	oc_tree_boundaries.SetFromCenterAndSize({ 0.0f, 0.0f, 0.0f }, { 100.0f, 100.0f, 100.0f });
 	oc_tree.SetBoundaries(oc_tree_boundaries);
@@ -151,6 +146,16 @@ bool ModuleGameObjectManager::CleanUp()
 const GameObject *ModuleGameObjectManager::GetRoot() const
 {
 	return root;
+}
+
+GameObject *ModuleGameObjectManager::Get(long unsigned int ID) const
+{
+	for (uint i = 0; i < list_of_gos.size(); ++i)
+	{
+		if (list_of_gos[i]->UUID == ID)
+			return list_of_gos[i];
+	}
+	return nullptr;
 }
 
 GameObject *ModuleGameObjectManager::CreateGameObject(const char *name)
@@ -273,7 +278,7 @@ void ModuleGameObjectManager::SetEditorCamera(const ComponentCamera *comp_cam)
 
 void ModuleGameObjectManager::CreateCamera()
 {
-	GameObject *go = CreateGameObject("Camera");
+	GameObject *go = CreateGameObject("Camera", nullptr);
 	go->AddComponent(COMPONENT_TYPE::TRANSFORM);
 	go->AddComponent(COMPONENT_TYPE::CAMERA);
 }
