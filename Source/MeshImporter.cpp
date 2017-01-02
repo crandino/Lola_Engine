@@ -114,7 +114,8 @@ uint MeshImporter::Load(const std::string &imported_file, ResourceMesh *mesh)
 			memcpy(mesh->mesh_data->tex_coord, cursor, bytes);
 		}
 
-		RELEASE_ARRAY(data);
+		//RELEASE_ARRAY(data);
+		delete[] data;
 	}
 
 	return bytes;
@@ -171,8 +172,10 @@ bool MeshImporter::Import(const aiMesh *ai_mesh, std::string &imported_file, ID 
 	uint size = Save(&buf, mesh);
 	bool ret = App->file_system->Save((lib_folder + imported_file).c_str(), buf, size) != 0 ? true : false;
 
-	RELEASE_ARRAY(buf);
-	RELEASE(mesh);
+	//RELEASE_ARRAY(buf);
+	delete[] buf;
+	delete mesh;
+	//RELEASE(mesh);
 
 	return ret;
 }

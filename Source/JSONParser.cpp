@@ -59,6 +59,7 @@ bool JSONParser::AddArray(const char *name_array, const JSONParser &block)
 {
 	if (AddArray(name_array))
 		return AddArray(block);
+	return false;
 }
 
 bool JSONParser::AddBoolean(const char *name_boolean, bool boolean)

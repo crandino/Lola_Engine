@@ -24,7 +24,9 @@ public:
 
 	~ResourceMesh()
 	{
-		RELEASE(mesh_data);  // Freeing mesh data
+		//RELEASE(mesh_data);  // Freeing mesh data
+		if (mesh_data != nullptr)
+			delete mesh_data;
 	}
 
 	bool LoadToMemory()
@@ -92,9 +94,13 @@ public:
 			loaded_in_memory = false;
 
 			glDeleteBuffers(1, (GLuint*)&mesh_data->id_indices);
+			mesh_data->id_indices = 0;
 			glDeleteBuffers(1, (GLuint*)&mesh_data->id_vertices);
+			mesh_data->id_vertices = 0;
 			glDeleteBuffers(1, (GLuint*)&mesh_data->id_tex_coord);
+			mesh_data->id_tex_coord = 0;
 			glDeleteBuffers(1, (GLuint*)&mesh_data->id_normals);
+			mesh_data->id_normals = 0;
 		}
 
 		return !loaded_in_memory;

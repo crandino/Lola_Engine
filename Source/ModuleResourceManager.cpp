@@ -58,7 +58,8 @@ bool ModuleResourceManager::Awake(JSONParser &config)
 			if (res != nullptr) resources[item.GetUUID("ID")] = res;
 		}
 
-		RELEASE_ARRAY(buf);		
+		//RELEASE_ARRAY(buf);	
+		delete[] buf;
 	}
 
 	// Stream log messages to Debug window
@@ -102,7 +103,7 @@ UPDATE_STATUS ModuleResourceManager::PreUpdate(float dt)
 	// Loading FBXs
 	if (App->input->GetKey(SDL_SCANCODE_G) == KEY_DOWN)
 	{
-		//LoadFile("cube.fbx");
+		//LoadFile("cube_trans.fbx");
 		LoadFile("primitives_with_parent.fbx");
 		//LoadFile("Models/aabb_test.fbx");
 		//LoadFile("Street environment_V01.FBX");
@@ -130,7 +131,7 @@ UPDATE_STATUS ModuleResourceManager::PostUpdate(float dt)
 bool ModuleResourceManager::CleanUp()
 {
 	for (std::map<ID, Resource*>::iterator it = resources.begin(); it != resources.end(); ++it)
-		RELEASE((*it).second);
+		delete (*it).second; //RELEASE((*it).second);
 	
 	resources.clear();
 
@@ -216,7 +217,7 @@ ID ModuleResourceManager::DeleteImportedFile(std::string &asset_to_delete)
 
 	Resource *res = Get(id_removed);
 	App->file_system->RemoveFile(res->imported_file.c_str());
-	RELEASE(res);
+	delete res; //RELEASE(res);
 	DeleteEntry(id_removed);
 
 	return id_removed;
@@ -456,7 +457,7 @@ void ModuleResourceManager::FreeInactiveResources()
 
 	// Deleting resources marked as "to delete"
 	for (uint i = 0; i < resources_to_delete.size(); ++i)
-		RELEASE(resources_to_delete[i]);
+		delete resources_to_delete[i]; //RELEASE(resources_to_delete[i]);
 
 	resources_to_delete.clear();
 }

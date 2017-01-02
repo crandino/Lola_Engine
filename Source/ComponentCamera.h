@@ -29,6 +29,8 @@ public:
 	math::Frustum origin_cam_frustum;
 
 	ComponentCamera();
+	~ComponentCamera();
+	
 	bool Update();
 	void SetComponent();
 

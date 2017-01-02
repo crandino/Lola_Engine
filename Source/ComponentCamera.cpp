@@ -34,6 +34,9 @@ ComponentCamera::ComponentCamera() : Component()
 	name = GetNameByType(type);
 }
 
+ComponentCamera::~ComponentCamera()
+{ }
+
 void ComponentCamera::SetComponent()
 {
 	UpdateFrustum();

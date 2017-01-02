@@ -46,6 +46,9 @@
     <Filter Include="Source\Resources\Importers">
       <UniqueIdentifier>{fd528fed-81a4-427b-9349-2b42c30069fd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\UI_Elements">
+      <UniqueIdentifier>{2b1e4a82-a36a-4d31-b9a2-fb96dcf3cbc2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Color.cpp">
@@ -266,6 +269,21 @@
     </ClCompile>
     <ClCompile Include="Source\MeshImporter.cpp">
       <Filter>Source\Resources\Importers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ModuleUIManager.cpp">
+      <Filter>Source\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\UI_Image.cpp">
+      <Filter>Source\UI_Elements</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\UI_Element.cpp">
+      <Filter>Source\UI_Elements</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\UI_Label.cpp">
+      <Filter>Source\UI_Elements</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\UI_Button.cpp">
+      <Filter>Source\UI_Elements</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -598,6 +616,21 @@
     </ClInclude>
     <ClInclude Include="Source\ResourceScene.h">
       <Filter>Source\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ModuleUIManager.h">
+      <Filter>Source\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\UI_Element.h">
+      <Filter>Source\UI_Elements</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\UI_Image.h">
+      <Filter>Source\UI_Elements</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\UI_Label.h">
+      <Filter>Source\UI_Elements</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\UI_Button.h">
+      <Filter>Source\UI_Elements</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

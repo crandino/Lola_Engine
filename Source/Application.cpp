@@ -7,6 +7,7 @@
 #include "ModuleFileSystem.h"
 #include "ModuleCameraEditor.h"
 #include "ModuleEditor.h"
+#include "ModuleUIManager.h"
 #include "ModuleGameObjectManager.h"
 #include "ModuleResourceManager.h"
 #include "ModuleRenderer3D.h"
@@ -25,6 +26,7 @@ Application::Application()
 	resource_manager = new ModuleResourceManager(this, true);
 	gameobject_manager = new ModuleGameObjectManager(this, true);
 	editor = new ModuleEditor(this, true);
+	ui_manager = new ModuleUIManager(this, true);
 
 	// The order of calls is very important!
 	// Modules will Init() Start() and Update in this order
@@ -44,6 +46,7 @@ Application::Application()
 	AddModule(camera);
 	AddModule(scene_intro);
 	AddModule(editor);
+	AddModule(ui_manager);
 
 	// Renderer last!
 	AddModule(renderer3D);
@@ -107,9 +110,9 @@ bool Application::Init()
 void Application::PrepareUpdate()
 {
 	if (App->input->GetKey(SDL_SCANCODE_F8) == KEY_DOWN)
-		SaveGame("Test.json");
+		SaveGame("SavedGame.json");
 	if (App->input->GetKey(SDL_SCANCODE_F9) == KEY_DOWN)
-		LoadGame("Test.json");
+		LoadGame("SavedGame.json");
 
 	perf_info.PreUpdate();
 }
@@ -189,7 +192,8 @@ void Application::LoadConfig(const char *file_config, JSONParser &root)
 	char* buf;
 	int size = App->file_system->Load(file_config, &buf);
 	root.ParseBuffer(buf);
-	RELEASE(buf);
+	//RELEASE(buf);
+	delete[] buf;
 }
 
 void Application::LoadGame(const char *file)

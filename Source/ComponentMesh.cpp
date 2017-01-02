@@ -22,8 +22,17 @@ ComponentMesh::ComponentMesh() : Component()
 
 ComponentMesh::~ComponentMesh()
 { 
-	if(resource->mesh_data != nullptr)
+	if (resource->mesh_data != nullptr)
+	{
 		resource->DecrReferences();
+
+		if (resource->GetNumReferences() == 0)
+		{
+			resource->UnloadFromMemory();
+			delete resource->mesh_data;
+			resource->mesh_data = nullptr;
+		}		
+	}		
 }
 
 bool ComponentMesh::Update()

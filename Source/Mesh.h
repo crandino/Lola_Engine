@@ -33,10 +33,15 @@ struct Mesh
 
 	~Mesh()
 	{
-		RELEASE_ARRAY(vertices);
+		/*RELEASE_ARRAY(vertices);
 		RELEASE_ARRAY(normals);
 		RELEASE_ARRAY(tex_coord);
-		RELEASE_ARRAY(indices);
+		RELEASE_ARRAY(indices);*/
+
+		delete[] vertices;
+		delete[] normals;
+		delete[] tex_coord;
+		delete[] indices;
 	}
 };
 

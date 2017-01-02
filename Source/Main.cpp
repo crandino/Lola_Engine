@@ -83,7 +83,7 @@ int main(int argc, char ** argv)
 	}
 
 	DEBUG("Exiting Engine");
-	RELEASE(App);
+	delete App; //RELEASE(App);
 	
 	return main_return;
 }

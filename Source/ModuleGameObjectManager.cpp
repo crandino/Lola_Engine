@@ -135,7 +135,7 @@ bool ModuleGameObjectManager::CleanUp()
 	bool ret = true;
 
 	for (uint i = 0; i < list_of_gos.size(); ++i)
-		RELEASE(list_of_gos[i]);
+		delete list_of_gos[i]; //RELEASE(list_of_gos[i]);
 
 	list_of_gos.clear();
 	list_of_gos_to_draw.clear();
@@ -249,7 +249,7 @@ bool ModuleGameObjectManager::DeleteGameObject(GameObject *go_to_delete)
 		for (uint i = 0; i < go_to_delete->children.size(); ++i)
 			go_to_delete->children[i]->parent = nullptr;
 
-		RELEASE(go_to_delete);
+		delete go_to_delete; //RELEASE(go_to_delete);
 		ret = true;		
 	}	
 

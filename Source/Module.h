@@ -6,7 +6,9 @@
 #include "JSONParser.h"
 
 class Application;
+class UI_Element;
 struct PhysBody3D;
+enum GUI_EVENTS;
 
 class Module
 {
@@ -58,9 +60,9 @@ public:
 		return true; 
 	}
 
-	virtual void OnCollision(PhysBody3D* body1, PhysBody3D* body2)
-	{
-	}
+	//virtual void OnCollision(PhysBody3D* body1, PhysBody3D* body2) {}	
+
+	virtual void OnGui(GUI_EVENTS ui_event, UI_Element *ui_element) {}
 
 	virtual bool Save(JSONParser &module)
 	{

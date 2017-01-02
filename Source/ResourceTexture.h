@@ -45,7 +45,9 @@ public:
 
 	~ResourceTexture()
 	{
-		RELEASE_ARRAY(texture_data);  // Freeing texture data
+		//RELEASE_ARRAY(texture_data);  // Freeing texture data
+		if(texture_data != nullptr)
+			delete[] texture_data;
 	}
 
 	bool ResourceTexture::LoadToMemory()
@@ -71,6 +73,7 @@ public:
 			loaded_in_memory = false;
 
 			ilDeleteImages(1, &tex_buffer);
+			tex_buffer = 0;
 			texture_size = 0;
 		}
 

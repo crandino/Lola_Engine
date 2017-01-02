@@ -23,6 +23,7 @@ class ModuleSceneIntro;
 class ModuleRenderer3D;
 class ModuleCameraEditor;
 class ModuleEditor;
+class ModuleUIManager;
 class ModuleGameObjectManager;
 class ModuleResourceManager;
 class ModuleRenderer3D;
@@ -44,6 +45,7 @@ public:
 	ModuleGameObjectManager *gameobject_manager = nullptr;
 	ModuleResourceManager   *resource_manager = nullptr;
 	ModuleEditor			*editor = nullptr;
+	ModuleUIManager			*ui_manager = nullptr;
 
 	Application();
 	~Application();

@@ -139,6 +139,7 @@
     <ClCompile Include="Source\ModuleRenderer3D.cpp" />
     <ClCompile Include="Source\ModuleResourceManager.cpp" />
     <ClCompile Include="Source\ModuleSceneIntro.cpp" />
+    <ClCompile Include="Source\ModuleUIManager.cpp" />
     <ClCompile Include="Source\ModuleWindow.cpp" />
     <ClCompile Include="Source\Parson\parson.c" />
     <ClCompile Include="Source\Performance.cpp" />
@@ -148,6 +149,10 @@
     <ClCompile Include="Source\OcTree.cpp" />
     <ClCompile Include="Source\SceneImporter.cpp" />
     <ClCompile Include="Source\Timer.cpp" />
+    <ClCompile Include="Source\UI_Button.cpp" />
+    <ClCompile Include="Source\UI_Element.cpp" />
+    <ClCompile Include="Source\UI_Image.cpp" />
+    <ClCompile Include="Source\UI_Label.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application.h" />
@@ -246,6 +251,7 @@
     <ClInclude Include="Source\ModuleRenderer3D.h" />
     <ClInclude Include="Source\ModuleResourceManager.h" />
     <ClInclude Include="Source\ModuleSceneIntro.h" />
+    <ClInclude Include="Source\ModuleUIManager.h" />
     <ClInclude Include="Source\ModuleWindow.h" />
     <ClInclude Include="Source\openGL.h" />
     <ClInclude Include="Source\Parson\parson.h" />
@@ -260,6 +266,10 @@
     <ClInclude Include="Source\ResourceTexture.h" />
     <ClInclude Include="Source\SceneImporter.h" />
     <ClInclude Include="Source\Timer.h" />
+    <ClInclude Include="Source\UI_Button.h" />
+    <ClInclude Include="Source\UI_Element.h" />
+    <ClInclude Include="Source\UI_Image.h" />
+    <ClInclude Include="Source\UI_Label.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Game\config.json" />

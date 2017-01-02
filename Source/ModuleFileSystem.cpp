@@ -46,7 +46,8 @@ bool ModuleFileSystem::Awake(JSONParser &config)
 bool ModuleFileSystem::CleanUp()
 {
 	//RemoveAllSearchPaths();
-	RELEASE(AssimpIO);
+	//RELEASE(AssimpIO);
+	delete AssimpIO;
 
 	return true;
 }
@@ -130,7 +131,7 @@ uint ModuleFileSystem::Load(const char* file, char **buffer) const
 			{
 				DEBUG("File system error while reading from file %s: %s", file, PHYSFS_getLastError());
 				if (*buffer != nullptr)
-					delete *buffer;
+					delete[] *buffer;
 			}
 			else
 				ret = (uint)size;

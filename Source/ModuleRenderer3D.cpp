@@ -368,6 +368,15 @@ void ModuleRenderer3D::ShowGameObject(const GameObject *go)
 			{
 				glEnable(GL_TEXTURE_2D);
 				glBindTexture(GL_TEXTURE_2D, 0); // Cleanning bind buffer;
+
+				// Alpha testing-> Add this alpha test on the corresponding resource 
+				glEnable(GL_ALPHA_TEST);
+				glAlphaFunc(GL_GREATER, 0.1f);
+
+				//Blending 
+				glEnable(GL_BLEND);
+				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 				glBindTexture(GL_TEXTURE_2D, comp_mat->resource->tex_buffer);		
 				glColor3f(comp_mat->resource->color_diffuse.x, comp_mat->resource->color_diffuse.y, comp_mat->resource->color_diffuse.z);
 			}
@@ -391,6 +400,8 @@ void ModuleRenderer3D::ShowGameObject(const GameObject *go)
 		glPopMatrix();
 		
 		glDisable(GL_TEXTURE_2D);
+		glDisable(GL_ALPHA_TEST);
+		glDisable(GL_BLEND);
 
 		glDisableClientState(GL_VERTEX_ARRAY);
 		glDisableClientState(GL_NORMAL_ARRAY);

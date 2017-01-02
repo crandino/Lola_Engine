@@ -72,9 +72,11 @@ bool MaterialImporter::Import(std::string &asset_to_import, std::string &importe
 			imported_file = imported_filename;
 			if (App->file_system->Save((lib_folder + imported_file).c_str(), dds_data, dds_size + color_size) != 0) success = true;
 		}
-		RELEASE_ARRAY(dds_data);
+		//RELEASE_ARRAY(dds_data);
+		delete[] dds_data;
+		delete data;
 	}
-	RELEASE(data);
+	//RELEASE(data);	
 
 	ilShutDown();
 	return success;
@@ -115,7 +117,8 @@ uint MaterialImporter::Load(const std::string &imported_file, ResourceTexture *r
 
 		memcpy(&res_mat->opacity, cursor, sizeof(float));
 
-		RELEASE_ARRAY(data);
+		//RELEASE_ARRAY(data);
+		delete[] data;
 	}
 
 	return data_size;

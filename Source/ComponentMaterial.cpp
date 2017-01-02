@@ -16,7 +16,16 @@ ComponentMaterial::ComponentMaterial() : Component()
 ComponentMaterial::~ComponentMaterial()
 { 
 	if (resource->texture_data != nullptr)
-		resource->DecrReferences();		
+	{
+		resource->DecrReferences();
+
+		if (resource->GetNumReferences() == 0)
+		{
+			resource->UnloadFromMemory();
+			delete[] resource->texture_data;
+			resource->texture_data = nullptr;
+		}			
+	}			
 }
 
 bool ComponentMaterial::Update()

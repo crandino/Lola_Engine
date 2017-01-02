@@ -24,8 +24,8 @@ GameObject::GameObject(const char* name)
 GameObject::~GameObject()
 {
 	for (uint i = 0; i < components.size(); ++i)
-		RELEASE(components[i]);
-
+		delete components[i]; //RELEASE(components[i]);
+	
 	components.clear();
 	children.clear();
 }

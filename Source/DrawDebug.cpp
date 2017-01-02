@@ -15,8 +15,8 @@ DrawDebug::DrawDebug()
 
 DrawDebug::~DrawDebug()
 {
-	RELEASE(edges);
-	RELEASE(corners);
+	delete[] edges; //RELEASE(edges);
+	delete[] corners; //RELEASE(corners);
 }
 
 void DrawDebug::DrawAABB(const math::AABB &bbox) const
