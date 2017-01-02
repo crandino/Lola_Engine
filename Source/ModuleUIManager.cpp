@@ -1,11 +1,3 @@
-//#include "p2Defs.h"
-//#include "p2Log.h"
-//#include "App.h"
-//#include "Render.h"
-//#include "Textures.h"
-//#include "Fonts.h"
-//#include "Input.h"
-//#include "Gui.h"
 #include "ModuleUIManager.h"
 
 #include "Application.h"
@@ -15,6 +7,8 @@
 #include "UI_Image.h"
 #include "UI_Label.h"
 #include "UI_Button.h"
+
+#include "Component.h"
 
 #include "SDL\include\SDL_render.h"
 
@@ -43,6 +37,9 @@ bool ModuleUIManager::Awake(JSONParser &config)
 bool ModuleUIManager::Start()
 {
 	//atlas = app->tex->loadTexture(atlas_file_name.GetString());
+
+	canvas = App->gameobject_manager->CreateGameObject("Canvas", nullptr);
+	canvas->AddComponent(COMPONENT_TYPE::TRANSFORM_2D);
 
 	screen = new UI_Element();
 	screen->interactable = false;

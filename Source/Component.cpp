@@ -37,6 +37,9 @@ const char *Component::GetNameByType(COMPONENT_TYPE type)
 	case(COMPONENT_TYPE::TRANSFORM):
 		name = "Transform";
 		break;
+	case(COMPONENT_TYPE::TRANSFORM_2D):
+		name = "Rect Transform";
+		break;
 	case(COMPONENT_TYPE::MESH):
 		name = "Mesh";
 		break;

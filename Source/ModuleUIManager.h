@@ -4,6 +4,8 @@
 #include "Module.h"
 #include "SDL\include\SDL_render.h"
 
+#include "ModuleGameObjectManager.h"
+
 class UI_Image;
 class UI_Button;
 class UI_Label;
@@ -32,7 +34,8 @@ class ModuleUIManager : public Module
 {
 public:
 
-	UI_Element				*screen;
+	GameObject		*canvas = nullptr;
+	UI_Element		*screen;
 
 	ModuleUIManager(Application* app, bool start_enabled = true);
 	~ModuleUIManager();

@@ -2,6 +2,7 @@
 
 #include "Component.h"
 #include "ComponentTransform.h"
+#include "ComponentTransform2D.h"
 #include "ComponentMesh.h"
 #include "ComponentMaterial.h"
 #include "ComponentCamera.h"
@@ -40,6 +41,9 @@ const Component* GameObject::AddComponent(COMPONENT_TYPE type)
 		comp = new ComponentTransform();
 		if(transform == nullptr)
 			transform = (ComponentTransform*)comp;
+		break;
+	case(COMPONENT_TYPE::TRANSFORM_2D):
+		comp = new ComponentTransform2D();
 		break;
 	case(COMPONENT_TYPE::MESH):
 		comp = new ComponentMesh();

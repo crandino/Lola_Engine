@@ -1,7 +1,7 @@
 #include "ComponentTransform.h"
 
 #include "GameObject.h"
-#include "ComponentMesh.h"
+//#include "ComponentMesh.h"
 
 #include "Assimp\include\scene.h"
 #include "imgui\imgui.h"
