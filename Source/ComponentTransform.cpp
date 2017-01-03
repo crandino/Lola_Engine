@@ -129,6 +129,7 @@ void ComponentTransform::RecalcTransformations()
 		{
 			go = go_stack.top();
 			go_stack.pop();
+
 			go->transform->parent_transform = parent_matrix;
 			go->transform->CalcWorldTransformMatrix();
 			go->transform_applied = true;				 // Children needs update for AABB, Frustum.. on their own Updates().

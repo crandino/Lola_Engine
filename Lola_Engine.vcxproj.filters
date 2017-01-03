@@ -288,6 +288,9 @@
     <ClCompile Include="Source\ComponentTransform2D.cpp">
       <Filter>Source\Components</Filter>
     </ClCompile>
+    <ClCompile Include="Source\ComponentImageUI.cpp">
+      <Filter>Source\Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Color.h">
@@ -636,6 +639,9 @@
       <Filter>Source\UI_Elements</Filter>
     </ClInclude>
     <ClInclude Include="Source\ComponentTransform2D.h">
+      <Filter>Source\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ComponentImageUI.h">
       <Filter>Source\Components</Filter>
     </ClInclude>
   </ItemGroup>

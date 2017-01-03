@@ -67,6 +67,9 @@ public:
 	UI_HorizontalScrollBar *CreateHorizontalScrollBar(math::float2 pos, int bar_offset, int thumb_vert_offset, SDL_Texture *bar_tex, SDL_Rect &section_bar,
 								SDL_Texture *thumb_tex, SDL_Rect &section_thumb, Module *module = NULL, UI_Element *parent = NULL);
 
+	// New factory functions with components
+	void CreateImage(int pos_x, int pos_y, int size_x, int size_y);
+
 	const SDL_Texture* getAtlas() const;
 	const UI_Element* whichFocus() const;
 	
@@ -82,6 +85,8 @@ private:
 	//p2SString					atlas_file_name;
 
 	bool					debug;
+
+	void CreateCanvas();
 	
 };
 

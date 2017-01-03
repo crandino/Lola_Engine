@@ -331,7 +331,13 @@ void ModuleRenderer3D::DrawDirectMode()
 }
 
 void ModuleRenderer3D::ShowGameObject(const GameObject *go)
-{
+{/*
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+
+	CalculateProjectionMatrix();
+	glLoadMatrixf(*projection_matrix.v);*/
+
 	const ComponentMesh *comp_mesh = nullptr;
 	const ComponentMaterial *comp_mat = nullptr;
 

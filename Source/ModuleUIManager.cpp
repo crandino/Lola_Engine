@@ -9,6 +9,7 @@
 #include "UI_Button.h"
 
 #include "Component.h"
+#include "ComponentTransform2D.h"
 
 #include "SDL\include\SDL_render.h"
 
@@ -38,13 +39,12 @@ bool ModuleUIManager::Start()
 {
 	//atlas = app->tex->loadTexture(atlas_file_name.GetString());
 
-	canvas = App->gameobject_manager->CreateGameObject("Canvas", nullptr);
-	canvas->AddComponent(COMPONENT_TYPE::TRANSFORM_2D);
-
 	screen = new UI_Element();
 	screen->interactable = false;
 	focus = screen;
 	previous_UIelement = screen;
+
+	CreateCanvas();
 
 	return true;
 }
@@ -167,6 +167,27 @@ UI_Button *ModuleUIManager::CreateButton(math::float2 p, SDL_Texture *tex_idle, 
 	UIelement_list.push_back(b);
 
 	return b;	
+}
+
+void ModuleUIManager::CreateImage(int pos_x, int pos_y, int size_x, int size_y )
+{
+	if (canvas != nullptr)
+		CreateCanvas();
+
+	GameObject *ui_image = App->gameobject_manager->CreateGameObject("UI_Image", canvas);
+	ui_image->AddComponent(COMPONENT_TYPE::TRANSFORM_2D);
+
+
+	//UI_Image *i = new UI_Image();
+	////i->init(p, tex, section, mod, parent);
+	//UIelement_list.push_back(i);
+	//return i;
+}
+
+void ModuleUIManager::CreateCanvas()
+{
+	canvas = App->gameobject_manager->CreateGameObject("Canvas", nullptr);
+	canvas->AddComponent(COMPONENT_TYPE::TRANSFORM_2D);
 }
 
 //UIinputBox *Gui::createInputBox(iPoint pos, iPoint text_offset, SDL_Texture *frame_tex, SDL_Rect &frame_section, const char *initial_text,

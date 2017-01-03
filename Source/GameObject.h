@@ -12,6 +12,7 @@ enum COMPONENT_TYPE;
 
 class Component;
 class ComponentTransform;
+class ComponentTransform2D;
 struct Mesh;
 
 class GameObject
@@ -25,6 +26,7 @@ public:
 
 	// Unique components
 	ComponentTransform				*transform = nullptr;
+	ComponentTransform2D			*transform_2d = nullptr;
 	bool							 transform_applied = false;
 
 	std::vector<Component*>			 components;

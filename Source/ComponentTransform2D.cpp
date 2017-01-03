@@ -3,9 +3,12 @@
 #include "GameObject.h"
 
 #include "ModuleWindow.h"
+#include "ModuleCameraEditor.h"
 #include "Application.h"
 
 #include "imgui\imgui.h"
+#include "MathGeoLib\MathGeoLib.h"
+#include "openGL.h"
 
 #include <stack>
 
@@ -15,12 +18,27 @@ ComponentTransform2D::ComponentTransform2D() : Component()
 	local_transform.SetIdentity();
 	parent_transform.SetIdentity();
 
-	local_position.Set(0.0f, 0.0f, 0.0f);
-	local_size.Set(100.0f, 100.0f);
+	local_position.Set(10.0f, 50.0f, 0.0f);
+	local_size.Set(200.0f, 200.0f);
 
-	/*local_rotation_euler_rad.Set(0.0f, 0.0f, 0.0f);
-	local_rotation_euler_deg.Set(0.0f, 0.0f, 0.0f);*/
-	local_rotation_quat.Set(0.0f, 0.0f, 0.0f, 1.0f);
+	math::Frustum frustum; App->camera->GetEditorCamera()->GetFrustum(frustum);
+	//local_position = frustum.CornerPoint(0);
+	
+	canvas.num_vertices = 4;
+	canvas.vertices = new math::float3[canvas.num_vertices];
+	canvas.vertices[0] = local_position;
+	canvas.vertices[1] = local_position + math::float3(local_size.x, 0.0f, 0.0f);
+	canvas.vertices[2] = local_position + math::float3(0.0f, local_size.y, 0.0f);
+	canvas.vertices[3] = local_position + math::float3(local_size, 0.0f);
+
+	canvas.num_indices = 6;
+	canvas.indices = new unsigned int[canvas.num_indices];
+	canvas.indices[0] = 0;
+	canvas.indices[1] = 2;
+	canvas.indices[2] = 1;
+	canvas.indices[3] = 1;
+	canvas.indices[4] = 2;
+	canvas.indices[5] = 3;
 
 	type = COMPONENT_TYPE::TRANSFORM_2D;
 	name = GetNameByType(type);
@@ -30,6 +48,26 @@ bool ComponentTransform2D::Update()
 {
 	if (game_object->transform_applied)
 		RecalcTransformations();
+
+	glEnableClientState(GL_VERTEX_ARRAY);
+
+	glMatrixMode(GL_PROJECTION);
+	glPushMatrix();
+	glLoadIdentity();	
+	glOrtho(0, App->window->GetScreenWidth(), App->window->GetScreenHeight(), 0, -1, 1);	//
+	glMatrixMode(GL_MODELVIEW);               // Select Modelview Matrix
+	glPushMatrix();                     // Push The Matrix
+	glLoadIdentity();
+
+	glVertexPointer(3, GL_FLOAT, 0, canvas.vertices);
+	glDrawElements(GL_TRIANGLES, canvas.num_indices, GL_UNSIGNED_INT, canvas.indices);
+
+	glMatrixMode(GL_PROJECTION);               // Select Projection
+	glPopMatrix();                     // Pop The Matrix
+	glMatrixMode(GL_MODELVIEW);               // Select Modelview
+	glPopMatrix();                     // Pop The Matrix
+
+	glDisableClientState(GL_VERTEX_ARRAY);
 
 	return true;
 }

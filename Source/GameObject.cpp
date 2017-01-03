@@ -44,6 +44,8 @@ const Component* GameObject::AddComponent(COMPONENT_TYPE type)
 		break;
 	case(COMPONENT_TYPE::TRANSFORM_2D):
 		comp = new ComponentTransform2D();
+		if (transform_2d == nullptr)
+			transform_2d = (ComponentTransform2D*)comp;
 		break;
 	case(COMPONENT_TYPE::MESH):
 		comp = new ComponentMesh();

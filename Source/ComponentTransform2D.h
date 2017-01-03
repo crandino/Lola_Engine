@@ -4,24 +4,20 @@
 #include "Component.h"
 #include "MathGeoLib\MathGeoLib.h"
 
+#include "Mesh.h"
+
 class ComponentTransform2D : public Component
 {
 
 private:
 
-	//math::vec forward_dir, left_dir, up_dir;
-
 	math::float3 local_position;				// Position representation;
-	math::float2 local_size;					// Scale representation;	
+	math::float2 local_size;					// Size representation;
 
-	//math::float3 local_rotation_euler_rad;		// Euler representation on rad.
-	//math::float3 local_rotation_euler_deg;		// Euler representation on degrees.
+	Mesh canvas;
 
 public:
 
-	//math::vec forward, left, up;
-
-	math::Quat local_rotation_quat;			 	// Rotation representation (quaternion);
 	math::float4x4 local_transform;				// Its local matrix transformation;
 	math::float4x4 world_transform;				// Its world matrix transformation;
 	math::float4x4 parent_transform;			// Combined parent matrix transformation;
