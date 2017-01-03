@@ -137,7 +137,7 @@ void ModuleEditor::ShowMenuFile()
 void ModuleEditor::ShowCreateMenu()
 {
 	if (ImGui::MenuItem("Camera")) { App->gameobject_manager->CreateCamera(); }
-	//if (ImGui::MenuItem("UI - Image")) { App->ui_manager->CreateImage(); }
+	if (ImGui::MenuItem("UI - Image")) { App->ui_manager->CreateImage(); }
 }
 
 void ModuleEditor::ShowAboutMenu()

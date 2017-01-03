@@ -44,7 +44,7 @@ bool ModuleUIManager::Start()
 	focus = screen;
 	previous_UIelement = screen;
 
-	CreateCanvas();
+	//CreateCanvas();
 
 	return true;
 }
@@ -169,19 +169,19 @@ UI_Button *ModuleUIManager::CreateButton(math::float2 p, SDL_Texture *tex_idle, 
 	return b;	
 }
 
-void ModuleUIManager::CreateImage(int pos_x, int pos_y, int size_x, int size_y )
+void ModuleUIManager::CreateImage(const math::float3 &pos, const math::float2 &size)
 {
-	if (canvas != nullptr)
+	if (canvas == nullptr)
 		CreateCanvas();
 
 	GameObject *ui_image = App->gameobject_manager->CreateGameObject("UI_Image", canvas);
 	ui_image->AddComponent(COMPONENT_TYPE::TRANSFORM_2D);
 
+	ui_image->transform_2d->SetLocalPos(pos);
+	ui_image->transform_2d->SetSize(size);
 
-	//UI_Image *i = new UI_Image();
-	////i->init(p, tex, section, mod, parent);
-	//UIelement_list.push_back(i);
-	//return i;
+	GameObject *ui_image2 = App->gameobject_manager->CreateGameObject("UI_Image2", ui_image);
+	ui_image2->AddComponent(COMPONENT_TYPE::TRANSFORM_2D);
 }
 
 void ModuleUIManager::CreateCanvas()

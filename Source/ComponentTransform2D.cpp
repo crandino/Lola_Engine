@@ -3,7 +3,6 @@
 #include "GameObject.h"
 
 #include "ModuleWindow.h"
-#include "ModuleCameraEditor.h"
 #include "Application.h"
 
 #include "imgui\imgui.h"
@@ -14,22 +13,17 @@
 
 ComponentTransform2D::ComponentTransform2D() : Component()
 {
-	world_transform.SetIdentity();
-	local_transform.SetIdentity();
-	parent_transform.SetIdentity();
-
-	local_position.Set(10.0f, 50.0f, 0.0f);
-	local_size.Set(200.0f, 200.0f);
-
-	math::Frustum frustum; App->camera->GetEditorCamera()->GetFrustum(frustum);
-	//local_position = frustum.CornerPoint(0);
+	local_position.Set(0.0f, 0.0f, 0.0f);
+	global_position.Set(0.0f, 0.0f, 0.0f);
 	
+	size.Set(App->window->GetScreenWidth(), App->window->GetScreenHeight());
+
 	canvas.num_vertices = 4;
 	canvas.vertices = new math::float3[canvas.num_vertices];
 	canvas.vertices[0] = local_position;
-	canvas.vertices[1] = local_position + math::float3(local_size.x, 0.0f, 0.0f);
-	canvas.vertices[2] = local_position + math::float3(0.0f, local_size.y, 0.0f);
-	canvas.vertices[3] = local_position + math::float3(local_size, 0.0f);
+	canvas.vertices[1] = local_position + math::float3(size.x, 0.0f, 0.0f);
+	canvas.vertices[2] = local_position + math::float3(0.0f, size.y, 0.0f);
+	canvas.vertices[3] = local_position + math::float3(size, 0.0f);
 
 	canvas.num_indices = 6;
 	canvas.indices = new unsigned int[canvas.num_indices];
@@ -46,8 +40,11 @@ ComponentTransform2D::ComponentTransform2D() : Component()
 
 bool ComponentTransform2D::Update()
 {
-	if (game_object->transform_applied)
-		RecalcTransformations();
+	if (apply_transformation)
+	{
+		RecalcTranslations();
+		apply_transformation = false;
+	}		
 
 	glEnableClientState(GL_VERTEX_ARRAY);
 
@@ -78,72 +75,57 @@ void ComponentTransform2D::ShowEditorInfo()
 	ImGui::Text(name);
 
 	if (ImGui::DragFloat3("Position", &local_position.x, 0.25f, 0.0f, 0.0f, "%.3f"))
-		game_object->transform_applied = true;
+		apply_transformation = true;
 
-	if (ImGui::DragFloat2("Size", &local_size.x, 0.25f, 1.0f, 1000.0f, "%.3f"))
-		game_object->transform_applied = true;
+	if (ImGui::DragFloat2("Size", &size.x, 0.25f, 1.0f, 1000.0f, "%.3f"))
+		apply_transformation = true;
 
 	ImGui::Separator();
 }
 
 // CalcWorldTransformMatrix recalculates both parent and local transformation for the current gameobject. Besides, the method recursively
 // recalculates the world matrix transformation for all its children.
-void ComponentTransform2D::RecalcTransformations()
+void ComponentTransform2D::RecalcTranslations()
 {
-	CalcWorldTransformMatrix();
+	CalcGlobalTranslation();
 
-	std::stack<GameObject*> go_stack;
-	GameObject *go = game_object;
-
-	while (go != nullptr)
-	{
-		//math::float4x4 parent_matrix = go->transform->world_transform;
-
-		for (uint i = 0; i < go->children.size(); ++i)
-			go_stack.push(go->children[i]);
-
-		if (go_stack.empty())
-			go = nullptr;
-		else
-		{
-			go = go_stack.top();
-			go_stack.pop();
-			//go->transform->parent_transform = parent_matrix;
-			//go->transform->CalcWorldTransformMatrix();
-			go->transform_applied = true;				 // Children needs update for AABB, Frustum.. on their own Updates().
-		}
-	}
+	for (uint i = 0; i < game_object->children.size(); ++i)
+		game_object->children[i]->transform_2d->CalcGlobalTranslation();
 }
 
-void ComponentTransform2D::CalcWorldTransformMatrix()
+void ComponentTransform2D::CalcGlobalTranslation()
 {
-	//local_transform = CalcTransformMatrix(local_position, local_scale, local_rotation_quat);
-	world_transform = parent_transform * local_transform;
-
-	//world_transform = world_transform.Transposed();
-}
-
-math::float4x4 ComponentTransform2D::CalcTransformMatrix(const math::float3 &pos, const math::float3 &scale, const math::Quat &rot)
-{
-	math::float4x4 mat = math::float4x4::FromTRS(pos, rot, scale);
-	return mat;
+	if (game_object->parent->transform_2d != nullptr)
+		global_position = game_object->parent->transform_2d->GetGlobalPos() + local_position;
+	else
+		global_position = local_position;
 }
 
 void ComponentTransform2D::Move(const math::vec &movement)
 {
 	local_position += movement;
-	game_object->transform_applied = true;
+	apply_transformation = true;
 }
 
-void ComponentTransform2D::SetPos(const math::vec &pos)
-{
-	local_position = pos;
-	game_object->transform_applied = true;
-}
-
-const math::vec &ComponentTransform2D::GetPos() const
+const math::vec &ComponentTransform2D::GetLocalPos() const
 {
 	return local_position;
+}
+
+const math::vec &ComponentTransform2D::GetGlobalPos() const
+{
+	return global_position;
+}
+
+void ComponentTransform2D::SetLocalPos(const math::vec &local_pos)
+{
+	local_position = local_pos;
+	apply_transformation = true;
+}
+
+void ComponentTransform2D::SetSize(const math::float2 &size)
+{
+	this->size = size;
 }
 
 bool ComponentTransform2D::Save(JSONParser &go)

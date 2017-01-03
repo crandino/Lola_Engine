@@ -68,7 +68,7 @@ public:
 								SDL_Texture *thumb_tex, SDL_Rect &section_thumb, Module *module = NULL, UI_Element *parent = NULL);
 
 	// New factory functions with components
-	void CreateImage(int pos_x, int pos_y, int size_x, int size_y);
+	void CreateImage(const math::float3 &pos = math::float3::zero, const math::float2 &size = math::float2(10.0f, 10.f));
 
 	const SDL_Texture* getAtlas() const;
 	const UI_Element* whichFocus() const;
