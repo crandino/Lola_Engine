@@ -90,7 +90,7 @@ void ComponentTransform2D::RecalcTranslations()
 	CalcGlobalTranslation();
 
 	for (uint i = 0; i < game_object->children.size(); ++i)
-		game_object->children[i]->transform_2d->CalcGlobalTranslation();
+		game_object->children[i]->transform_2d->RecalcTranslations();
 }
 
 void ComponentTransform2D::CalcGlobalTranslation()

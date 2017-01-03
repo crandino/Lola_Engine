@@ -35,14 +35,6 @@ ComponentMesh::~ComponentMesh()
 	}		
 }
 
-bool ComponentMesh::Update()
-{
-	if (game_object->transform_applied)
-		ApplyTransformToAABB();
-
-	return true;
-}
-
 void ComponentMesh::AddResource(Resource *res)
 {
 	res->IncrReferences();

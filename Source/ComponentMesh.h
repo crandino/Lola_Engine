@@ -21,7 +21,6 @@ public:
 	ComponentMesh();
 	~ComponentMesh();
 
-	bool Update();
 	void AddResource(Resource *res);
 
 	void ShowEditorInfo();

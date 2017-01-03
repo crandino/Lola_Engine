@@ -19,6 +19,8 @@ private:
 	math::float3 local_rotation_euler_rad;		// Euler representation on rad.
 	math::float3 local_rotation_euler_deg;		// Euler representation on degrees.
 
+	bool apply_transformation = false;
+
 public:
 
 	math::vec forward, left, up;

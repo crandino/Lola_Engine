@@ -1,7 +1,8 @@
 #include "ComponentTransform.h"
 
 #include "GameObject.h"
-//#include "ComponentMesh.h"
+#include "ComponentMesh.h"
+#include "ComponentCamera.h"
 
 #include "Assimp\include\scene.h"
 #include "imgui\imgui.h"
@@ -31,8 +32,11 @@ ComponentTransform::ComponentTransform() : Component()
 
 bool ComponentTransform::Update()
 {
-	if (game_object->transform_applied)
+	if (apply_transformation)
+	{
 		RecalcTransformations();
+		apply_transformation = false;
+	}		
 		
 	return true;
 }
@@ -43,16 +47,16 @@ void ComponentTransform::ShowEditorInfo()
 	ImGui::Text(name);	
 
 	if (ImGui::DragFloat3("Position", &local_position.x, 0.25f, 0.0f, 0.0f, "%.3f"))
-		game_object->transform_applied = true;	
+		apply_transformation = true;
 		
 	if (ImGui::DragFloat3("Rotation", &local_rotation_euler_deg.x, 0.25f, 0.0f, 0.0f, "%.3f"))
 	{
-		game_object->transform_applied = true;
+		apply_transformation = true;
 		EulerToQuat(local_rotation_euler_deg, local_rotation_quat);
 	}
 
 	if (ImGui::DragFloat3("Scale", &local_scale.x, 0.25f, 0.0f, 0.0f, "%.3f"))
-		game_object->transform_applied = true;
+		apply_transformation = true;
 
 	if (ImGui::TreeNode("Transform matrix"))
 	{
@@ -113,40 +117,32 @@ void ComponentTransform::RecalcTransformations()
 {
 	CalcWorldTransformMatrix();
 
-	std::stack<GameObject*> go_stack;
-	GameObject *go = game_object;
-
-	while (go != nullptr)
-	{
-		math::float4x4 parent_matrix = go->transform->world_transform;
-
-		for (uint i = 0; i < go->children.size(); ++i)
-			go_stack.push(go->children[i]);
-
-		if (go_stack.empty())
-			go = nullptr;
-		else
-		{
-			go = go_stack.top();
-			go_stack.pop();
-
-			go->transform->parent_transform = parent_matrix;
-			go->transform->CalcWorldTransformMatrix();
-			go->transform_applied = true;				 // Children needs update for AABB, Frustum.. on their own Updates().
-		}
-	}	
+	for (uint i = 0; i < game_object->children.size(); ++i)
+		game_object->children[i]->transform->RecalcTransformations();
 }
 
 void ComponentTransform::CalcWorldTransformMatrix()
 {
 	local_transform = CalcTransformMatrix(local_position, local_scale, local_rotation_quat);
-	world_transform = parent_transform * local_transform;
+
+	if (game_object->parent->transform != nullptr)
+	{
+		parent_transform = game_object->parent->transform->world_transform;
+		world_transform = parent_transform * local_transform;
+	}
+	else
+		world_transform = local_transform;
 
 	forward = (world_transform.RotatePart() * forward_dir).Normalized();
 	left = (world_transform.RotatePart() * left_dir).Normalized();
 	up = (world_transform.RotatePart() * up_dir).Normalized();
 
-	//world_transform = world_transform.Transposed();
+	// Updating frustum and AABB
+	ComponentMesh *comp = (ComponentMesh*)game_object->GetComponentByType(COMPONENT_TYPE::MESH);
+	ComponentCamera *camera = (ComponentCamera*)game_object->GetComponentByType(COMPONENT_TYPE::CAMERA);
+
+	if (comp != nullptr) comp->ApplyTransformToAABB();
+	if (camera != nullptr) camera->ApplyTransformToFrustum();
 }
 
 math::float4x4 ComponentTransform::CalcTransformMatrix(const math::float3 &pos, const math::float3 &scale, const math::Quat &rot)
@@ -203,20 +199,20 @@ void ComponentTransform::EulerToQuat(math::float3 &euler, math::Quat &out_quat)
 void ComponentTransform::Move(const math::vec &movement)
 {
 	local_position += movement;
-	game_object->transform_applied = true;
+	apply_transformation = true;
 }
 
 void ComponentTransform::SetPos(const math::vec &pos)
 {
 	local_position = pos;
-	game_object->transform_applied = true;
+	apply_transformation = true;
 }
 
 void ComponentTransform::RotateAngleAxis(float angle_rad, const math::vec &axis)
 {
 	math::Quat rot_quat = math::Quat::RotateAxisAngle(axis, angle_rad);
 	local_rotation_quat = local_rotation_quat.Mul(rot_quat);
-	game_object->transform_applied = true;
+	apply_transformation = true;
 
 	QuatToEuler(local_rotation_quat, local_rotation_euler_rad);
 	local_rotation_euler_deg.x = math::RadToDeg(local_rotation_euler_rad.x);

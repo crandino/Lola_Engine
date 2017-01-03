@@ -92,8 +92,6 @@ UPDATE_STATUS ModuleGameObjectManager::Update(float dt)
 						break;
 				}
 			}					
-
-			curr_go->transform_applied = false;
 		}
 	}
 

@@ -49,10 +49,7 @@ bool ComponentCamera::Update()
 	{
 		UpdateFrustum();
 		ApplyTransformToFrustum();
-	}			
-
-	if (game_object->transform_applied)
-		ApplyTransformToFrustum();
+	}		
 
 	return true;
 }
