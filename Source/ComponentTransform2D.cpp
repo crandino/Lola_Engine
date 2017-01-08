@@ -5,6 +5,8 @@
 #include "ModuleWindow.h"
 #include "Application.h"
 
+#include "ResourceMesh.h"
+
 #include "imgui\imgui.h"
 #include "MathGeoLib\MathGeoLib.h"
 #include "openGL.h"
@@ -18,24 +20,36 @@ ComponentTransform2D::ComponentTransform2D() : Component()
 	
 	size.Set(App->window->GetScreenWidth(), App->window->GetScreenHeight());
 
-	canvas.num_vertices = 4;
-	canvas.vertices = new math::float3[canvas.num_vertices];
-	canvas.vertices[0] = local_position;
-	canvas.vertices[1] = local_position + math::float3(size.x, 0.0f, 0.0f);
-	canvas.vertices[2] = local_position + math::float3(0.0f, size.y, 0.0f);
-	canvas.vertices[3] = local_position + math::float3(size, 0.0f);
-
-	canvas.num_indices = 6;
-	canvas.indices = new unsigned int[canvas.num_indices];
-	canvas.indices[0] = 0;
-	canvas.indices[1] = 2;
-	canvas.indices[2] = 1;
-	canvas.indices[3] = 1;
-	canvas.indices[4] = 2;
-	canvas.indices[5] = 3;
-
 	type = COMPONENT_TYPE::TRANSFORM_2D;
 	name = GetNameByType(type);
+
+	AddResource(App->resource_manager->CreateNewResource(RESOURCE_TYPE::MESHES, App->resource_manager->GenerateID(), 1));
+
+	// Panel mesh: positions, size, vertices, indices
+	panel->mesh_data = new Mesh();
+
+	/* Order vertices:
+	0 ----- 1
+	|       |
+    |       |
+	2 ----- 3    
+	*/
+
+	panel->mesh_data->num_vertices = 4;
+	panel->mesh_data->vertices = new math::float3[panel->mesh_data->num_vertices];
+
+	ResizePanel();
+
+	panel->mesh_data->num_indices = 6;
+	panel->mesh_data->indices = new unsigned int[panel->mesh_data->num_indices];
+	panel->mesh_data->indices[0] = 0;
+	panel->mesh_data->indices[1] = 2;
+	panel->mesh_data->indices[2] = 1;
+	panel->mesh_data->indices[3] = 1;
+	panel->mesh_data->indices[4] = 2;
+	panel->mesh_data->indices[5] = 3;
+
+	//panel->LoadToMemory();
 }
 
 bool ComponentTransform2D::Update()
@@ -53,16 +67,16 @@ bool ComponentTransform2D::Update()
 	glLoadIdentity();	
 	glOrtho(0, App->window->GetScreenWidth(), App->window->GetScreenHeight(), 0, -1, 1);	//
 	glMatrixMode(GL_MODELVIEW);               // Select Modelview Matrix
-	glPushMatrix();                     // Push The Matrix
+	glPushMatrix();							// Push The Matrix
 	glLoadIdentity();
 
-	glVertexPointer(3, GL_FLOAT, 0, canvas.vertices);
-	glDrawElements(GL_TRIANGLES, canvas.num_indices, GL_UNSIGNED_INT, canvas.indices);
+	glVertexPointer(3, GL_FLOAT, 0, panel->mesh_data->vertices);
+	glDrawElements(GL_TRIANGLES, panel->mesh_data->num_indices, GL_UNSIGNED_INT, panel->mesh_data->indices);
 
-	glMatrixMode(GL_PROJECTION);               // Select Projection
-	glPopMatrix();                     // Pop The Matrix
+	glMatrixMode(GL_PROJECTION);              // Select Projection
+	glPopMatrix();							// Pop The Matrix
 	glMatrixMode(GL_MODELVIEW);               // Select Modelview
-	glPopMatrix();                     // Pop The Matrix
+	glPopMatrix();							// Pop The Matrix
 
 	glDisableClientState(GL_VERTEX_ARRAY);
 
@@ -83,6 +97,12 @@ void ComponentTransform2D::ShowEditorInfo()
 	ImGui::Separator();
 }
 
+void ComponentTransform2D::AddResource(Resource *res)
+{
+	res->IncrReferences();
+	panel = (ResourceMesh*)res;
+}
+
 // CalcWorldTransformMatrix recalculates both parent and local transformation for the current gameobject. Besides, the method recursively
 // recalculates the world matrix transformation for all its children.
 void ComponentTransform2D::RecalcTranslations()
@@ -99,6 +119,16 @@ void ComponentTransform2D::CalcGlobalTranslation()
 		global_position = game_object->parent->transform_2d->GetGlobalPos() + local_position;
 	else
 		global_position = local_position;
+
+	ResizePanel();
+}
+
+void ComponentTransform2D::ResizePanel()
+{
+	panel->mesh_data->vertices[0] = global_position;
+	panel->mesh_data->vertices[1] = global_position + math::float3(size.x, 0.0f, 0.0f);
+	panel->mesh_data->vertices[2] = global_position + math::float3(0.0f, size.y, 0.0f);
+	panel->mesh_data->vertices[3] = global_position + math::float3(size, 0.0f);
 }
 
 void ComponentTransform2D::Move(const math::vec &movement)
@@ -126,6 +156,7 @@ void ComponentTransform2D::SetLocalPos(const math::vec &local_pos)
 void ComponentTransform2D::SetSize(const math::float2 &size)
 {
 	this->size = size;
+	ResizePanel();
 }
 
 bool ComponentTransform2D::Save(JSONParser &go)

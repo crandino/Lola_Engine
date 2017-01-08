@@ -174,14 +174,11 @@ void ModuleUIManager::CreateImage(const math::float3 &pos, const math::float2 &s
 	if (canvas == nullptr)
 		CreateCanvas();
 
-	GameObject *ui_image = App->gameobject_manager->CreateGameObject("UI_Image", canvas);
+	/*GameObject *ui_image = App->gameobject_manager->CreateGameObject("UI_Image", canvas);
 	ui_image->AddComponent(COMPONENT_TYPE::TRANSFORM_2D);
 
 	ui_image->transform_2d->SetLocalPos(pos);
-	ui_image->transform_2d->SetSize(size);
-
-	GameObject *ui_image2 = App->gameobject_manager->CreateGameObject("UI_Image2", ui_image);
-	ui_image2->AddComponent(COMPONENT_TYPE::TRANSFORM_2D);
+	ui_image->transform_2d->SetSize(size);*/
 }
 
 void ModuleUIManager::CreateCanvas()
