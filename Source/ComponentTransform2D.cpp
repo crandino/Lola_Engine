@@ -49,7 +49,7 @@ ComponentTransform2D::ComponentTransform2D() : Component()
 	panel->mesh_data->indices[4] = 2;
 	panel->mesh_data->indices[5] = 3;
 
-	//panel->LoadToMemory();
+	panel->LoadToMemory();
 }
 
 bool ComponentTransform2D::Update()
@@ -66,17 +66,19 @@ bool ComponentTransform2D::Update()
 	glPushMatrix();
 	glLoadIdentity();	
 	glOrtho(0, App->window->GetScreenWidth(), App->window->GetScreenHeight(), 0, -1, 1);	//
-	glMatrixMode(GL_MODELVIEW);               // Select Modelview Matrix
+	glMatrixMode(GL_MODELVIEW);             // Select Modelview Matrix
 	glPushMatrix();							// Push The Matrix
 	glLoadIdentity();
 
-	glVertexPointer(3, GL_FLOAT, 0, panel->mesh_data->vertices);
-	glDrawElements(GL_TRIANGLES, panel->mesh_data->num_indices, GL_UNSIGNED_INT, panel->mesh_data->indices);
+	glBindBuffer(GL_ARRAY_BUFFER, panel->mesh_data->id_vertices);
+	glVertexPointer(3, GL_FLOAT, 0, NULL);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, panel->mesh_data->id_indices);
+	glDrawElements(GL_TRIANGLES, panel->mesh_data->num_indices, GL_UNSIGNED_INT, NULL);
 
 	glMatrixMode(GL_PROJECTION);              // Select Projection
-	glPopMatrix();							// Pop The Matrix
+	glPopMatrix();							  // Pop The Matrix
 	glMatrixMode(GL_MODELVIEW);               // Select Modelview
-	glPopMatrix();							// Pop The Matrix
+	glPopMatrix();							  // Pop The Matrix
 
 	glDisableClientState(GL_VERTEX_ARRAY);
 
@@ -103,8 +105,6 @@ void ComponentTransform2D::AddResource(Resource *res)
 	panel = (ResourceMesh*)res;
 }
 
-// CalcWorldTransformMatrix recalculates both parent and local transformation for the current gameobject. Besides, the method recursively
-// recalculates the world matrix transformation for all its children.
 void ComponentTransform2D::RecalcTranslations()
 {
 	CalcGlobalTranslation();
@@ -120,6 +120,7 @@ void ComponentTransform2D::CalcGlobalTranslation()
 	else
 		global_position = local_position;
 
+	// Adapt UI panel to new dimensions
 	ResizePanel();
 }
 
@@ -129,6 +130,9 @@ void ComponentTransform2D::ResizePanel()
 	panel->mesh_data->vertices[1] = global_position + math::float3(size.x, 0.0f, 0.0f);
 	panel->mesh_data->vertices[2] = global_position + math::float3(0.0f, size.y, 0.0f);
 	panel->mesh_data->vertices[3] = global_position + math::float3(size, 0.0f);
+	
+	glBindBuffer(GL_ARRAY_BUFFER, panel->mesh_data->id_vertices);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, panel->mesh_data->num_vertices * sizeof(math::float3), panel->mesh_data->vertices);
 }
 
 void ComponentTransform2D::Move(const math::vec &movement)
@@ -156,7 +160,7 @@ void ComponentTransform2D::SetLocalPos(const math::vec &local_pos)
 void ComponentTransform2D::SetSize(const math::float2 &size)
 {
 	this->size = size;
-	ResizePanel();
+	apply_transformation = true;
 }
 
 bool ComponentTransform2D::Save(JSONParser &go)
