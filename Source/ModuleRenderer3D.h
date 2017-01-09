@@ -39,6 +39,7 @@ public:
 	void ShowGameObject(const GameObject *go);
 
 	void DrawDirectMode();
+	void SwapBuffers();
 
 public:
 
@@ -53,7 +54,7 @@ private:
 
 	unsigned int checker_id;
 	unsigned char check_image[CHECKERS_HEIGHT][CHECKERS_WIDTH][4];
-	void GenerateChecker(unsigned int*buffer);
+	void GenerateChecker(unsigned int*buffer);	
 };
 
 #endif // !__MODULERENDERER3D_H__

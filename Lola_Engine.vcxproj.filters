@@ -237,9 +237,6 @@
     <ClCompile Include="Source\ComponentMaterial.cpp">
       <Filter>Source\Components</Filter>
     </ClCompile>
-    <ClCompile Include="Source\DrawDebug.cpp">
-      <Filter>Source\Helpers</Filter>
-    </ClCompile>
     <ClCompile Include="Source\ModuleCameraEditor.cpp">
       <Filter>Source\Modules</Filter>
     </ClCompile>
@@ -290,6 +287,9 @@
     </ClCompile>
     <ClCompile Include="Source\ComponentImageUI.cpp">
       <Filter>Source\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DebugMode.cpp">
+      <Filter>Source\Helpers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -578,9 +578,6 @@
     <ClInclude Include="Source\Primitive.h">
       <Filter>Source\Helpers</Filter>
     </ClInclude>
-    <ClInclude Include="Source\DrawDebug.h">
-      <Filter>Source\Helpers</Filter>
-    </ClInclude>
     <ClInclude Include="Source\openGL.h">
       <Filter>Source\Helpers</Filter>
     </ClInclude>
@@ -643,6 +640,9 @@
     </ClInclude>
     <ClInclude Include="Source\ComponentImageUI.h">
       <Filter>Source\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DebugMode.h">
+      <Filter>Source\Helpers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

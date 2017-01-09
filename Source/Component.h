@@ -12,11 +12,16 @@ class Resource;
 enum COMPONENT_TYPE
 {
 	UNKNOWN,
-	TRANSFORM,
-	TRANSFORM_2D,
+
+	// Generic components
+	TRANSFORM, 
 	MATERIAL,
 	MESH,
-	CAMERA
+	CAMERA,
+
+	// UI components
+	TRANSFORM_2D,
+	UI_IMAGE	
 };
 
 class Component

@@ -84,7 +84,7 @@
     <ClCompile Include="Source\ComponentMesh.cpp" />
     <ClCompile Include="Source\ComponentTransform.cpp" />
     <ClCompile Include="Source\ComponentTransform2D.cpp" />
-    <ClCompile Include="Source\DrawDebug.cpp" />
+    <ClCompile Include="Source\DebugMode.cpp" />
     <ClCompile Include="Source\GameObject.cpp" />
     <ClCompile Include="Source\imgui\imgui.cpp" />
     <ClCompile Include="Source\imgui\imgui_demo.cpp" />
@@ -167,7 +167,7 @@
     <ClInclude Include="Source\ComponentTransform.h" />
     <ClInclude Include="Source\ComponentTransform2D.h" />
     <ClInclude Include="Source\Console.h" />
-    <ClInclude Include="Source\DrawDebug.h" />
+    <ClInclude Include="Source\DebugMode.h" />
     <ClInclude Include="Source\GameObject.h" />
     <ClInclude Include="Source\Globals.h" />
     <ClInclude Include="Source\imgui\imconfig.h" />

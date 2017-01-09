@@ -8,14 +8,14 @@
 #include "SDL\include\SDL_rect.h"
 #include "SDL\include\SDL_render.h"
 
-enum UI_TYPE
-{
-	UI_LABEL,
-	UI_IMAGE,
-	UI_BUTTON,
-	UI_INPUTBOX,
-	UI_HORIZONTALSCROLLBAR
-};
+//enum UI_TYPE
+//{
+//	UI_LABEL,
+//	UI_IMAGE,
+//	UI_BUTTON,
+//	UI_INPUTBOX,
+//	UI_HORIZONTALSCROLLBAR
+//};
 
 struct StateImage
 {
@@ -41,7 +41,7 @@ public:
 	bool					interactable;
 	bool					is_inside;
 	bool					can_be_focused = false;
-	UI_TYPE					type;
+	//UI_TYPE					type;
 	std::vector<Module*>	mod_listeners;			// Listener's module list
 
 	UI_Element() {}

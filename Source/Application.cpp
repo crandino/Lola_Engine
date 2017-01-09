@@ -157,6 +157,13 @@ UPDATE_STATUS Application::Update()
 		ret = (*item)->IsEnabled() ? (*item)->PostUpdate(dt) : UPDATE_CONTINUE;
 		++item;
 	}
+	
+	// Debug Options
+	if (debug_mode.IsActive())
+		App->gameobject_manager->DrawDebug();
+
+	// Render all information
+	App->renderer3D->SwapBuffers();
 
 	FinishUpdate();
 

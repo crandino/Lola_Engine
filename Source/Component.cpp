@@ -34,12 +34,10 @@ const char *Component::GetNameByType(COMPONENT_TYPE type)
 	const char *name;
 	switch (type)
 	{
+	// Generic components
 	case(COMPONENT_TYPE::TRANSFORM):
 		name = "Transform";
-		break;
-	case(COMPONENT_TYPE::TRANSFORM_2D):
-		name = "Rect Transform";
-		break;
+		break;	
 	case(COMPONENT_TYPE::MESH):
 		name = "Mesh";
 		break;
@@ -49,6 +47,15 @@ const char *Component::GetNameByType(COMPONENT_TYPE type)
 	case(COMPONENT_TYPE::CAMERA):
 		name = "Camera";
 		break;
+
+	// UI components
+	case(COMPONENT_TYPE::TRANSFORM_2D):
+		name = "Rect Transform";
+		break;
+	case(COMPONENT_TYPE::UI_IMAGE):
+		name = "UI Image";
+		break;
+
 	default:
 		name = "Unknown";
 	}

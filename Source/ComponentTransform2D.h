@@ -15,11 +15,13 @@ private:
 	math::float3 local_position;				// Position representation;
 	math::float2 size;							// Size representation;
 
-	ResourceMesh *panel = nullptr;
-
 	bool apply_transformation = false;
 
+	void InitPanelMesh();
+
 public:
+
+	ResourceMesh *panel = nullptr;
 
 	ComponentTransform2D();
 	bool Update();

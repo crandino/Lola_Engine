@@ -7,6 +7,8 @@
 #include "Performance.h"
 #include "Console.h"
 
+#include "DebugMode.h"
+
 #include <list>
 
 enum ENGINE_MODE
@@ -67,6 +69,9 @@ public:
 	ENGINE_MODE GetEngineMode() const;
 	void ChangeEngineMode();
 	void PausePlayMode();
+
+	// Debug Mode
+	DebugMode debug_mode;
 		
 private:
 

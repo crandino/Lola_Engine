@@ -114,8 +114,7 @@ uint MeshImporter::Load(const std::string &imported_file, ResourceMesh *mesh)
 			memcpy(mesh->mesh_data->tex_coord, cursor, bytes);
 		}
 
-		//RELEASE_ARRAY(data);
-		delete[] data;
+		RELEASE_ARRAY(data);
 	}
 
 	return bytes;

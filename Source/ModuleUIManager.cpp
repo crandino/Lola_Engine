@@ -2,6 +2,7 @@
 
 #include "Application.h"
 #include "ModuleInput.h"
+#include "ModuleWindow.h"
 
 #include "UI_Element.h"
 #include "UI_Image.h"
@@ -10,6 +11,10 @@
 
 #include "Component.h"
 #include "ComponentTransform2D.h"
+#include "ComponentImageUI.h"
+
+#include "ResourceMesh.h"
+#include "ResourceTexture.h"
 
 #include "SDL\include\SDL_render.h"
 
@@ -44,13 +49,11 @@ bool ModuleUIManager::Start()
 	focus = screen;
 	previous_UIelement = screen;
 
-	//CreateCanvas();
-
 	return true;
 }
 
 // Update all guis
-bool ModuleUIManager::PreUpdate()
+UPDATE_STATUS ModuleUIManager::PreUpdate(float dt)
 {
 	math::float2 p = math::float2(App->input->GetMouseX(), App->input->GetMouseY());
 	current_UIelement = whichUIelemOnMouse();
@@ -92,26 +95,71 @@ bool ModuleUIManager::PreUpdate()
 		--it;  // Previous listener
 	}
 
-	for (std::vector<UI_Element*>::iterator it = UIelement_list.begin(); it != UIelement_list.end(); ++it)
-		(*it)->preUpdate();
+	/*for (std::vector<UI_Element*>::iterator it = UIelement_list.begin(); it != UIelement_list.end(); ++it)
+		(*it)->preUpdate();*/
 	
 	previous_UIelement = current_UIelement;
-	return true;
+	return UPDATE_CONTINUE;
 }
 
 // Called after all Updates
-bool ModuleUIManager::PostUpdate()
+UPDATE_STATUS ModuleUIManager::PostUpdate(float dt)
 {
-	/*if (app->input->getKey(SDL_SCANCODE_F1) == KEY_DOWN)
-		debug = !debug;*/
+	if (UI_list.empty())
+		return UPDATE_CONTINUE;
 
-	for (std::vector<UI_Element*>::iterator it = UIelement_list.begin(); it != UIelement_list.end(); ++it)
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+
+	glDisable(GL_LIGHTING); // Panel mesh is not afected by lights!
+
+	glMatrixMode(GL_PROJECTION);
+	glPushMatrix();
+	glLoadIdentity();
+	glOrtho(0, App->window->GetScreenWidth(), App->window->GetScreenHeight(), 0, -1, 1);	//
+	glMatrixMode(GL_MODELVIEW);             // Select Modelview Matrix
+	glPushMatrix();							// Push The Matrix
+	glLoadIdentity();
+
+	for (std::vector<GameObject*>::iterator it = UI_list.begin(); it != UI_list.end(); ++it)
 	{
-		/*if (debug)
-			item->data->drawDebug();
-		item->data->draw();*/
-	}
-	return true;
+		GameObject *curr_ui = (*it);
+		const Mesh* panel = curr_ui->GetPanel();
+
+		// Vertices
+		glBindBuffer(GL_ARRAY_BUFFER, panel->id_vertices);
+		glVertexPointer(3, GL_FLOAT, 0, NULL);
+		// Texture coordinates
+		glBindBuffer(GL_ARRAY_BUFFER, panel->id_tex_coord);
+		glTexCoordPointer(2, GL_FLOAT, 0, NULL);
+
+		ComponentImageUI *ui_image = (ComponentImageUI*)curr_ui->GetComponentByType(COMPONENT_TYPE::UI_IMAGE);
+		if (ui_image != nullptr)
+		{
+			// Texture
+			glEnable(GL_TEXTURE_2D);
+			glBindTexture(GL_TEXTURE_2D, 0);
+			glBindTexture(GL_TEXTURE_2D, ui_image->resource->tex_buffer);
+		}		
+		
+		// Indices
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, panel->id_indices);
+		glDrawElements(GL_TRIANGLES, panel->num_indices, GL_UNSIGNED_INT, NULL);
+	}	
+
+	glMatrixMode(GL_PROJECTION);              // Select Projection
+	glPopMatrix();							  // Pop The Matrix
+	glMatrixMode(GL_MODELVIEW);               // Select Modelview
+	glPopMatrix();							  // Pop The Matrix
+
+	glEnable(GL_LIGHTING);
+	//glEnable(GL_COLOR_MATERIAL);
+
+	glDisable(GL_TEXTURE_2D);
+	glDisableClientState(GL_VERTEX_ARRAY);
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+
+	return UPDATE_CONTINUE;
 }
 
 // Called before quitting
@@ -119,10 +167,10 @@ bool ModuleUIManager::CleanUp()
 {
 	DEBUG("Freeing GUI");
 
-	for (std::vector<UI_Element*>::iterator it = UIelement_list.begin(); it != UIelement_list.end(); ++it)
+	/*for (std::vector<UI_Element*>::iterator it = UIelement_list.begin(); it != UIelement_list.end(); ++it)
 		delete (*it);
-	
-	UIelement_list.clear();
+	*/
+	//UIelement_list.clear();
 
 	// Deleting screen root for tree
 	delete screen;
@@ -146,7 +194,7 @@ UI_Label* ModuleUIManager::CreateLabel(math::float2 p, const char *string, _TTF_
 {
 	UI_Label *l = new UI_Label();
 	//l->init(p, string, font, mod, parent);
-	UIelement_list.push_back(l);
+	//UIelement_list.push_back(l);
 	return l;
 }
 
@@ -154,7 +202,7 @@ UI_Image* ModuleUIManager::CreateImage(math::float2 p, SDL_Texture *tex, SDL_Rec
 {
 	UI_Image *i = new UI_Image();
 	//i->init(p, tex, section, mod, parent);
-	UIelement_list.push_back(i);
+	//UIelement_list.push_back(i);
 	return i;
 }
 
@@ -164,7 +212,7 @@ UI_Button *ModuleUIManager::CreateButton(math::float2 p, SDL_Texture *tex_idle, 
 {
 	UI_Button *b = new UI_Button();
 	//b->init(p, tex_idle, section_idle, tex_hover, section_hover, tex_clicked, section_clicked, mod, parent);
-	UIelement_list.push_back(b);
+	//UIelement_list.push_back(b);
 
 	return b;	
 }
@@ -175,10 +223,16 @@ void ModuleUIManager::CreateImage(const math::float3 &pos, const math::float2 &s
 		CreateCanvas();
 
 	GameObject *ui_image = App->gameobject_manager->CreateGameObject("UI_Image", canvas);
-	ui_image->AddComponent(COMPONENT_TYPE::TRANSFORM_2D);
 
+	ui_image->AddComponent(COMPONENT_TYPE::TRANSFORM_2D);
 	ui_image->transform_2d->SetLocalPos(pos);
 	ui_image->transform_2d->SetSize(size);
+	
+	ComponentImageUI *image = (ComponentImageUI*)ui_image->AddComponent(COMPONENT_TYPE::UI_IMAGE);
+	image->AddResource(App->resource_manager->Get(App->resource_manager->Find("Tigger.png")));
+	image->InitTexture("Tigger.png");
+
+	UI_list.push_back(ui_image);
 }
 
 void ModuleUIManager::CreateCanvas()
@@ -207,54 +261,54 @@ void ModuleUIManager::CreateCanvas()
 
 void ModuleUIManager::OnGui(GUI_EVENTS mouse_event, UI_Element *trigger)
 {
-	switch (trigger->type)
-	{
-	case UI_BUTTON:
-	{
-		UI_Button *b = (UI_Button*)trigger;
-		switch (mouse_event)
-		{
-		case MOUSE_ENTER:
-			b->setHoverState();
-			b->is_inside = true;	
-			break;
-		case MOUSE_LEAVE:
-			b->setIdleState();
-			b->is_inside = false;
-			break;
-		case MOUSE_CLICK_LEFT:
-		case MOUSE_CLICK_RIGHT:
-			b->setClickedState();
-			break;
-		case MOUSE_REPEAT_LEFT:
-			b->dragElement();
-			break;
-		case MOUSE_LEAVE_LEFT:
-		case MOUSE_LEAVE_RIGHT:
-			b->setHoverState();
-			break;
-		case GAIN_FOCUS:
-			if (focus != trigger)
-			{
-				focus = trigger;
-				//app->input->stopTextInput();
-			}
-			break;
-		}
-		break;
-	}
+	//switch (trigger->type)
+	//{
+	//case UI_BUTTON:
+	//{
+	//	UI_Button *b = (UI_Button*)trigger;
+	//	switch (mouse_event)
+	//	{
+	//	case MOUSE_ENTER:
+	//		b->setHoverState();
+	//		b->is_inside = true;	
+	//		break;
+	//	case MOUSE_LEAVE:
+	//		b->setIdleState();
+	//		b->is_inside = false;
+	//		break;
+	//	case MOUSE_CLICK_LEFT:
+	//	case MOUSE_CLICK_RIGHT:
+	//		b->setClickedState();
+	//		break;
+	//	case MOUSE_REPEAT_LEFT:
+	//		b->dragElement();
+	//		break;
+	//	case MOUSE_LEAVE_LEFT:
+	//	case MOUSE_LEAVE_RIGHT:
+	//		b->setHoverState();
+	//		break;
+	//	case GAIN_FOCUS:
+	//		if (focus != trigger)
+	//		{
+	//			focus = trigger;
+	//			//app->input->stopTextInput();
+	//		}
+	//		break;
+	//	}
+	//	break;
+	//}
 
-	case UI_IMAGE:
-	{
-		UI_Image *i = (UI_Image*)trigger;
-		switch (mouse_event)
-		{
-		case MOUSE_REPEAT_LEFT:
-			i->dragElement();
-			break;
-		}
-		break;
-	}
+	//case UI_IMAGE:
+	//{
+	//	UI_Image *i = (UI_Image*)trigger;
+	//	switch (mouse_event)
+	//	{
+	//	case MOUSE_REPEAT_LEFT:
+	//		i->dragElement();
+	//		break;
+	//	}
+	//	break;
+	//}
 
 	/*case UI_INPUTBOX:
 	{
@@ -304,20 +358,20 @@ void ModuleUIManager::OnGui(GUI_EVENTS mouse_event, UI_Element *trigger)
 	//	}
 	//	break;
 	//}
-	}
+	//}
 }
 
 UI_Element *ModuleUIManager::whichUIelemOnMouse() const
 {
 	math::float2 p = math::float2(App->input->GetMouseX(), App->input->GetMouseY());
 	
-	std::vector<UI_Element*>::const_iterator it = UIelement_list.end();
+	/*std::vector<UI_Element*>::const_iterator it = UIelement_list.end();
 	while (it != UIelement_list.begin())
 	{
 		if ((*it)->isMouseIn(p) && (*it)->interactable)
 			return (*it);
 		--it;
-	}
+	}*/
 
 	return screen;
 }

@@ -32,6 +32,7 @@ public:
 	ID GenerateID();
 
 	Resource* Get(ID uid);
+	ID Find(const std::string &asset_to_find) const;
 
 	bool LoadFile(const char *file_to_load);
 
@@ -45,7 +46,6 @@ private:
 	std::map<ID, Resource*> resources;
 	std::vector<Resource*> resources_to_delete;
 
-	ID Find(const std::string &asset_to_find) const;
 	void DeleteEntry(ID id);
 	bool IsUpdated(ID id) const;
 

@@ -170,11 +170,14 @@ UPDATE_STATUS ModuleRenderer3D::Update(float dt)
 // PostUpdate present buffer to screen
 UPDATE_STATUS ModuleRenderer3D::PostUpdate(float dt)
 {
+	return UPDATE_CONTINUE;
+}
+
+void ModuleRenderer3D::SwapBuffers()
+{
 	// Rendering
 	glViewport(0, 0, App->window->GetScreenWidth(), App->window->GetScreenHeight());
 	SDL_GL_SwapWindow(App->window->window);
-
-	return UPDATE_CONTINUE;
 }
 
 // Called before quitting
@@ -331,8 +334,8 @@ void ModuleRenderer3D::DrawDirectMode()
 }
 
 void ModuleRenderer3D::ShowGameObject(const GameObject *go)
-{/*
-	glMatrixMode(GL_PROJECTION);
+{
+	/*glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 
 	CalculateProjectionMatrix();

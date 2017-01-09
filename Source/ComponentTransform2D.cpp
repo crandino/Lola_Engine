@@ -2,9 +2,6 @@
 
 #include "GameObject.h"
 
-#include "ModuleWindow.h"
-#include "Application.h"
-
 #include "ResourceMesh.h"
 
 #include "imgui\imgui.h"
@@ -18,28 +15,34 @@ ComponentTransform2D::ComponentTransform2D() : Component()
 	local_position.Set(0.0f, 0.0f, 0.0f);
 	global_position.Set(0.0f, 0.0f, 0.0f);
 	
-	size.Set(App->window->GetScreenWidth(), App->window->GetScreenHeight());
+	size.Set(0.0f, 0.0f);
 
 	type = COMPONENT_TYPE::TRANSFORM_2D;
 	name = GetNameByType(type);
 
 	AddResource(App->resource_manager->CreateNewResource(RESOURCE_TYPE::MESHES, App->resource_manager->GenerateID(), 1));
+	InitPanelMesh();
+}
 
+void ComponentTransform2D::InitPanelMesh()
+{
 	// Panel mesh: positions, size, vertices, indices
 	panel->mesh_data = new Mesh();
 
 	/* Order vertices:
 	0 ----- 1
 	|       |
-    |       |
-	2 ----- 3    
+	|       |
+	2 ----- 3
 	*/
 
+	// Vertices
 	panel->mesh_data->num_vertices = 4;
 	panel->mesh_data->vertices = new math::float3[panel->mesh_data->num_vertices];
 
 	ResizePanel();
 
+	// Indices
 	panel->mesh_data->num_indices = 6;
 	panel->mesh_data->indices = new unsigned int[panel->mesh_data->num_indices];
 	panel->mesh_data->indices[0] = 0;
@@ -48,6 +51,14 @@ ComponentTransform2D::ComponentTransform2D() : Component()
 	panel->mesh_data->indices[3] = 1;
 	panel->mesh_data->indices[4] = 2;
 	panel->mesh_data->indices[5] = 3;
+
+	// Texture coordinates
+	panel->mesh_data->num_tex_coord = 4;
+	panel->mesh_data->tex_coord = new math::float2[panel->mesh_data->num_tex_coord];
+	panel->mesh_data->tex_coord[0] = { 0.0f, 1.0f };
+	panel->mesh_data->tex_coord[1] = { 1.0f, 1.0f };
+	panel->mesh_data->tex_coord[2] = { 0.0f, 0.0f };
+	panel->mesh_data->tex_coord[3] = { 1.0f, 0.0f };
 
 	panel->LoadToMemory();
 }
@@ -60,28 +71,6 @@ bool ComponentTransform2D::Update()
 		apply_transformation = false;
 	}		
 
-	glEnableClientState(GL_VERTEX_ARRAY);
-
-	glMatrixMode(GL_PROJECTION);
-	glPushMatrix();
-	glLoadIdentity();	
-	glOrtho(0, App->window->GetScreenWidth(), App->window->GetScreenHeight(), 0, -1, 1);	//
-	glMatrixMode(GL_MODELVIEW);             // Select Modelview Matrix
-	glPushMatrix();							// Push The Matrix
-	glLoadIdentity();
-
-	glBindBuffer(GL_ARRAY_BUFFER, panel->mesh_data->id_vertices);
-	glVertexPointer(3, GL_FLOAT, 0, NULL);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, panel->mesh_data->id_indices);
-	glDrawElements(GL_TRIANGLES, panel->mesh_data->num_indices, GL_UNSIGNED_INT, NULL);
-
-	glMatrixMode(GL_PROJECTION);              // Select Projection
-	glPopMatrix();							  // Pop The Matrix
-	glMatrixMode(GL_MODELVIEW);               // Select Modelview
-	glPopMatrix();							  // Pop The Matrix
-
-	glDisableClientState(GL_VERTEX_ARRAY);
-
 	return true;
 }
 
@@ -90,10 +79,10 @@ void ComponentTransform2D::ShowEditorInfo()
 	ImGui::TextColored(ImVec4(1.0f, 0.5, 0.0f, 1.0f), "Component: "); ImGui::SameLine();
 	ImGui::Text(name);
 
-	if (ImGui::DragFloat3("Position", &local_position.x, 0.25f, 0.0f, 0.0f, "%.3f"))
+	if (ImGui::DragFloat3("Position", &local_position.x, 1.0f, 0.0f, 0.0f, "%.3f"))
 		apply_transformation = true;
 
-	if (ImGui::DragFloat2("Size", &size.x, 0.25f, 1.0f, 1000.0f, "%.3f"))
+	if (ImGui::DragFloat2("Size", &size.x, 1.0f, 1.0f, 1000.0f, "%.3f"))
 		apply_transformation = true;
 
 	ImGui::Separator();

@@ -76,6 +76,7 @@ UPDATE_STATUS ModuleGameObjectManager::Update(float dt)
 {
 	GameObject *curr_go = nullptr;
 		
+	// Run Update() for each component!
 	for (uint i = 0; i < list_of_gos.size(); ++i)
 	{
 		curr_go = list_of_gos[i];
@@ -83,15 +84,7 @@ UPDATE_STATUS ModuleGameObjectManager::Update(float dt)
 		if (curr_go->IsActive())
 		{
 			for (uint i = 0; i < curr_go->components.size(); ++i)
-			{
-				curr_go->components[i]->Update();
-				switch (curr_go->components[i]->GetType())
-				{
-					case(COMPONENT_TYPE::CAMERA):
-						draw_debug.DrawFrustum(((ComponentCamera*)curr_go->components[i])->cam_frustum);
-						break;
-				}
-			}					
+				curr_go->components[i]->Update();				
 		}
 	}
 
@@ -99,23 +92,12 @@ UPDATE_STATUS ModuleGameObjectManager::Update(float dt)
 	const GameObject *camera = App->camera->GetEditorCamera();
 	math::Frustum frustum = ((ComponentCamera*)camera->GetComponentByType(COMPONENT_TYPE::CAMERA))->cam_frustum;
 	FrustumCulling(frustum);
-	draw_debug.DrawOcTree(oc_tree, frustum);
 
 	for (uint i = 0; i < list_of_gos_to_draw.size(); ++i)
 	{
 		const GameObject *curr_go = list_of_gos_to_draw[i];
 		if(curr_go->active)
-			App->renderer3D->ShowGameObject(curr_go);
-
-		for (uint i = 0; i < curr_go->components.size(); ++i)
-		{
-			switch (curr_go->components[i]->GetType())
-			{
-			case(COMPONENT_TYPE::MESH):
-				draw_debug.DrawAABB(((ComponentMesh*)curr_go->components[i])->bounding_box);
-				break;
-			}
-		}			
+			App->renderer3D->ShowGameObject(curr_go);	
 	}	
 
 	return UPDATE_CONTINUE;
@@ -133,12 +115,39 @@ bool ModuleGameObjectManager::CleanUp()
 	bool ret = true;
 
 	for (uint i = 0; i < list_of_gos.size(); ++i)
-		delete list_of_gos[i]; //RELEASE(list_of_gos[i]);
+		RELEASE(list_of_gos[i]);
 
 	list_of_gos.clear();
 	list_of_gos_to_draw.clear();
 	
 	return ret;
+}
+
+// Draw debug information
+void ModuleGameObjectManager::DrawDebug()
+{
+	const GameObject *curr_go = nullptr;
+
+	for (uint i = 0; i < list_of_gos.size(); ++i)
+	{
+		curr_go = list_of_gos[i];
+
+		for (uint j = 0; j < curr_go->components.size(); ++j)
+		{
+			switch (curr_go->components[j]->GetType())
+			{
+			case(COMPONENT_TYPE::MESH):
+				App->debug_mode.DrawAABB(((ComponentMesh*)curr_go->components[j])->bounding_box);
+				break;
+			case(COMPONENT_TYPE::CAMERA):
+				App->debug_mode.DrawFrustum(((ComponentCamera*)curr_go->components[j])->cam_frustum);
+
+				if (curr_go == App->camera->GetEditorCamera())
+					App->debug_mode.DrawOcTree(oc_tree, ((ComponentCamera*)curr_go->components[j])->cam_frustum);
+				break;
+			}
+		}		
+	}	
 }
 
 const GameObject *ModuleGameObjectManager::GetRoot() const

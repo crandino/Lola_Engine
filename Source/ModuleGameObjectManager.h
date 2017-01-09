@@ -3,7 +3,6 @@
 
 #include "Module.h"
 #include "MathGeoLib\MathGeoLib.h"
-#include "DrawDebug.h"
 
 #include "OcTree.h"
 #include <vector>
@@ -40,14 +39,14 @@ public:
 
 	GameObject *Get(long unsigned int ID) const;
 
+	void DrawDebug();
+
 	void UpdateOcTree();
 
 private:
 
 	OcTree								oc_tree;
 	math::AABB							oc_tree_boundaries;
-
-	DrawDebug							draw_debug;
 
 	math::LCG							UUID_generator;
 

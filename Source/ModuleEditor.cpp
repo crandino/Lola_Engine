@@ -10,8 +10,6 @@
 #include "GameObject.h"
 #include "Component.h"
 
-#include "DrawDebug.h"
-
 #include "imgui\imgui.h"
 #include "imgui\imgui_impl_sdl_gl3.h"
 
@@ -112,9 +110,9 @@ void ModuleEditor::ShowMenuBar()
 
 	if (ImGui::BeginMenu("Debug"))
 	{	
-		ImGui::MenuItem("Show AABB", nullptr, &DrawDebug::show_aabb);
-		ImGui::MenuItem("Show Frustum", nullptr, &DrawDebug::show_frustum);
-		ImGui::MenuItem("Show OcTree", nullptr, &DrawDebug::show_octree);
+		ImGui::MenuItem("Show AABB", nullptr, &App->debug_mode.show_aabb);
+		ImGui::MenuItem("Show Frustum", nullptr, &App->debug_mode.show_frustum);
+		ImGui::MenuItem("Show OcTree", nullptr, &App->debug_mode.show_octree);
 		ImGui::EndMenu();
 	}
 

@@ -217,7 +217,7 @@ ID ModuleResourceManager::DeleteImportedFile(std::string &asset_to_delete)
 
 	Resource *res = Get(id_removed);
 	App->file_system->RemoveFile(res->imported_file.c_str());
-	delete res; //RELEASE(res);
+	RELEASE(res);
 	DeleteEntry(id_removed);
 
 	return id_removed;

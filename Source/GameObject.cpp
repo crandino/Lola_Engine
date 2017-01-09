@@ -2,10 +2,12 @@
 
 #include "Component.h"
 #include "ComponentTransform.h"
-#include "ComponentTransform2D.h"
 #include "ComponentMesh.h"
 #include "ComponentMaterial.h"
 #include "ComponentCamera.h"
+
+#include "ComponentTransform2D.h"
+#include "ComponentImageUI.h"
 
 #include "Application.h"
 #include "ModuleGameObjectManager.h"
@@ -42,11 +44,6 @@ const Component* GameObject::AddComponent(COMPONENT_TYPE type)
 		if(transform == nullptr)
 			transform = (ComponentTransform*)comp;
 		break;
-	case(COMPONENT_TYPE::TRANSFORM_2D):
-		comp = new ComponentTransform2D();
-		if (transform_2d == nullptr)
-			transform_2d = (ComponentTransform2D*)comp;
-		break;
 	case(COMPONENT_TYPE::MESH):
 		comp = new ComponentMesh();
 		break;
@@ -56,6 +53,16 @@ const Component* GameObject::AddComponent(COMPONENT_TYPE type)
 	case(COMPONENT_TYPE::CAMERA):
 		comp = new ComponentCamera();
 		break;
+
+	// UI components
+	case(COMPONENT_TYPE::TRANSFORM_2D):
+		comp = new ComponentTransform2D();
+		if (transform_2d == nullptr)
+			transform_2d = (ComponentTransform2D*)comp;
+		break;
+	case(COMPONENT_TYPE::UI_IMAGE):
+		comp = new ComponentImageUI();
+		break;	
 	}
 
 	comp->game_object = this;
@@ -120,15 +127,17 @@ bool GameObject::GetFrustum(math::Frustum &frustum) const
 
 const Mesh *GameObject::GetMesh() const
 {
-	if (HasMesh())
+	if((ComponentMesh*)GetComponentByType(COMPONENT_TYPE::MESH) != nullptr)
 		return ((ComponentMesh*)GetComponentByType(COMPONENT_TYPE::MESH))->resource->mesh_data;	
 	return nullptr;
 }
 
- bool GameObject::HasMesh() const
- {
-	 return (GetComponentByType(COMPONENT_TYPE::MESH) != nullptr  ? true : false);
- }
+const Mesh *GameObject::GetPanel() const
+{
+	if ((ComponentTransform2D*)GetComponentByType(COMPONENT_TYPE::TRANSFORM_2D) != nullptr)
+		return ((ComponentTransform2D*)GetComponentByType(COMPONENT_TYPE::TRANSFORM_2D))->panel->mesh_data;
+	return nullptr;
+}
 
  bool GameObject::Save(JSONParser &game_objects)
  {

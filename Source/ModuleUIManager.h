@@ -44,8 +44,8 @@ public:
 
 	bool Start();
 	
-	bool PreUpdate();
-	bool PostUpdate();
+	UPDATE_STATUS PreUpdate(float dt);
+	UPDATE_STATUS PostUpdate(float dt);
 
 	// Called before quitting
 	bool CleanUp();
@@ -80,11 +80,9 @@ private:
 	UI_Element				*current_UIelement;
 	UI_Element				*previous_UIelement;
 
-	std::vector<UI_Element*>	UIelement_list;
+	std::vector<GameObject*>	UI_list;
 	SDL_Texture*				atlas;
 	//p2SString					atlas_file_name;
-
-	bool					debug;
 
 	void CreateCanvas();
 	
