@@ -35,6 +35,8 @@ public:
 	// Utilities
 	void Move(const math::vec &movement);
 	void ResizePanel();
+
+	bool ContainsPoint(const math::float2 &point) const;
 	
 	// Setters / Getters
 	const math::vec &GetGlobalPos() const;

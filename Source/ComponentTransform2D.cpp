@@ -130,6 +130,13 @@ void ComponentTransform2D::Move(const math::vec &movement)
 	apply_transformation = true;
 }
 
+bool ComponentTransform2D::ContainsPoint(const math::float2 &point) const
+{
+	if (point.x < global_position.x || point.x > global_position.x + size.x || point.y < global_position.y || point.y > global_position.y + size.y)
+		return false;
+	return true;
+}
+
 const math::vec &ComponentTransform2D::GetLocalPos() const
 {
 	return local_position;

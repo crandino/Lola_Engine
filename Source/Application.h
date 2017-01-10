@@ -25,6 +25,7 @@ class ModuleSceneIntro;
 class ModuleRenderer3D;
 class ModuleCameraEditor;
 class ModuleEditor;
+class ModuleFontManager;
 class ModuleUIManager;
 class ModuleGameObjectManager;
 class ModuleResourceManager;
@@ -48,6 +49,7 @@ public:
 	ModuleResourceManager   *resource_manager = nullptr;
 	ModuleEditor			*editor = nullptr;
 	ModuleUIManager			*ui_manager = nullptr;
+	ModuleFontManager		*font_manager = nullptr;
 
 	Application();
 	~Application();

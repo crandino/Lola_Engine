@@ -54,7 +54,7 @@ public:
 	void OnGui(GUI_EVENTS mouse_event, UI_Element *trigger);
 
 	// Which element is under the mouse	
-	UI_Element *whichUIelemOnMouse() const;
+	const GameObject *whichUIelemOnMouse(const math::float2 &mouse_pos) const;
 
 	// Gui creation functions
 	UI_Label *CreateLabel(math::float2 p, const char *string, _TTF_Font *font = NULL, Module *mod = NULL, UI_Element *parent = NULL);

@@ -56,49 +56,59 @@ bool ModuleUIManager::Start()
 UPDATE_STATUS ModuleUIManager::PreUpdate(float dt)
 {
 	math::float2 p = math::float2(App->input->GetMouseX(), App->input->GetMouseY());
-	current_UIelement = whichUIelemOnMouse();
+	//UI_Element *current_UIelement = 
+	const GameObject *curr_element = whichUIelemOnMouse(p);
 
-	std::vector<Module*>::iterator it = current_UIelement->mod_listeners.end();
-	while (it != current_UIelement->mod_listeners.begin())
+	if (curr_element != nullptr && App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT)
 	{
-		if (current_UIelement != previous_UIelement)
-			(*it)->OnGui(MOUSE_LEAVE, previous_UIelement);
-
-		if (current_UIelement->interactable)
-		{
-			if (!current_UIelement->is_inside && current_UIelement->isMouseIn(p))
-				(*it)->OnGui(MOUSE_ENTER, current_UIelement);
-
-			if (App->input->GetMouseButton(0) == KEY_REPEAT)
-				(*it)->OnGui(MOUSE_REPEAT_LEFT, current_UIelement);
-
-			// Behaviour for left mouse button
-			if (App->input->GetMouseButton(0) == KEY_DOWN)
-			{
-				(*it)->OnGui(MOUSE_CLICK_LEFT, current_UIelement);
-				if (focus != current_UIelement && current_UIelement->can_be_focused)
-				{
-					(*it)->OnGui(LOST_FOCUS, focus);
-					(*it)->OnGui(GAIN_FOCUS, current_UIelement);
-				}
-			}
-			else if (App->input->GetMouseButton(0) == KEY_UP)
-				(*it)->OnGui(MOUSE_LEAVE_LEFT, current_UIelement);
-
-			// Behaviour for right mouse button
-			if (App->input->GetMouseButton(1) == KEY_DOWN)
-				(*it)->OnGui(MOUSE_CLICK_RIGHT, current_UIelement);
-			else if (App->input->GetMouseButton(1) == KEY_UP)
-				(*it)->OnGui(MOUSE_LEAVE_RIGHT, current_UIelement);
-		}
-
-		--it;  // Previous listener
+		curr_element->transform_2d->Move({ (float)App->input->GetMouseXMotion(), (float)App->input->GetMouseYMotion(), 0.0f });
 	}
+
+
+	// New component with interactable boolean (movement and triggerable), list_of_listeners (pointers to Module class), 
+
+
+	//std::vector<Module*>::iterator it = current_UIelement->mod_listeners.end();
+	//while (it != current_UIelement->mod_listeners.begin())
+	//{
+	//	if (current_UIelement != previous_UIelement)
+	//		(*it)->OnGui(MOUSE_LEAVE, previous_UIelement);
+
+	//	if (current_UIelement->interactable)
+	//	{
+	//		if (!current_UIelement->is_inside && current_UIelement->isMouseIn(p))
+	//			(*it)->OnGui(MOUSE_ENTER, current_UIelement);
+
+	//		if (App->input->GetMouseButton(0) == KEY_REPEAT)
+	//			(*it)->OnGui(MOUSE_REPEAT_LEFT, current_UIelement);
+
+	//		// Behaviour for left mouse button
+	//		if (App->input->GetMouseButton(0) == KEY_DOWN)
+	//		{
+	//			(*it)->OnGui(MOUSE_CLICK_LEFT, current_UIelement);
+	//			if (focus != current_UIelement && current_UIelement->can_be_focused)
+	//			{
+	//				(*it)->OnGui(LOST_FOCUS, focus);
+	//				(*it)->OnGui(GAIN_FOCUS, current_UIelement);
+	//			}
+	//		}
+	//		else if (App->input->GetMouseButton(0) == KEY_UP)
+	//			(*it)->OnGui(MOUSE_LEAVE_LEFT, current_UIelement);
+
+	//		// Behaviour for right mouse button
+	//		if (App->input->GetMouseButton(1) == KEY_DOWN)
+	//			(*it)->OnGui(MOUSE_CLICK_RIGHT, current_UIelement);
+	//		else if (App->input->GetMouseButton(1) == KEY_UP)
+	//			(*it)->OnGui(MOUSE_LEAVE_RIGHT, current_UIelement);
+	//	}
+
+	//	--it;  // Previous listener
+	//}
 
 	/*for (std::vector<UI_Element*>::iterator it = UIelement_list.begin(); it != UIelement_list.end(); ++it)
 		(*it)->preUpdate();*/
 	
-	previous_UIelement = current_UIelement;
+	//previous_UIelement = current_UIelement;
 	return UPDATE_CONTINUE;
 }
 
@@ -153,7 +163,6 @@ UPDATE_STATUS ModuleUIManager::PostUpdate(float dt)
 	glPopMatrix();							  // Pop The Matrix
 
 	glEnable(GL_LIGHTING);
-	//glEnable(GL_COLOR_MATERIAL);
 
 	glDisable(GL_TEXTURE_2D);
 	glDisableClientState(GL_VERTEX_ARRAY);
@@ -361,17 +370,13 @@ void ModuleUIManager::OnGui(GUI_EVENTS mouse_event, UI_Element *trigger)
 	//}
 }
 
-UI_Element *ModuleUIManager::whichUIelemOnMouse() const
+const GameObject *ModuleUIManager::whichUIelemOnMouse(const math::float2 &mouse_pos) const
 {
-	math::float2 p = math::float2(App->input->GetMouseX(), App->input->GetMouseY());
-	
-	/*std::vector<UI_Element*>::const_iterator it = UIelement_list.end();
-	while (it != UIelement_list.begin())
+	for (std::vector<GameObject*>::const_reverse_iterator it = UI_list.rbegin(); it != UI_list.rend(); ++it)
 	{
-		if ((*it)->isMouseIn(p) && (*it)->interactable)
+		if ((*it)->transform_2d->ContainsPoint(mouse_pos))
 			return (*it);
-		--it;
-	}*/
+	}
 
-	return screen;
+	return nullptr;
 }

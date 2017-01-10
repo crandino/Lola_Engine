@@ -8,6 +8,7 @@
 #include "ModuleCameraEditor.h"
 #include "ModuleEditor.h"
 #include "ModuleUIManager.h"
+#include "ModuleFontManager.h"
 #include "ModuleGameObjectManager.h"
 #include "ModuleResourceManager.h"
 #include "ModuleRenderer3D.h"
@@ -19,7 +20,7 @@ Application::Application()
 	window = new ModuleWindow(this, true);
 	file_system = new ModuleFileSystem(this, true);
 	input = new ModuleInput(this, true);
-	audio = new ModuleAudio(this, true);
+	audio = new ModuleAudio(this, false);
 	scene_intro = new ModuleSceneIntro(this, true);
 	renderer3D = new ModuleRenderer3D(this, true);
 	camera = new ModuleCameraEditor(this, true);
@@ -27,6 +28,7 @@ Application::Application()
 	gameobject_manager = new ModuleGameObjectManager(this, true);
 	editor = new ModuleEditor(this, true);
 	ui_manager = new ModuleUIManager(this, true);
+	font_manager = new ModuleFontManager(this, true);
 
 	// The order of calls is very important!
 	// Modules will Init() Start() and Update in this order
@@ -40,7 +42,8 @@ Application::Application()
 	// Loaders		
 	AddModule(file_system);
 	AddModule(resource_manager);	
-	AddModule(gameobject_manager);		
+	AddModule(gameobject_manager);	
+	AddModule(font_manager);
 	
 	// Scenes
 	AddModule(camera);
