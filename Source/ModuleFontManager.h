@@ -3,6 +3,16 @@
 
 #include "Module.h"
 
+// FreeType Headers
+#include "FreeType2\include\ft2build.h"
+#include "FreeType2\include\freetype\freetype.h"
+
+//#include "FreeType\freetype2\freetype\ftglyph.h"
+//#include "FreeType\freetype2\freetype\ftoutln.h"
+//#include "FreeType\freetype2\freetype\fttrigon.h"
+
+#pragma comment (lib, "Source/FreeType2/libx86/freetype.lib")
+
 class ModuleFontManager : public Module
 {
 public:
@@ -17,7 +27,6 @@ public:
 	UPDATE_STATUS PreUpdate(float dt);
 	UPDATE_STATUS PostUpdate(float dt);
 
-	// Called before quitting
 	bool CleanUp();
 
 private:

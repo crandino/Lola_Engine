@@ -13,6 +13,12 @@ ModuleFontManager::~ModuleFontManager()
 bool ModuleFontManager::Awake(JSONParser &config)
 {
 	bool ret = true;
+
+	// Create And Initilize A FreeType Font Library.
+	FT_Library library;
+	if(FT_Init_FreeType(&library))
+		throw std::runtime_error("FT_Init_FreeType failed");
+
 	return ret;
 }
 
