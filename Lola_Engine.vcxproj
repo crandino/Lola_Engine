@@ -78,6 +78,7 @@
     <ClCompile Include="Source\Application.cpp" />
     <ClCompile Include="Source\Color.cpp" />
     <ClCompile Include="Source\Component.cpp" />
+    <ClCompile Include="Source\ComponentButtonUI.cpp" />
     <ClCompile Include="Source\ComponentCamera.cpp" />
     <ClCompile Include="Source\ComponentImageUI.cpp" />
     <ClCompile Include="Source\ComponentLabelUI.cpp" />
@@ -162,6 +163,7 @@
     <ClInclude Include="Source\Application.h" />
     <ClInclude Include="Source\Color.h" />
     <ClInclude Include="Source\Component.h" />
+    <ClInclude Include="Source\ComponentButtonUI.h" />
     <ClInclude Include="Source\ComponentCamera.h" />
     <ClInclude Include="Source\ComponentImageUI.h" />
     <ClInclude Include="Source\ComponentLabelUI.h" />

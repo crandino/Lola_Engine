@@ -22,7 +22,8 @@ enum COMPONENT_TYPE
 	// UI components
 	TRANSFORM_2D,
 	UI_IMAGE,
-	UI_LABEL
+	UI_LABEL, 
+	UI_BUTTON
 };
 
 class Component

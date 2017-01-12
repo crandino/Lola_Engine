@@ -58,6 +58,9 @@ const char *Component::GetNameByType(COMPONENT_TYPE type)
 	case(COMPONENT_TYPE::UI_LABEL):
 		name = "UI Label";
 		break;
+	case(COMPONENT_TYPE::UI_BUTTON):
+		name = "UI Button";
+		break;
 
 	default:
 		name = "Unknown";

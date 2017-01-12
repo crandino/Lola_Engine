@@ -135,8 +135,9 @@ void ModuleEditor::ShowMenuFile()
 void ModuleEditor::ShowCreateMenu()
 {
 	if (ImGui::MenuItem("Camera")) { App->gameobject_manager->CreateCamera(); }
-	if (ImGui::MenuItem("UI - Image")) { App->ui_manager->CreateImage(); }
-	if (ImGui::MenuItem("UI - Label")) { App->ui_manager->CreateLabel(); }
+	if (ImGui::MenuItem("UI Image")) { App->ui_manager->CreateImage(); }
+	if (ImGui::MenuItem("UI Label")) { App->ui_manager->CreateLabel(); }
+	if (ImGui::MenuItem("UI Button")) { App->ui_manager->CreateButton(); }
 }
 
 void ModuleEditor::ShowAboutMenu()

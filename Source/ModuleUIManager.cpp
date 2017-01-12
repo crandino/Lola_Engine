@@ -13,6 +13,7 @@
 #include "ComponentTransform2D.h"
 #include "ComponentImageUI.h"
 #include "ComponentLabelUI.h"
+#include "ComponentButtonUI.h"
 
 #include "ResourceMesh.h"
 #include "ResourceTexture.h"
@@ -161,6 +162,15 @@ UPDATE_STATUS ModuleUIManager::PostUpdate(float dt)
 			glBindTexture(GL_TEXTURE_2D, 0);
 			glBindTexture(GL_TEXTURE_2D, ui_label->resource->tex_buffer);
 		}
+
+		ComponentButtonUI *ui_button = (ComponentButtonUI*)curr_ui->GetComponentByType(COMPONENT_TYPE::UI_BUTTON);
+		if (ui_button != nullptr)
+		{
+			// Texture
+			glEnable(GL_TEXTURE_2D);
+			glBindTexture(GL_TEXTURE_2D, 0);
+			glBindTexture(GL_TEXTURE_2D, ui_button->current_state->tex_buffer);
+		}
 		
 		// Indices
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, panel->id_indices);
@@ -270,6 +280,26 @@ void ModuleUIManager::CreateLabel(const math::float3 &pos, const math::float2 &s
 	label->SetText();
 
 	UI_list.push_back(ui_label);
+}
+
+void ModuleUIManager::CreateButton(const math::float3 &pos, const math::float2 &size)
+{
+	if (canvas == nullptr)
+		CreateCanvas();
+
+	GameObject *ui_button = App->gameobject_manager->CreateGameObject("UI_Button", canvas);
+
+	ui_button->AddComponent(COMPONENT_TYPE::TRANSFORM_2D);
+	ui_button->transform_2d->SetLocalPos(pos);
+	ui_button->transform_2d->SetSize(size);
+
+	ComponentButtonUI *button = (ComponentButtonUI*)ui_button->AddComponent(COMPONENT_TYPE::UI_BUTTON);
+
+	button->InitIdleTexture("idle_button.png");
+	button->InitHoverTexture("hover_button.png");
+	button->InitPushedTexture("pushed_button.png");
+
+	UI_list.push_back(ui_button);
 }
 
 void ModuleUIManager::CreateCanvas()

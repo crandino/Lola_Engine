@@ -297,6 +297,9 @@
     <ClCompile Include="Source\ComponentLabelUI.cpp">
       <Filter>Source\Components</Filter>
     </ClCompile>
+    <ClCompile Include="Source\ComponentButtonUI.cpp">
+      <Filter>Source\Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Color.h">
@@ -654,6 +657,9 @@
       <Filter>Source\Modules</Filter>
     </ClInclude>
     <ClInclude Include="Source\ComponentLabelUI.h">
+      <Filter>Source\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ComponentButtonUI.h">
       <Filter>Source\Components</Filter>
     </ClInclude>
   </ItemGroup>
