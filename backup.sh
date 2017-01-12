@@ -1,4 +1,5 @@
 # First, we delete all the files on the Drive folder...
+echo "Deleting files on Engine Drive's folder"
 rm -fr  ~/Google\ Drive/Grado\ Videojuego\ -\ CITM/Curso3_Semestre1/Motores/*
 
 # Next, we copy engine files to this Google Drive folder

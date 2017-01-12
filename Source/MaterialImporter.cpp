@@ -14,7 +14,7 @@ bool MaterialImporter::Import(std::string &asset_to_import, std::string &importe
 
 	if (size > 0)
 	{
-		ilLoadL(IL_TYPE_UNKNOWN, data, size);
+		if (ilLoadL(IL_TYPE_UNKNOWN, data, size));
 		ilSetInteger(IL_DXTC_FORMAT, IL_DXT5); // To pick a specific DXT compression use
 		uint dds_size = ilSaveL(IL_DDS, NULL, 0);
 
@@ -72,11 +72,9 @@ bool MaterialImporter::Import(std::string &asset_to_import, std::string &importe
 			imported_file = imported_filename;
 			if (App->file_system->Save((lib_folder + imported_file).c_str(), dds_data, dds_size + color_size) != 0) success = true;
 		}
-		//RELEASE_ARRAY(dds_data);
-		delete[] dds_data;
-		delete data;
-	}
-	//RELEASE(data);	
+		RELEASE_ARRAY(dds_data);
+		RELEASE(data);	
+	}	
 
 	ilShutDown();
 	return success;
@@ -117,10 +115,35 @@ uint MaterialImporter::Load(const std::string &imported_file, ResourceTexture *r
 
 		memcpy(&res_mat->opacity, cursor, sizeof(float));
 
-		//RELEASE_ARRAY(data);
-		delete[] data;
+		RELEASE_ARRAY(data);
 	}
 
 	return data_size;
+}
+
+uint MaterialImporter::Save(unsigned char **data, uint size)
+{
+	ilInit();
+
+	uint dds_size = 0;
+
+	if (ilLoadL(IL_TYPE_UNKNOWN, *data, size))
+	{
+		ilSetInteger(IL_DXTC_FORMAT, IL_DXT5); // To pick a specific DXT compression use
+		dds_size = ilSaveL(IL_DDS, NULL, 0);
+
+		char *dds_data = new char[dds_size]; // allocate data buffer for DDS and colors
+
+		// Save to buffer with the ilSaveIL function												  
+		if (ilSaveL(IL_DDS, dds_data, dds_size) > 0)
+			App->file_system->Save("font.dds", dds_data, dds_size);
+
+		RELEASE_ARRAY(dds_data);
+	}
+	/*ILenum error = ilGetError();
+	DEBUG("%s",iluErrorString(error));*/
+
+	ilShutDown();
+	return dds_size;
 }
 

@@ -6,12 +6,15 @@
 // FreeType Headers
 #include "FreeType2\include\ft2build.h"
 #include "FreeType2\include\freetype\freetype.h"
+#include "FreeType2\include\freetype\ftglyph.h"
 
 //#include "FreeType\freetype2\freetype\ftglyph.h"
 //#include "FreeType\freetype2\freetype\ftoutln.h"
 //#include "FreeType\freetype2\freetype\fttrigon.h"
 
 #pragma comment (lib, "Source/FreeType2/libx86/freetype.lib")
+
+class ResourceTexture;
 
 class ModuleFontManager : public Module
 {
@@ -29,7 +32,12 @@ public:
 
 	bool CleanUp();
 
+	void CreateTextureFromText(ResourceTexture *res);
+
 private:
+	
+	FT_Face face;			// The Object In Which FreeType Holds Information On A Given Font Is Called A "face".
+	FT_Library library;
 
 };
 

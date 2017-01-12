@@ -25,6 +25,8 @@ public:
 
 	bool static Import(std::string &asset_to_import, std::string &imported_file, ID &res_id, const aiMaterial *ai_material = nullptr);
 	uint static Load(const std::string &imported_file, ResourceTexture *res_mat);
+	uint static Save(unsigned char **data, uint size);
+
 };
 
 #endif //__MATERIALIMPORTER_H__

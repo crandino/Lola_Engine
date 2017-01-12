@@ -12,6 +12,7 @@
 #include "Component.h"
 #include "ComponentTransform2D.h"
 #include "ComponentImageUI.h"
+#include "ComponentLabelUI.h"
 
 #include "ResourceMesh.h"
 #include "ResourceTexture.h"
@@ -150,7 +151,16 @@ UPDATE_STATUS ModuleUIManager::PostUpdate(float dt)
 			glEnable(GL_TEXTURE_2D);
 			glBindTexture(GL_TEXTURE_2D, 0);
 			glBindTexture(GL_TEXTURE_2D, ui_image->resource->tex_buffer);
-		}		
+		}	
+
+		ComponentLabelUI *ui_label = (ComponentLabelUI*)curr_ui->GetComponentByType(COMPONENT_TYPE::UI_LABEL);
+		if (ui_label != nullptr)
+		{
+			// Texture
+			glEnable(GL_TEXTURE_2D);
+			glBindTexture(GL_TEXTURE_2D, 0);
+			glBindTexture(GL_TEXTURE_2D, ui_label->resource->tex_buffer);
+		}
 		
 		// Indices
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, panel->id_indices);
@@ -242,6 +252,24 @@ void ModuleUIManager::CreateImage(const math::float3 &pos, const math::float2 &s
 	image->InitTexture("Tigger.png");
 
 	UI_list.push_back(ui_image);
+}
+
+void ModuleUIManager::CreateLabel(const math::float3 &pos, const math::float2 &size)
+{
+	if (canvas == nullptr)
+		CreateCanvas();
+
+	GameObject *ui_label = App->gameobject_manager->CreateGameObject("UI_Label", canvas);
+
+	ui_label->AddComponent(COMPONENT_TYPE::TRANSFORM_2D);
+	ui_label->transform_2d->SetLocalPos(pos);
+	ui_label->transform_2d->SetSize(size);
+
+	ComponentLabelUI *label = (ComponentLabelUI*)ui_label->AddComponent(COMPONENT_TYPE::UI_LABEL);
+	label->AddResource(App->resource_manager->CreateNewResource(RESOURCE_TYPE::TEXTURES, App->resource_manager->GenerateID(), 1));
+	label->SetText();
+
+	UI_list.push_back(ui_label);
 }
 
 void ModuleUIManager::CreateCanvas()

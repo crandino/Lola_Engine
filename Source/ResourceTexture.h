@@ -45,9 +45,9 @@ public:
 
 	~ResourceTexture()
 	{
-		//RELEASE_ARRAY(texture_data);  // Freeing texture data
-		if(texture_data != nullptr)
-			delete[] texture_data;
+	    // Freeing texture data
+		if (texture_data != nullptr)
+			RELEASE_ARRAY(texture_data);
 	}
 
 	bool ResourceTexture::LoadToMemory()

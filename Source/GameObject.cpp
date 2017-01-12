@@ -8,6 +8,7 @@
 
 #include "ComponentTransform2D.h"
 #include "ComponentImageUI.h"
+#include "ComponentLabelUI.h"
 
 #include "Application.h"
 #include "ModuleGameObjectManager.h"
@@ -63,6 +64,9 @@ const Component* GameObject::AddComponent(COMPONENT_TYPE type)
 	case(COMPONENT_TYPE::UI_IMAGE):
 		comp = new ComponentImageUI();
 		break;	
+	case(COMPONENT_TYPE::UI_LABEL):
+		comp = new ComponentLabelUI();
+		break;
 	}
 
 	comp->game_object = this;

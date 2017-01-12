@@ -69,6 +69,7 @@ public:
 
 	// New factory functions with components
 	void CreateImage(const math::float3 &pos = math::float3::zero, const math::float2 &size = math::float2(100.0f, 100.0f));
+	void CreateLabel(const math::float3 &pos = math::float3::zero, const math::float2 &size = math::float2(100.0f, 100.0f));
 
 	const SDL_Texture* getAtlas() const;
 	const UI_Element* whichFocus() const;

@@ -80,6 +80,7 @@
     <ClCompile Include="Source\Component.cpp" />
     <ClCompile Include="Source\ComponentCamera.cpp" />
     <ClCompile Include="Source\ComponentImageUI.cpp" />
+    <ClCompile Include="Source\ComponentLabelUI.cpp" />
     <ClCompile Include="Source\ComponentMaterial.cpp" />
     <ClCompile Include="Source\ComponentMesh.cpp" />
     <ClCompile Include="Source\ComponentTransform.cpp" />
@@ -163,6 +164,7 @@
     <ClInclude Include="Source\Component.h" />
     <ClInclude Include="Source\ComponentCamera.h" />
     <ClInclude Include="Source\ComponentImageUI.h" />
+    <ClInclude Include="Source\ComponentLabelUI.h" />
     <ClInclude Include="Source\ComponentMaterial.h" />
     <ClInclude Include="Source\ComponentMesh.h" />
     <ClInclude Include="Source\ComponentTransform.h" />
