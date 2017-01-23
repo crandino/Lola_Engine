@@ -1,15 +1,16 @@
 #ifndef __RESOURCES_H__
 #define __RESOURCES_H__
 
+#include <string>
+
 enum RESOURCE_TYPE
 {
-	NONE,
-	TEXTURES, 
-	MESHES, 
-	SCENES
+	RES_NONE,
+	RES_TEXTURES, 
+	RES_MATERIAL,
+	RES_MESHES, 
+	RES_SCENES
 };
-
-typedef long unsigned int ID;
 
 class Resource
 {
@@ -22,58 +23,23 @@ protected:
 public:
 
 	RESOURCE_TYPE type;
-	ID id;
+	long unsigned int id;
 	std::string file;
 	std::string imported_file;
 	int timestamp;
 
-	Resource()
-	{
-		loaded_in_memory = false;
-		times_referenced = 0;
-		timestamp = 0;
-		id = 0;
-		type = RESOURCE_TYPE::NONE;
-	}
+	Resource();
+	virtual ~Resource();
 
-	virtual ~Resource()
-	{
-	}
+	virtual bool LoadToMemory();
+	virtual bool UnloadFromMemory();
 
-	virtual bool LoadToMemory()
-	{
-		return true;
-	}
+	bool LoadedInMemory() const;
 
-	virtual bool UnloadFromMemory()
-	{
-		return true;
-	}
-
-	bool LoadedInMemory() const
-	{
-		return loaded_in_memory;
-	}
-
-	int GetNumReferences() const
-	{
-		return times_referenced;
-	}
-
-	void SetNumReferences(int times)
-	{
-		times_referenced = times;
-	}
-
-	void IncrReferences()
-	{
-		++times_referenced;
-	}
-
-	void DecrReferences()
-	{
-		if(times_referenced > 0) --times_referenced;
-	}
+	int GetNumReferences() const;
+	void SetNumReferences(int times);
+	void IncrReferences();
+	void DecrReferences();
 };
 
 #endif __RESOURCES_H__

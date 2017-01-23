@@ -5,6 +5,8 @@
 
 #include "MathGeoLib\MathGeoLib.h"
 
+enum RESOURCE_TYPE;
+
 class JSONParser
 {
 
@@ -77,6 +79,7 @@ public:
 
 	// Utilities
 	bool ValueExists(const char *node_name) const;
+	void CreateResourceEntry(const char *filename, const char *imported_filename, long unsigned int id, RESOURCE_TYPE type);
 
 	// Save
 	void Save(char **buf);

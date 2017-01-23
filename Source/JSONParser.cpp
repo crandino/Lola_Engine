@@ -155,6 +155,14 @@ bool JSONParser::ValueExists(const char *node_name) const
 	return (json_object_has_value(root, node_name) != 0) ? true : false;
 }
 
+void JSONParser::CreateResourceEntry(const char *filename, const char *imported_filename, long unsigned int id, RESOURCE_TYPE type)
+{
+	AddString("File", filename);
+	AddString("Imported File", imported_filename);
+	AddInt("Type", type);
+	AddUUID("ID", id);	
+}
+
 
 void JSONParser::FreeBuffer(char **buff)
 {

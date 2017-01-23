@@ -288,6 +288,8 @@ void ModuleFileSystem::SetWriteDirectory()
 			{				
 				AddSearchPath("Assets/Models", "Models");
 				AddSearchPath("Assets/Textures", "Textures");
+				AddSearchPath("Assets/Shaders/Vertex", "VertexShaders");
+				AddSearchPath("Assets/Shaders/Fragment", "FragmentShaders");
 
 				// Creating internal folders for own engine usage
 				if (!PHYSFS_exists(LIBRARY_SCENES))
@@ -298,6 +300,9 @@ void ModuleFileSystem::SetWriteDirectory()
 
 				if (!PHYSFS_exists(LIBRARY_MESH))
 					PHYSFS_mkdir(LIBRARY_MESH);
+
+				if (!PHYSFS_exists(LIBRARY_MATERIAL))
+					PHYSFS_mkdir(LIBRARY_MATERIAL);
 
 				DEBUG("%s %s", "On Editor Mode, write directory is ", write_dir);
 				AddSearchPath(write_dir, ".");

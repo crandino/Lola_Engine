@@ -6,9 +6,15 @@
 #include "Assimp\include\cfileio.h"
 #include "Devil\include\il.h"
 
-#define LIBRARY_TEXTURE "Library/Textures/"
-#define LIBRARY_MESH "Library/Mesh/"
-#define LIBRARY_SCENES "Library/Scenes/"
+// Library folders
+#define LIBRARY "Library/"
+#define LIBRARY_TEXTURE LIBRARY "Textures/"
+#define LIBRARY_MESH LIBRARY "Mesh/"
+#define LIBRARY_SCENES LIBRARY "Scenes/"
+#define LIBRARY_MATERIAL LIBRARY "Material/"
+
+// Asset folder
+#define ASSETS "Assets/"
 
 struct SDL_RWops;
 int close_sdl_rwops(SDL_RWops *rw);

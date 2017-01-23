@@ -8,12 +8,7 @@ class ResourceScene : public Resource
 
 public:
 
-	ResourceScene(ID id, int timestamp) : Resource()
-	{
-		this->id = id;
-		this->timestamp = timestamp;
-		type = RESOURCE_TYPE::SCENES;
-	}
+	ResourceScene(long unsigned int id, int timestamp);
 };
 
 

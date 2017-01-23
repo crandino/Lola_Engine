@@ -3,13 +3,16 @@
 #include "Component.h"
 #include "ComponentTransform.h"
 #include "ComponentMesh.h"
-#include "ComponentMaterial.h"
+#include "ComponentTexture.h"
 #include "ComponentCamera.h"
 
 #include "ComponentTransform2D.h"
+#include "ComponentPropertiesUI.h"
 #include "ComponentImageUI.h"
 #include "ComponentLabelUI.h"
 #include "ComponentButtonUI.h"
+
+#include "ResourceMesh.h"
 
 #include "Application.h"
 #include "ModuleGameObjectManager.h"
@@ -29,7 +32,7 @@ GameObject::GameObject(const char* name)
 GameObject::~GameObject()
 {
 	for (uint i = 0; i < components.size(); ++i)
-		delete components[i]; //RELEASE(components[i]);
+		RELEASE(components[i]);
 	
 	components.clear();
 	children.clear();
@@ -41,34 +44,39 @@ const Component* GameObject::AddComponent(COMPONENT_TYPE type)
 
 	switch (type)
 	{
-	case(COMPONENT_TYPE::TRANSFORM):
+	case(COMPONENT_TYPE::COMP_TRANSFORM):
 		comp = new ComponentTransform();
 		if(transform == nullptr)
 			transform = (ComponentTransform*)comp;
 		break;
-	case(COMPONENT_TYPE::MESH):
+	case(COMPONENT_TYPE::COMP_MESH):
 		comp = new ComponentMesh();
 		break;
-	case(COMPONENT_TYPE::MATERIAL):
-		comp = new ComponentMaterial();
+	case(COMPONENT_TYPE::COMP_TEXTURE):
+		comp = new ComponentTexture();
 		break;
-	case(COMPONENT_TYPE::CAMERA):
+	case(COMPONENT_TYPE::COMP_CAMERA):
 		comp = new ComponentCamera();
 		break;
 
 	// UI components
-	case(COMPONENT_TYPE::TRANSFORM_2D):
+	case(COMPONENT_TYPE::COMP_TRANSFORM_2D):
 		comp = new ComponentTransform2D();
 		if (transform_2d == nullptr)
 			transform_2d = (ComponentTransform2D*)comp;
 		break;
-	case(COMPONENT_TYPE::UI_IMAGE):
+	case(COMPONENT_TYPE::COMP_UI_PROPERTIES):
+		comp = new ComponentPropertiesUI();
+		if (ui_properties == nullptr)
+			ui_properties = (ComponentPropertiesUI*)comp;
+		break;
+	case(COMPONENT_TYPE::COMP_UI_IMAGE):
 		comp = new ComponentImageUI();
 		break;	
-	case(COMPONENT_TYPE::UI_LABEL):
+	case(COMPONENT_TYPE::COMP_UI_LABEL):
 		comp = new ComponentLabelUI();
 		break;
-	case(COMPONENT_TYPE::UI_BUTTON):
+	case(COMPONENT_TYPE::COMP_UI_BUTTON):
 		comp = new ComponentButtonUI();
 		break;
 	}
@@ -110,7 +118,7 @@ bool GameObject::GetAABB(math::AABB &aabb) const
 {
 	bool ret = false;
 	aabb.SetNegativeInfinity();
-	const ComponentMesh *mesh = (ComponentMesh*)GetComponentByType(COMPONENT_TYPE::MESH);
+	const ComponentMesh *mesh = (ComponentMesh*)GetComponentByType(COMPONENT_TYPE::COMP_MESH);
 	if (mesh)
 	{
 		ret = true;
@@ -123,7 +131,7 @@ bool GameObject::GetAABB(math::AABB &aabb) const
 bool GameObject::GetFrustum(math::Frustum &frustum) const
 {
 	bool ret = false;
-	const ComponentCamera *camera = (ComponentCamera*)GetComponentByType(COMPONENT_TYPE::CAMERA);
+	const ComponentCamera *camera = (ComponentCamera*)GetComponentByType(COMPONENT_TYPE::COMP_CAMERA);
 	if (camera)
 	{
 		ret = true;
@@ -135,15 +143,15 @@ bool GameObject::GetFrustum(math::Frustum &frustum) const
 
 const Mesh *GameObject::GetMesh() const
 {
-	if((ComponentMesh*)GetComponentByType(COMPONENT_TYPE::MESH) != nullptr)
-		return ((ComponentMesh*)GetComponentByType(COMPONENT_TYPE::MESH))->resource->mesh_data;	
+	if((ComponentMesh*)GetComponentByType(COMPONENT_TYPE::COMP_MESH) != nullptr)
+		return ((ComponentMesh*)GetComponentByType(COMPONENT_TYPE::COMP_MESH))->resource->mesh_data;	
 	return nullptr;
 }
 
 const Mesh *GameObject::GetPanel() const
 {
-	if ((ComponentTransform2D*)GetComponentByType(COMPONENT_TYPE::TRANSFORM_2D) != nullptr)
-		return ((ComponentTransform2D*)GetComponentByType(COMPONENT_TYPE::TRANSFORM_2D))->panel->mesh_data;
+	if ((ComponentTransform2D*)GetComponentByType(COMPONENT_TYPE::COMP_TRANSFORM_2D) != nullptr)
+		return ((ComponentTransform2D*)GetComponentByType(COMPONENT_TYPE::COMP_TRANSFORM_2D))->panel->mesh_data;
 	return nullptr;
 }
 
@@ -191,10 +199,10 @@ const Mesh *GameObject::GetPanel() const
 
 		 switch ((COMPONENT_TYPE)component.GetInt("Type"))
 		 {
-			 case COMPONENT_TYPE::TRANSFORM: comp = (Component*)AddComponent(COMPONENT_TYPE::TRANSFORM); break;					 
-			 case COMPONENT_TYPE::MESH: comp = (Component*)AddComponent(COMPONENT_TYPE::MESH); break;			 
-			 case COMPONENT_TYPE::MATERIAL: comp = (Component*)AddComponent(COMPONENT_TYPE::MATERIAL); break;
-			 case COMPONENT_TYPE::CAMERA: comp = (Component*)AddComponent(COMPONENT_TYPE::CAMERA); break;
+			 case COMPONENT_TYPE::COMP_TRANSFORM: comp = (Component*)AddComponent(COMPONENT_TYPE::COMP_TRANSFORM); break;					 
+			 case COMPONENT_TYPE::COMP_MESH: comp = (Component*)AddComponent(COMPONENT_TYPE::COMP_MESH); break;			 
+			 case COMPONENT_TYPE::COMP_TEXTURE: comp = (Component*)AddComponent(COMPONENT_TYPE::COMP_TEXTURE); break;
+			 case COMPONENT_TYPE::COMP_CAMERA: comp = (Component*)AddComponent(COMPONENT_TYPE::COMP_CAMERA); break;
 		 }
 		comp->Load(component);
 	 }

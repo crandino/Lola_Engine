@@ -3,7 +3,7 @@
 
 #include "Timer.h"
 
-#include "Application.h"
+//#include "Application.h"
 
 #define HISTOGRAM_VALUES 60
 

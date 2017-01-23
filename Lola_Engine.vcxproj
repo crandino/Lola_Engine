@@ -47,8 +47,10 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(ProjectDir)Source\FreeType2\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>
+      </AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <ShowIncludes>false</ShowIncludes>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -82,8 +84,9 @@
     <ClCompile Include="Source\ComponentCamera.cpp" />
     <ClCompile Include="Source\ComponentImageUI.cpp" />
     <ClCompile Include="Source\ComponentLabelUI.cpp" />
-    <ClCompile Include="Source\ComponentMaterial.cpp" />
+    <ClCompile Include="Source\ComponentTexture.cpp" />
     <ClCompile Include="Source\ComponentMesh.cpp" />
+    <ClCompile Include="Source\ComponentPropertiesUI.cpp" />
     <ClCompile Include="Source\ComponentTransform.cpp" />
     <ClCompile Include="Source\ComponentTransform2D.cpp" />
     <ClCompile Include="Source\DebugMode.cpp" />
@@ -97,6 +100,13 @@
     <ClCompile Include="Source\log.cpp" />
     <ClCompile Include="Source\Main.cpp" />
     <ClCompile Include="Source\MaterialImporter.cpp" />
+    <ClCompile Include="Source\Resource.cpp" />
+    <ClCompile Include="Source\ResourceMaterial.cpp" />
+    <ClCompile Include="Source\ResourceMesh.cpp" />
+    <ClCompile Include="Source\ResourceScene.cpp" />
+    <ClCompile Include="Source\ResourceTexture.cpp" />
+    <ClCompile Include="Source\ShaderImporter.cpp" />
+    <ClCompile Include="Source\TextureImporter.cpp" />
     <ClCompile Include="Source\MathGeoLib\Algorithm\GJK.cpp" />
     <ClCompile Include="Source\MathGeoLib\Algorithm\Random\LCG.cpp" />
     <ClCompile Include="Source\MathGeoLib\Geometry\AABB.cpp" />
@@ -154,10 +164,6 @@
     <ClCompile Include="Source\OcTree.cpp" />
     <ClCompile Include="Source\SceneImporter.cpp" />
     <ClCompile Include="Source\Timer.cpp" />
-    <ClCompile Include="Source\UI_Button.cpp" />
-    <ClCompile Include="Source\UI_Element.cpp" />
-    <ClCompile Include="Source\UI_Image.cpp" />
-    <ClCompile Include="Source\UI_Label.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application.h" />
@@ -167,8 +173,9 @@
     <ClInclude Include="Source\ComponentCamera.h" />
     <ClInclude Include="Source\ComponentImageUI.h" />
     <ClInclude Include="Source\ComponentLabelUI.h" />
-    <ClInclude Include="Source\ComponentMaterial.h" />
+    <ClInclude Include="Source\ComponentTexture.h" />
     <ClInclude Include="Source\ComponentMesh.h" />
+    <ClInclude Include="Source\ComponentPropertiesUI.h" />
     <ClInclude Include="Source\ComponentTransform.h" />
     <ClInclude Include="Source\ComponentTransform2D.h" />
     <ClInclude Include="Source\Console.h" />
@@ -182,9 +189,12 @@
     <ClInclude Include="Source\imgui\stb_rect_pack.h" />
     <ClInclude Include="Source\imgui\stb_textedit.h" />
     <ClInclude Include="Source\imgui\stb_truetype.h" />
+    <ClInclude Include="Source\Importer.h" />
     <ClInclude Include="Source\JSONParser.h" />
     <ClInclude Include="Source\Light.h" />
     <ClInclude Include="Source\MaterialImporter.h" />
+    <ClInclude Include="Source\ShaderImporter.h" />
+    <ClInclude Include="Source\TextureImporter.h" />
     <ClInclude Include="Source\MathGeoLib\Algorithm\GJK.h" />
     <ClInclude Include="Source\MathGeoLib\Algorithm\Random\LCG.h" />
     <ClInclude Include="Source\MathGeoLib\Algorithm\SAT.h" />
@@ -271,15 +281,12 @@
     <ClInclude Include="Source\Primitive.h" />
     <ClInclude Include="Source\OcTree.h" />
     <ClInclude Include="Source\Resource.h" />
+    <ClInclude Include="Source\ResourceMaterial.h" />
     <ClInclude Include="Source\ResourceMesh.h" />
     <ClInclude Include="Source\ResourceScene.h" />
     <ClInclude Include="Source\ResourceTexture.h" />
     <ClInclude Include="Source\SceneImporter.h" />
     <ClInclude Include="Source\Timer.h" />
-    <ClInclude Include="Source\UI_Button.h" />
-    <ClInclude Include="Source\UI_Element.h" />
-    <ClInclude Include="Source\UI_Image.h" />
-    <ClInclude Include="Source\UI_Label.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Game\config.json" />
@@ -292,6 +299,9 @@
     <None Include="Source\MathGeoLib\Geometry\TriangleMesh_IntersectRay_SSE.inl" />
     <None Include="Source\MathGeoLib\Math\float2.inl" />
     <None Include="Source\MathGeoLib\Math\Matrix.inl" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Source\Text.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

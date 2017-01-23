@@ -3,7 +3,6 @@
 
 #include "Module.h"
 
-#include "Resource.h"
 #include "Timer.h"
 
 #include "MathGeoLib\MathGeoLib.h"
@@ -11,6 +10,8 @@
 #include <map>
 
 typedef long unsigned int ID;
+
+class Resource;
 
 class ModuleResourceManager : public Module
 {
@@ -21,6 +22,8 @@ public:
 	~ModuleResourceManager();
 
 	bool Awake(JSONParser &config);
+	bool Start();
+
 	UPDATE_STATUS PreUpdate(float dt);
 	UPDATE_STATUS PostUpdate(float dt);
 

@@ -6,18 +6,20 @@
 #include "ModuleInput.h"
 
 //Importers
-#include "MaterialImporter.h"
+#include "TextureImporter.h"
 #include "MeshImporter.h"
 #include "SceneImporter.h"
+#include "ShaderImporter.h"
 
 // Resources
 #include "ResourceTexture.h"
+#include "ResourceMaterial.h"
 #include "ResourceMesh.h"
 #include "ResourceScene.h"
 
 //Components
 #include "ComponentTransform.h"
-#include "ComponentMaterial.h"
+#include "ComponentTexture.h"
 #include "ComponentMesh.h"
 
 //Assimp
@@ -26,7 +28,8 @@
 #include "Assimp/include/postprocess.h"
 #include "Assimp/include/cfileio.h"
 
-#include <fstream>
+//#include <fstream>
+#include <stack>
 
 #pragma comment (lib, "Source/Assimp/libx86/assimp.lib")
 
@@ -58,8 +61,7 @@ bool ModuleResourceManager::Awake(JSONParser &config)
 			if (res != nullptr) resources[item.GetUUID("ID")] = res;
 		}
 
-		//RELEASE_ARRAY(buf);	
-		delete[] buf;
+		RELEASE_ARRAY(buf);
 	}
 
 	// Stream log messages to Debug window
@@ -70,12 +72,21 @@ bool ModuleResourceManager::Awake(JSONParser &config)
 	return true;
 }
 
+bool ModuleResourceManager::Start()
+{
+	// Shader testing --->
+	ShaderImporter::Load("DefaultVertexShader.glsl");
+	// ---> Shader testing
+
+	return true;
+}
+
 UPDATE_STATUS ModuleResourceManager::PreUpdate(float dt)
 {
 	if (check_timer.ReadSec() > check_interval)
 	{
 		std::vector<std::string> files, dirs;
-		App->file_system->ExploreFiles("Assets", files, dirs, true);
+		App->file_system->ExploreFiles(ASSETS, files, dirs, true);
 
 		bool resources_changed = false;
 
@@ -85,7 +96,7 @@ UPDATE_STATUS ModuleResourceManager::PreUpdate(float dt)
 			ID id = Find(files[i]);
 			if (id == 0)
 			{
-				ImportFile(files[i]);   // Asset new -> import!
+				ImportFile(files[i]);			// Asset new -> import!
 				resources_changed = true;
 			}				
 			else if (IsUpdated(id))
@@ -147,9 +158,10 @@ Resource *ModuleResourceManager::CreateNewResource(RESOURCE_TYPE type, ID id, in
 
 	switch (type)
 	{
-	case (RESOURCE_TYPE::TEXTURES): res = (Resource*) new ResourceTexture(id, timestamp); break;
-	case (RESOURCE_TYPE::SCENES): res = (Resource*) new ResourceScene(id, timestamp); break;
-	case (RESOURCE_TYPE::MESHES): res = (Resource*) new ResourceMesh(id, timestamp); break;	
+	case (RESOURCE_TYPE::RES_TEXTURES): res = (Resource*) new ResourceTexture(id, timestamp); break;
+	case (RESOURCE_TYPE::RES_MATERIAL): res = (Resource*) new ResourceMaterial(id, timestamp); break;
+	case (RESOURCE_TYPE::RES_SCENES): res = (Resource*) new ResourceScene(id, timestamp); break;
+	case (RESOURCE_TYPE::RES_MESHES): res = (Resource*) new ResourceMesh(id, timestamp); break;	
 	}
 
 	if (res != nullptr)
@@ -158,54 +170,25 @@ Resource *ModuleResourceManager::CreateNewResource(RESOURCE_TYPE type, ID id, in
 	return res;
 }
 
-ID ModuleResourceManager::ImportFile(std::string &new_asset_file, ID force_id)
+ID ModuleResourceManager::ImportFile(std::string &asset_file, ID force_id)
 {
-	ID res_id = force_id == 0 ? GenerateID() : force_id;
-	int timestamp = -1;
+	ID res_id = (force_id != 0 ? force_id : GenerateID());	
 
-	std::vector<std::string> imported_files;
-	std::vector<std::string> asset_files;
-	std::vector<ID> IDs;	
-
-	std::vector<RESOURCE_TYPE> types;
-	RESOURCE_TYPE type = GetTypeOfFile(new_asset_file);
-
-	// Creating an entry for each new asset properties
-	asset_files.push_back(new_asset_file);
-	IDs.push_back(res_id);
-	types.push_back(type);
-
-	bool successful_import = false;	
-
-	switch (type)
+	switch (GetTypeOfFile(asset_file))
 	{
-		case(RESOURCE_TYPE::TEXTURES):
-		{			
-			imported_files.push_back("");			
-
-			successful_import = MaterialImporter::Import(asset_files.back(), imported_files.back(), IDs.back());
-			if (successful_import) timestamp = App->file_system->GetLastTimeMod(new_asset_file.c_str(), "Textures/");
+		case(RESOURCE_TYPE::RES_TEXTURES):
+		{		
+			TextureImporter::Import(asset_file, res_id);
 			break;
 		}
-		case(RESOURCE_TYPE::SCENES):
-		{			
-			successful_import = SceneImporter::Import(asset_files, imported_files, IDs, types);
-			if (successful_import) timestamp = App->file_system->GetLastTimeMod(new_asset_file.c_str(), "Models/");
+		case(RESOURCE_TYPE::RES_SCENES):
+		{		
+			SceneImporter::Import(asset_file, res_id);
 			break;
 		}
-		case(RESOURCE_TYPE::NONE):
-			DEBUG("Unknwon type for file %s", new_asset_file.c_str());
+		case(RESOURCE_TYPE::RES_NONE):
+			DEBUG("Unknwon type for file %s", asset_file.c_str());
 			break;
-	}
-
-	if (successful_import)
-	{
-		for (uint i = 0; i < asset_files.size(); ++i)
-		{
-			Resource *res = CreateNewResource(types[i], IDs[i], timestamp);
-			res->file = asset_files[i];
-			res->imported_file = imported_files[i];
-		}		
 	}
 
 	return res_id;
@@ -217,7 +200,6 @@ ID ModuleResourceManager::DeleteImportedFile(std::string &asset_to_delete)
 
 	Resource *res = Get(id_removed);
 	App->file_system->RemoveFile(res->imported_file.c_str());
-	RELEASE(res);
 	DeleteEntry(id_removed);
 
 	return id_removed;
@@ -230,23 +212,23 @@ ID ModuleResourceManager::GenerateID()
 
 RESOURCE_TYPE ModuleResourceManager::GetTypeOfFile(const std::string &file) const
 {
+	RESOURCE_TYPE type = RESOURCE_TYPE::RES_NONE;
+
 	std::string tex_extensions[] = { "png", "tga", "jpg", "PNG", "TGA", "JPG"};
 	std::string scene_extensions[] = { "fbx", "FBX" };
 
-	size_t dot_pos = file.find_last_of(".");
-
-	RESOURCE_TYPE type = RESOURCE_TYPE::NONE;
+	size_t dot_pos = file.find_last_of(".");	
 
 	if (dot_pos != std::string::npos)  // Checking dot extension existence
 	{
-		std::string ext(&file[dot_pos + 1]);
+		std::string ext(&file[dot_pos + 1]);  // Setting extension on ext variable
 
 		// Checking textures extensions...
 		for (uint i = 0; i < sizeof(tex_extensions) / sizeof(std::string); ++i)
 		{
 			if (tex_extensions[i] == ext)
 			{
-				type = RESOURCE_TYPE::TEXTURES;
+				type = RESOURCE_TYPE::RES_TEXTURES;
 				break;
 			}
 		}
@@ -256,7 +238,7 @@ RESOURCE_TYPE ModuleResourceManager::GetTypeOfFile(const std::string &file) cons
 		{
 			if (scene_extensions[i] == ext)
 			{
-				type = RESOURCE_TYPE::SCENES;
+				type = RESOURCE_TYPE::RES_SCENES;
 				break;
 			}
 		}
@@ -279,6 +261,7 @@ ID ModuleResourceManager::Find(const std::string &asset_to_find) const
 void ModuleResourceManager::DeleteEntry(ID id)
 {
 	std::map<ID,Resource*>::iterator it = resources.find(id);
+	RELEASE(it->second);
 	resources.erase(it);
 }
 
@@ -289,9 +272,9 @@ bool ModuleResourceManager::IsUpdated(ID id) const
 
 	switch (res->type)
 	{
-		case(RESOURCE_TYPE::TEXTURES): timestamp = App->file_system->GetLastTimeMod(res->file.c_str(), "Textures/"); break;
-		//case(RESOURCE_TYPE::MESHES): timestamp = App->file_system->GetLastTimeMod(res->file.c_str(), LIBRARY_MESH); break;
-		case(RESOURCE_TYPE::SCENES): timestamp = App->file_system->GetLastTimeMod(res->file.c_str(), "Models/"); break;
+		case(RESOURCE_TYPE::RES_TEXTURES): timestamp = App->file_system->GetLastTimeMod(res->file.c_str(), "Textures/"); break;
+		//case(RESOURCE_TYPE::RES_MESHES): timestamp = App->file_system->GetLastTimeMod(res->file.c_str(), LIBRARY_MESH); break;
+		case(RESOURCE_TYPE::RES_SCENES): timestamp = App->file_system->GetLastTimeMod(res->file.c_str(), "Models/"); break;
 	}
 
 	if (timestamp > res->timestamp)
@@ -331,7 +314,7 @@ bool ModuleResourceManager::LoadFile(const char *file_to_load)
 			
 			switch ((RESOURCE_TYPE)item.GetInt("Type"))
 			{
-			case(RESOURCE_TYPE::MESHES):
+			case(RESOURCE_TYPE::RES_MESHES):
 				{
 					ResourceMesh *res_mesh = (ResourceMesh*)resources[item.GetUUID("ID")];
 					if (!res_mesh->LoadedInMemory())
@@ -340,11 +323,11 @@ bool ModuleResourceManager::LoadFile(const char *file_to_load)
 					res_mesh->LoadToMemory();
 					break;
 				}
-			case(RESOURCE_TYPE::TEXTURES):
+			case(RESOURCE_TYPE::RES_TEXTURES):
 				{
 					ResourceTexture *res_mat = (ResourceTexture*)resources[item.GetUUID("ID")];
 					if (!res_mat->LoadedInMemory())				
-						MaterialImporter::Load(item.GetString("Imported File"), res_mat);
+						TextureImporter::Load(item.GetString("Imported File"), res_mat);
 					
 					res_mat->LoadToMemory();
 					break; 					
@@ -402,8 +385,8 @@ bool ModuleResourceManager::LoadFile(const char *file_to_load)
 							GameObject *new_go = App->gameobject_manager->CreateGameObject(go_name, parent);
 							go_stack.push(new_go);
 
-							// --- TRANSFORM ---						
-							ComponentTransform *comp_trans = (ComponentTransform*)new_go->AddComponent(COMPONENT_TYPE::TRANSFORM);
+							// --- TRANSFORM ---					
+							ComponentTransform *comp_trans = (ComponentTransform*)new_go->AddComponent(COMPONENT_TYPE::COMP_TRANSFORM);
 							comp_trans->SetComponent(node_to_add);
 
 							// --- MESH ---	
@@ -411,7 +394,7 @@ bool ModuleResourceManager::LoadFile(const char *file_to_load)
 							{
 								aiMesh *ai_mesh = scene->mMeshes[node_to_add->mMeshes[j]];
 							
-								ComponentMesh *comp_mesh = (ComponentMesh*)new_go->AddComponent(COMPONENT_TYPE::MESH);
+								ComponentMesh *comp_mesh = (ComponentMesh*)new_go->AddComponent(COMPONENT_TYPE::COMP_MESH);
 								comp_mesh->AddResource((ResourceMesh*)Get(FindFileIdJSON(json_scene, file, go_name)));	
 
 								// --- MATERIAL ---	
@@ -421,7 +404,7 @@ bool ModuleResourceManager::LoadFile(const char *file_to_load)
 								{
 									aiString path;
 									ai_material->GetTexture(aiTextureType_DIFFUSE, 0, &path);
-									ComponentMaterial *comp_mat = (ComponentMaterial*)new_go->AddComponent(COMPONENT_TYPE::MATERIAL);
+									ComponentTexture *comp_mat = (ComponentTexture*)new_go->AddComponent(COMPONENT_TYPE::COMP_TEXTURE);
 									comp_mat->AddResource((ResourceTexture*)Get(FindFileIdJSON(json_scene, file, App->file_system->GetFileFromDirPath(path.C_Str()))));
 								}				
 							}
@@ -541,7 +524,7 @@ bool ModuleResourceManager::Load(JSONParser &module)
 
 		switch (res->type)
 		{
-		case(RESOURCE_TYPE::MESHES):
+		case(RESOURCE_TYPE::RES_MESHES):
 			{
 				if (item.GetBoolean("Loaded in memory"))
 				{
@@ -550,11 +533,11 @@ bool ModuleResourceManager::Load(JSONParser &module)
 				}				
 				break;
 			}
-		case(RESOURCE_TYPE::TEXTURES):
+		case(RESOURCE_TYPE::RES_TEXTURES):
 			{
 				if (item.GetBoolean("Loaded in memory"))
 				{
-					MaterialImporter::Load((std::string)item.GetString("Imported File"), (ResourceTexture*)res);
+					TextureImporter::Load((std::string)item.GetString("Imported File"), (ResourceTexture*)res);
 					res->LoadToMemory();
 				}
 				break;

@@ -1,14 +1,14 @@
 #include "ComponentButtonUI.h"
 
 #include "ResourceTexture.h"
-#include "MaterialImporter.h"
+#include "TextureImporter.h"
 
 #include "imgui\imgui.h"
 
 ComponentButtonUI::ComponentButtonUI() : Component()
 {
-	type = COMPONENT_TYPE::UI_IMAGE;
-	name = GetNameByType(type);
+	type = COMPONENT_TYPE::COMP_UI_BUTTON;
+	name = "UI Button";
 
 	idle = hover = pushed = nullptr;
 	current_state = nullptr;
@@ -62,7 +62,7 @@ void ComponentButtonUI::InitIdleTexture(const char *tex_name)
 	idle->IncrReferences();
 
 	if (!idle->LoadedInMemory())
-		MaterialImporter::Load(idle->imported_file, idle);
+		TextureImporter::Load(idle->imported_file, idle);
 
 	idle->LoadToMemory();
 
@@ -75,7 +75,7 @@ void ComponentButtonUI::InitHoverTexture(const char *tex_name)
 	hover->IncrReferences();
 
 	if (!hover->LoadedInMemory())
-		MaterialImporter::Load(hover->imported_file, hover);
+		TextureImporter::Load(hover->imported_file, hover);
 
 	hover->LoadToMemory();
 }
@@ -86,7 +86,7 @@ void ComponentButtonUI::InitPushedTexture(const char *tex_name)
 	pushed->IncrReferences();
 
 	if (!pushed->LoadedInMemory())
-		MaterialImporter::Load(pushed->imported_file, pushed);
+		TextureImporter::Load(pushed->imported_file, pushed);
 
 	pushed->LoadToMemory();
 }

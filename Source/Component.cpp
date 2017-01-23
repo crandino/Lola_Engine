@@ -7,7 +7,7 @@
 
 Component::Component()
 {
-	type = COMPONENT_TYPE::UNKNOWN;
+	type = COMPONENT_TYPE::COMP_UNKNOWN;
 	active = true;
 
 	App->gameobject_manager->GenerateUUID(this);
@@ -29,43 +29,8 @@ COMPONENT_TYPE &Component::GetType()
 	return type;
 }
 
-const char *Component::GetNameByType(COMPONENT_TYPE type)
+const char *Component::GetName()
 {
-	const char *name;
-	switch (type)
-	{
-	// Generic components
-	case(COMPONENT_TYPE::TRANSFORM):
-		name = "Transform";
-		break;	
-	case(COMPONENT_TYPE::MESH):
-		name = "Mesh";
-		break;
-	case(COMPONENT_TYPE::MATERIAL):
-		name = "Material";
-		break;
-	case(COMPONENT_TYPE::CAMERA):
-		name = "Camera";
-		break;
-
-	// UI components
-	case(COMPONENT_TYPE::TRANSFORM_2D):
-		name = "Rect Transform";
-		break;
-	case(COMPONENT_TYPE::UI_IMAGE):
-		name = "UI Image";
-		break;
-	case(COMPONENT_TYPE::UI_LABEL):
-		name = "UI Label";
-		break;
-	case(COMPONENT_TYPE::UI_BUTTON):
-		name = "UI Button";
-		break;
-
-	default:
-		name = "Unknown";
-	}
-
 	return name;
 }
 

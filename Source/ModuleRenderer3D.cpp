@@ -7,16 +7,19 @@
 
 #include "ComponentMesh.h"
 #include "ComponentTransform.h"
-#include "ComponentMaterial.h"
+#include "ComponentTexture.h"
 #include "ComponentCamera.h"
 #include "GameObject.h"
+
+#include "ResourceMesh.h"
+#include "Mesh.h"
 
 #include "openGL.h"
 
 #include "Devil\include\ilut.h"
 
-#pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
-#pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
+#pragma comment (lib, "glu32.lib")						 /* link OpenGL Utility lib     */
+#pragma comment (lib, "opengl32.lib")					 /* link Microsoft OpenGL lib   */
 #pragma comment (lib, "Source/Glew/libx86/glew32.lib")   /* link Glew lib   */
 
 ModuleRenderer3D::ModuleRenderer3D(Application* app, bool start_enabled) : Module(app, start_enabled)
@@ -335,17 +338,11 @@ void ModuleRenderer3D::DrawDirectMode()
 
 void ModuleRenderer3D::ShowGameObject(const GameObject *go)
 {
-	/*glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-
-	CalculateProjectionMatrix();
-	glLoadMatrixf(*projection_matrix.v);*/
-
 	const ComponentMesh *comp_mesh = nullptr;
-	const ComponentMaterial *comp_mat = nullptr;
+	const ComponentTexture *comp_tex = nullptr;
 
-	comp_mesh = (ComponentMesh*)go->GetComponentByType(COMPONENT_TYPE::MESH);
-	comp_mat = (ComponentMaterial*)go->GetComponentByType(COMPONENT_TYPE::MATERIAL);
+	comp_mesh = (ComponentMesh*)go->GetComponentByType(COMPONENT_TYPE::COMP_MESH);
+	comp_tex = (ComponentTexture*)go->GetComponentByType(COMPONENT_TYPE::COMP_MATERIAL);
 
 	// Rendering
 	if (comp_mesh != nullptr && comp_mesh->IsActive())
@@ -373,21 +370,21 @@ void ModuleRenderer3D::ShowGameObject(const GameObject *go)
 		else
 		{
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-			if (comp_mat != nullptr && comp_mat->IsActive())
+			if (comp_tex != nullptr && comp_tex->IsActive())
 			{
 				glEnable(GL_TEXTURE_2D);
 				glBindTexture(GL_TEXTURE_2D, 0); // Cleanning bind buffer;
 
-				// Alpha testing-> Add this alpha test on the corresponding resource 
-				glEnable(GL_ALPHA_TEST);
-				glAlphaFunc(GL_GREATER, 0.1f);
+				//// Alpha testing-> Add this alpha test on the corresponding resource 
+				//glEnable(GL_ALPHA_TEST);
+				//glAlphaFunc(GL_GREATER, 0.1f);
 
-				//Blending 
-				glEnable(GL_BLEND);
-				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+				////Blending 
+				//glEnable(GL_BLEND);
+				//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-				glBindTexture(GL_TEXTURE_2D, comp_mat->resource->tex_buffer);		
-				glColor3f(comp_mat->resource->color_diffuse.x, comp_mat->resource->color_diffuse.y, comp_mat->resource->color_diffuse.z);
+				glBindTexture(GL_TEXTURE_2D, comp_tex->resource->tex_buffer);		
+				//glColor3f(comp_mat->resource->color_diffuse.x, comp_mat->resource->color_diffuse.y, comp_mat->resource->color_diffuse.z);
 			}
 		}			
 
@@ -409,8 +406,8 @@ void ModuleRenderer3D::ShowGameObject(const GameObject *go)
 		glPopMatrix();
 		
 		glDisable(GL_TEXTURE_2D);
-		glDisable(GL_ALPHA_TEST);
-		glDisable(GL_BLEND);
+		/*glDisable(GL_ALPHA_TEST);
+		glDisable(GL_BLEND);*/
 
 		glDisableClientState(GL_VERTEX_ARRAY);
 		glDisableClientState(GL_NORMAL_ARRAY);

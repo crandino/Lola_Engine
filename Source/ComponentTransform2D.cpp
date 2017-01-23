@@ -2,11 +2,12 @@
 
 #include "GameObject.h"
 
-#include "ResourceMesh.h"
-
 #include "imgui\imgui.h"
 #include "MathGeoLib\MathGeoLib.h"
-#include "openGL.h"
+//#include "openGL.h"
+
+#include "ResourceMesh.h"
+#include "Mesh.h"
 
 #include <stack>
 
@@ -17,10 +18,10 @@ ComponentTransform2D::ComponentTransform2D() : Component()
 	
 	size.Set(0.0f, 0.0f);
 
-	type = COMPONENT_TYPE::TRANSFORM_2D;
-	name = GetNameByType(type);
+	type = COMPONENT_TYPE::COMP_TRANSFORM_2D;
+	name = "Rect Transform";
 
-	AddResource(App->resource_manager->CreateNewResource(RESOURCE_TYPE::MESHES, App->resource_manager->GenerateID(), 1));
+	AddResource(App->resource_manager->CreateNewResource(RESOURCE_TYPE::RES_MESHES, App->resource_manager->GenerateID(), 1));
 	InitPanelMesh();
 }
 
@@ -33,8 +34,7 @@ void ComponentTransform2D::InitPanelMesh()
 	0 ----- 1
 	|       |
 	|       |
-	2 ----- 3
-	*/
+	2 ----- 3     */
 
 	// Vertices
 	panel->mesh_data->num_vertices = 4;

@@ -2,11 +2,16 @@
 
 #include "Application.h"
 #include "ModuleFileSystem.h"
+#include "ModuleResourceManager.h"
 
 #include "Mesh.h"
 #include "ResourceMesh.h"
 
-uint MeshImporter::Save(char **data, const Mesh *mesh)
+#include "Assimp\include\mesh.h"
+
+#include "MathGeoLib\MathGeoLib.h" 
+
+unsigned int MeshImporter::Save(char **data, const Mesh *mesh)
 {
 	/* Save follows that sequence: indices, vertices, normals and texture coordinates. Each component consists
 	of num_of_elements and array of that elements.*/
@@ -58,9 +63,9 @@ uint MeshImporter::Save(char **data, const Mesh *mesh)
 	return size;
 }
 
-uint MeshImporter::Load(const std::string &imported_file, ResourceMesh *mesh)
+unsigned int MeshImporter::Load(const std::string &imported_file, ResourceMesh *mesh)
 {
-	uint bytes = 0;
+	unsigned int bytes = 0;
 
 	char *data;
 	std::string lib_folder = LIBRARY_MESH;
@@ -155,27 +160,32 @@ void MeshImporter::Load(const aiMesh *ai_mesh, Mesh *mesh)
 	}
 }
 
-bool MeshImporter::Import(const aiMesh *ai_mesh, std::string &imported_file, ID &res_id)
+Resource *MeshImporter::Import(const aiMesh *ai_mesh, const long unsigned int &res_id)
 {
+	Resource *res = nullptr;
+
 	std::string lib_folder = LIBRARY_MESH;
 	// Loading Mesh from Assimp
 	Mesh *mesh = new Mesh();
 	Load(ai_mesh, mesh);
 
 	// Saving Mesh to own format file
-	char file[SHORT_STRING];
-	sprintf_s(file, SHORT_STRING, "%lu%s", res_id, ".msh");
-	imported_file = file;
+	char filename[SHORT_STRING];
+	sprintf_s(filename, SHORT_STRING, "%lu%s", res_id, ".msh");
+	std::string imported_file = filename;
 
 	char *buf;
-	uint size = Save(&buf, mesh);
-	bool ret = App->file_system->Save((lib_folder + imported_file).c_str(), buf, size) != 0 ? true : false;
+	uint size = Save(&buf, mesh);	
 
-	//RELEASE_ARRAY(buf);
-	delete[] buf;
-	delete mesh;
-	//RELEASE(mesh);
+	if (App->file_system->Save((lib_folder + imported_file).c_str(), buf, size) != 0)
+	{
+		res = App->resource_manager->CreateNewResource(RESOURCE_TYPE::RES_MESHES, res_id, -1);
+		res->imported_file = filename;
+	} 
 
-	return ret;
+	RELEASE_ARRAY(buf);
+	RELEASE(mesh);
+
+	return res;
 }
 

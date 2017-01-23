@@ -11,19 +11,21 @@ class Resource;
 
 enum COMPONENT_TYPE
 {
-	UNKNOWN,
+	COMP_UNKNOWN,
 
 	// Generic components
-	TRANSFORM, 
-	MATERIAL,
-	MESH,
-	CAMERA,
+	COMP_TRANSFORM, 
+	COMP_MATERIAL,
+	COMP_TEXTURE,
+	COMP_MESH,
+	COMP_CAMERA,
 
 	// UI components
-	TRANSFORM_2D,
-	UI_IMAGE,
-	UI_LABEL, 
-	UI_BUTTON
+	COMP_TRANSFORM_2D,
+	COMP_UI_PROPERTIES,
+	COMP_UI_IMAGE,
+	COMP_UI_LABEL, 
+	COMP_UI_BUTTON
 };
 
 class Component
@@ -47,7 +49,7 @@ public:
 	virtual void ShowEditorInfo();
 
 	COMPONENT_TYPE &GetType();
-	const char *GetNameByType(COMPONENT_TYPE type);
+	const char *GetName();
 	bool IsActive() const;
 
 	virtual void AddResource(Resource *res)

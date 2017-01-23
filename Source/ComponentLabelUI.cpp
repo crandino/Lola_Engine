@@ -9,8 +9,8 @@
 
 ComponentLabelUI::ComponentLabelUI() : Component()
 {
-	type = COMPONENT_TYPE::UI_LABEL;
-	name = GetNameByType(type);
+	type = COMPONENT_TYPE::COMP_UI_LABEL;
+	name = "UI Label";
 
 	resource = nullptr;
 }

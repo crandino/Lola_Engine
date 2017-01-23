@@ -30,8 +30,8 @@ ComponentCamera::ComponentCamera() : Component()
 	aspect_ratio = 1.333f;
 	FOV_v = 60.0f;	
 
-	type = COMPONENT_TYPE::CAMERA;
-	name = GetNameByType(type);
+	type = COMPONENT_TYPE::COMP_CAMERA;
+	name = "Texture";
 }
 
 ComponentCamera::~ComponentCamera()

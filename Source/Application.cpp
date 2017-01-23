@@ -15,6 +15,8 @@
 
 #include "JSONParser.h"
 
+#include "Console.h"
+
 Application::Application()
 {
 	window = new ModuleWindow(this, true);
@@ -28,7 +30,7 @@ Application::Application()
 	gameobject_manager = new ModuleGameObjectManager(this, true);
 	editor = new ModuleEditor(this, true);
 	ui_manager = new ModuleUIManager(this, true);
-	font_manager = new ModuleFontManager(this, true);
+	font_manager = new ModuleFontManager(this, false);
 
 	// The order of calls is very important!
 	// Modules will Init() Start() and Update in this order

@@ -1,25 +1,26 @@
 #ifndef __MESHIMPORTER_H__
 #define __MESHIMPORTER_H__
 
-#include "Assimp\include\mesh.h"
+#include "Importer.h"
 
-#include "MathGeoLib\MathGeoLib.h" 
+#include <string>
 
-typedef long unsigned int ID;
 struct Mesh;
+struct aiMesh;
+class Resource;
 class ResourceMesh;
 
-class MeshImporter
+class MeshImporter : public Importer
 {
-
 public:
+
+	Resource static *Import(const aiMesh *ai_mesh, const long unsigned int &res_id);
 
 	unsigned int static Save(char **data, const Mesh *mesh);
 
 	unsigned int static Load(const std::string &imported_file, ResourceMesh *mesh);
 	void static Load(const aiMesh *ai_mesh, Mesh *mesh);
-
-	bool static Import(const aiMesh *ai_mesh, std::string &imported_file, ID &res_id);
+	
 };
 
 #endif // !__MESHIMPORTER_H__

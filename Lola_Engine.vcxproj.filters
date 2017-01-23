@@ -43,11 +43,8 @@
     <Filter Include="Source\Resources">
       <UniqueIdentifier>{18f8cc9e-6486-469e-906c-ce4d2dd86b70}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Resources\Importers">
+    <Filter Include="Source\Importers">
       <UniqueIdentifier>{fd528fed-81a4-427b-9349-2b42c30069fd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\UI_Elements">
-      <UniqueIdentifier>{2b1e4a82-a36a-4d31-b9a2-fb96dcf3cbc2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -234,9 +231,6 @@
     <ClCompile Include="Source\ComponentMesh.cpp">
       <Filter>Source\Components</Filter>
     </ClCompile>
-    <ClCompile Include="Source\ComponentMaterial.cpp">
-      <Filter>Source\Components</Filter>
-    </ClCompile>
     <ClCompile Include="Source\ModuleCameraEditor.cpp">
       <Filter>Source\Modules</Filter>
     </ClCompile>
@@ -258,29 +252,14 @@
     <ClCompile Include="Source\Performance.cpp">
       <Filter>Source\Helpers</Filter>
     </ClCompile>
-    <ClCompile Include="Source\MaterialImporter.cpp">
-      <Filter>Source\Resources\Importers</Filter>
-    </ClCompile>
     <ClCompile Include="Source\SceneImporter.cpp">
-      <Filter>Source\Resources\Importers</Filter>
+      <Filter>Source\Importers</Filter>
     </ClCompile>
     <ClCompile Include="Source\MeshImporter.cpp">
-      <Filter>Source\Resources\Importers</Filter>
+      <Filter>Source\Importers</Filter>
     </ClCompile>
     <ClCompile Include="Source\ModuleUIManager.cpp">
       <Filter>Source\Modules</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\UI_Image.cpp">
-      <Filter>Source\UI_Elements</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\UI_Element.cpp">
-      <Filter>Source\UI_Elements</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\UI_Label.cpp">
-      <Filter>Source\UI_Elements</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\UI_Button.cpp">
-      <Filter>Source\UI_Elements</Filter>
     </ClCompile>
     <ClCompile Include="Source\ComponentTransform2D.cpp">
       <Filter>Source\Components</Filter>
@@ -299,6 +278,36 @@
     </ClCompile>
     <ClCompile Include="Source\ComponentButtonUI.cpp">
       <Filter>Source\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ComponentPropertiesUI.cpp">
+      <Filter>Source\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\TextureImporter.cpp">
+      <Filter>Source\Importers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\MaterialImporter.cpp">
+      <Filter>Source\Importers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ComponentTexture.cpp">
+      <Filter>Source\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ResourceTexture.cpp">
+      <Filter>Source\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Resource.cpp">
+      <Filter>Source\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ResourceScene.cpp">
+      <Filter>Source\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ResourceMesh.cpp">
+      <Filter>Source\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ResourceMaterial.cpp">
+      <Filter>Source\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ShaderImporter.cpp">
+      <Filter>Source\Importers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -575,11 +584,8 @@
     <ClInclude Include="Source\ComponentMesh.h">
       <Filter>Source\Components</Filter>
     </ClInclude>
-    <ClInclude Include="Source\ComponentMaterial.h">
-      <Filter>Source\Components</Filter>
-    </ClInclude>
     <ClInclude Include="Source\MeshImporter.h">
-      <Filter>Source\Resources\Importers</Filter>
+      <Filter>Source\Importers</Filter>
     </ClInclude>
     <ClInclude Include="Source\Mesh.h">
       <Filter>Source\Components</Filter>
@@ -605,9 +611,6 @@
     <ClInclude Include="Source\JSONParser.h">
       <Filter>Source\Helpers</Filter>
     </ClInclude>
-    <ClInclude Include="Source\MaterialImporter.h">
-      <Filter>Source\Resources\Importers</Filter>
-    </ClInclude>
     <ClInclude Include="Source\ModuleSceneIntro.h">
       <Filter>Source\Modules\Game</Filter>
     </ClInclude>
@@ -621,7 +624,7 @@
       <Filter>Source\Resources</Filter>
     </ClInclude>
     <ClInclude Include="Source\SceneImporter.h">
-      <Filter>Source\Resources\Importers</Filter>
+      <Filter>Source\Importers</Filter>
     </ClInclude>
     <ClInclude Include="Source\ResourceMesh.h">
       <Filter>Source\Resources</Filter>
@@ -631,18 +634,6 @@
     </ClInclude>
     <ClInclude Include="Source\ModuleUIManager.h">
       <Filter>Source\Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\UI_Element.h">
-      <Filter>Source\UI_Elements</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\UI_Image.h">
-      <Filter>Source\UI_Elements</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\UI_Label.h">
-      <Filter>Source\UI_Elements</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\UI_Button.h">
-      <Filter>Source\UI_Elements</Filter>
     </ClInclude>
     <ClInclude Include="Source\ComponentTransform2D.h">
       <Filter>Source\Components</Filter>
@@ -661,6 +652,27 @@
     </ClInclude>
     <ClInclude Include="Source\ComponentButtonUI.h">
       <Filter>Source\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ComponentPropertiesUI.h">
+      <Filter>Source\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Importer.h">
+      <Filter>Source\Importers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ResourceMaterial.h">
+      <Filter>Source\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\TextureImporter.h">
+      <Filter>Source\Importers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\MaterialImporter.h">
+      <Filter>Source\Importers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ComponentTexture.h">
+      <Filter>Source\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ShaderImporter.h">
+      <Filter>Source\Importers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -694,5 +706,10 @@
     <None Include="Game\Library\Resources.dat">
       <Filter>JSON files</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Source\Text.txt">
+      <Filter>Source</Filter>
+    </Text>
   </ItemGroup>
 </Project>

@@ -4,26 +4,21 @@
 #include "ModuleInput.h"
 #include "ModuleWindow.h"
 
-#include "UI_Element.h"
-#include "UI_Image.h"
-#include "UI_Label.h"
-#include "UI_Button.h"
-
 #include "Component.h"
 #include "ComponentTransform2D.h"
 #include "ComponentImageUI.h"
 #include "ComponentLabelUI.h"
 #include "ComponentButtonUI.h"
+#include "ComponentPropertiesUI.h"
 
 #include "ResourceMesh.h"
 #include "ResourceTexture.h"
 
-#include "SDL\include\SDL_render.h"
+#include "Mesh.h"
 
 ModuleUIManager::ModuleUIManager(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
 	sprintf_s(name, SHORT_STRING, "UI_Manager");
-	//debug = false;
 }
 
 // Destructor
@@ -46,10 +41,11 @@ bool ModuleUIManager::Start()
 {
 	//atlas = app->tex->loadTexture(atlas_file_name.GetString());
 
-	screen = new UI_Element();
+	current_ui = previous_ui = canvas;
+	/*screen = new UI_Element();
 	screen->interactable = false;
 	focus = screen;
-	previous_UIelement = screen;
+	previous_UIelement = screen;*/
 
 	return true;
 }
@@ -57,21 +53,28 @@ bool ModuleUIManager::Start()
 // Update all guis
 UPDATE_STATUS ModuleUIManager::PreUpdate(float dt)
 {
-	math::float2 p = math::float2(App->input->GetMouseX(), App->input->GetMouseY());
-	//UI_Element *current_UIelement = 
-	const GameObject *curr_element = whichUIelemOnMouse(p);
+	if (UI_list.empty())
+		return UPDATE_CONTINUE;
 
-	if (curr_element != nullptr && App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT)
+	math::float2 p = math::float2(App->input->GetMouseX(), App->input->GetMouseY());
+	current_ui = whichUIelemOnMouse(p);
+
+	if (current_ui != nullptr && App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT)
+		current_ui->transform_2d->Move({ (float)App->input->GetMouseXMotion(), (float)App->input->GetMouseYMotion(), 0.0f });
+
+
+	std::list<Module*>::const_iterator it = current_ui->ui_properties->GetListeners().begin();
+	while (it != current_ui->ui_properties->GetListeners().end())
 	{
-		curr_element->transform_2d->Move({ (float)App->input->GetMouseXMotion(), (float)App->input->GetMouseYMotion(), 0.0f });
+		if (current_ui != previous_ui)
+		{
+			(*it)->OnGui(MOUSE_ENTER, (GameObject*)current_ui);
+			(*it)->OnGui(MOUSE_LEAVE, (GameObject*)previous_ui);
+		}	
+
+		++it;
 	}
 
-
-	// New component with interactable boolean (movement and triggerable), list_of_listeners (pointers to Module class), 
-
-
-	//std::vector<Module*>::iterator it = current_UIelement->mod_listeners.end();
-	//while (it != current_UIelement->mod_listeners.begin())
 	//{
 	//	if (current_UIelement != previous_UIelement)
 	//		(*it)->OnGui(MOUSE_LEAVE, previous_UIelement);
@@ -145,7 +148,7 @@ UPDATE_STATUS ModuleUIManager::PostUpdate(float dt)
 		glBindBuffer(GL_ARRAY_BUFFER, panel->id_tex_coord);
 		glTexCoordPointer(2, GL_FLOAT, 0, NULL);
 
-		ComponentImageUI *ui_image = (ComponentImageUI*)curr_ui->GetComponentByType(COMPONENT_TYPE::UI_IMAGE);
+		ComponentImageUI *ui_image = (ComponentImageUI*)curr_ui->GetComponentByType(COMPONENT_TYPE::COMP_UI_IMAGE);
 		if (ui_image != nullptr)
 		{
 			// Texture
@@ -154,7 +157,7 @@ UPDATE_STATUS ModuleUIManager::PostUpdate(float dt)
 			glBindTexture(GL_TEXTURE_2D, ui_image->resource->tex_buffer);
 		}	
 
-		ComponentLabelUI *ui_label = (ComponentLabelUI*)curr_ui->GetComponentByType(COMPONENT_TYPE::UI_LABEL);
+		ComponentLabelUI *ui_label = (ComponentLabelUI*)curr_ui->GetComponentByType(COMPONENT_TYPE::COMP_UI_LABEL);
 		if (ui_label != nullptr)
 		{
 			// Texture
@@ -163,7 +166,7 @@ UPDATE_STATUS ModuleUIManager::PostUpdate(float dt)
 			glBindTexture(GL_TEXTURE_2D, ui_label->resource->tex_buffer);
 		}
 
-		ComponentButtonUI *ui_button = (ComponentButtonUI*)curr_ui->GetComponentByType(COMPONENT_TYPE::UI_BUTTON);
+		ComponentButtonUI *ui_button = (ComponentButtonUI*)curr_ui->GetComponentByType(COMPONENT_TYPE::COMP_UI_BUTTON);
 		if (ui_button != nullptr)
 		{
 			// Texture
@@ -202,62 +205,55 @@ bool ModuleUIManager::CleanUp()
 	//UIelement_list.clear();
 
 	// Deleting screen root for tree
-	delete screen;
+	//delete screen;
 
 	return true;
 }
 
 // const getter for atlas
-const SDL_Texture* ModuleUIManager::getAtlas() const
-{
-	return atlas;
-}
+//const SDL_Texture* ModuleUIManager::getAtlas() const
+//{
+//	return atlas;
+//}
+//
+//const UI_Element* ModuleUIManager::whichFocus() const
+//{
+//	return focus;
+//}
 
-const UI_Element* ModuleUIManager::whichFocus() const
-{
-	return focus;
-}
-
-// Factories for class Gui ---------------------------------------------------
-UI_Label* ModuleUIManager::CreateLabel(math::float2 p, const char *string, _TTF_Font *font, Module *mod, UI_Element *parent)
-{
-	UI_Label *l = new UI_Label();
-	//l->init(p, string, font, mod, parent);
-	//UIelement_list.push_back(l);
-	return l;
-}
-
-UI_Image* ModuleUIManager::CreateImage(math::float2 p, SDL_Texture *tex, SDL_Rect &section, Module *mod, UI_Element *parent)
-{
-	UI_Image *i = new UI_Image();
-	//i->init(p, tex, section, mod, parent);
-	//UIelement_list.push_back(i);
-	return i;
-}
-
-UI_Button *ModuleUIManager::CreateButton(math::float2 p, SDL_Texture *tex_idle, SDL_Rect& section_idle, SDL_Texture *tex_hover,
-								  SDL_Rect& section_hover, SDL_Texture *tex_clicked, SDL_Rect& section_clicked,
-								  Module *mod, UI_Element *parent)
-{
-	UI_Button *b = new UI_Button();
-	//b->init(p, tex_idle, section_idle, tex_hover, section_hover, tex_clicked, section_clicked, mod, parent);
-	//UIelement_list.push_back(b);
-
-	return b;	
-}
+//// Factories for class Gui ---------------------------------------------------
+//UI_Label* ModuleUIManager::CreateLabel(math::float2 p, const char *string, _TTF_Font *font, Module *mod, UI_Element *parent)
+//{
+//	UI_Label *l = new UI_Label();
+//	//l->init(p, string, font, mod, parent);
+//	//UIelement_list.push_back(l);
+//	return l;
+//}
+//
+//UI_Image* ModuleUIManager::CreateImage(math::float2 p, SDL_Texture *tex, SDL_Rect &section, Module *mod, UI_Element *parent)
+//{
+//	UI_Image *i = new UI_Image();
+//	//i->init(p, tex, section, mod, parent);
+//	//UIelement_list.push_back(i);
+//	return i;
+//}
+//
+//UI_Button *ModuleUIManager::CreateButton(math::float2 p, SDL_Texture *tex_idle, SDL_Rect& section_idle, SDL_Texture *tex_hover,
+//								  SDL_Rect& section_hover, SDL_Texture *tex_clicked, SDL_Rect& section_clicked,
+//								  Module *mod, UI_Element *parent)
+//{
+//	UI_Button *b = new UI_Button();
+//	//b->init(p, tex_idle, section_idle, tex_hover, section_hover, tex_clicked, section_clicked, mod, parent);
+//	//UIelement_list.push_back(b);
+//
+//	return b;	
+//}
 
 void ModuleUIManager::CreateImage(const math::float3 &pos, const math::float2 &size)
 {
-	if (canvas == nullptr)
-		CreateCanvas();
+	GameObject *ui_image = CreateBaseElement("UI_Image", pos, size);
+	ComponentImageUI *image = (ComponentImageUI*)ui_image->AddComponent(COMPONENT_TYPE::COMP_UI_IMAGE);
 
-	GameObject *ui_image = App->gameobject_manager->CreateGameObject("UI_Image", canvas);
-
-	ui_image->AddComponent(COMPONENT_TYPE::TRANSFORM_2D);
-	ui_image->transform_2d->SetLocalPos(pos);
-	ui_image->transform_2d->SetSize(size);
-	
-	ComponentImageUI *image = (ComponentImageUI*)ui_image->AddComponent(COMPONENT_TYPE::UI_IMAGE);
 	image->AddResource(App->resource_manager->Get(App->resource_manager->Find("Tigger.png")));
 	image->InitTexture("Tigger.png");
 
@@ -266,17 +262,10 @@ void ModuleUIManager::CreateImage(const math::float3 &pos, const math::float2 &s
 
 void ModuleUIManager::CreateLabel(const math::float3 &pos, const math::float2 &size)
 {
-	if (canvas == nullptr)
-		CreateCanvas();
+	GameObject *ui_label = CreateBaseElement("UI_Label", pos, size);
+	ComponentLabelUI *label = (ComponentLabelUI*)ui_label->AddComponent(COMPONENT_TYPE::COMP_UI_LABEL);
 
-	GameObject *ui_label = App->gameobject_manager->CreateGameObject("UI_Label", canvas);
-
-	ui_label->AddComponent(COMPONENT_TYPE::TRANSFORM_2D);
-	ui_label->transform_2d->SetLocalPos(pos);
-	ui_label->transform_2d->SetSize(size);
-
-	ComponentLabelUI *label = (ComponentLabelUI*)ui_label->AddComponent(COMPONENT_TYPE::UI_LABEL);
-	label->AddResource(App->resource_manager->CreateNewResource(RESOURCE_TYPE::TEXTURES, App->resource_manager->GenerateID(), 1));
+	label->AddResource(App->resource_manager->CreateNewResource(RESOURCE_TYPE::RES_TEXTURES, App->resource_manager->GenerateID(), 1));
 	label->SetText();
 
 	UI_list.push_back(ui_label);
@@ -284,16 +273,8 @@ void ModuleUIManager::CreateLabel(const math::float3 &pos, const math::float2 &s
 
 void ModuleUIManager::CreateButton(const math::float3 &pos, const math::float2 &size)
 {
-	if (canvas == nullptr)
-		CreateCanvas();
-
-	GameObject *ui_button = App->gameobject_manager->CreateGameObject("UI_Button", canvas);
-
-	ui_button->AddComponent(COMPONENT_TYPE::TRANSFORM_2D);
-	ui_button->transform_2d->SetLocalPos(pos);
-	ui_button->transform_2d->SetSize(size);
-
-	ComponentButtonUI *button = (ComponentButtonUI*)ui_button->AddComponent(COMPONENT_TYPE::UI_BUTTON);
+	GameObject *ui_button = CreateBaseElement("UI_Button", pos, size);
+	ComponentButtonUI *button = (ComponentButtonUI*)ui_button->AddComponent(COMPONENT_TYPE::COMP_UI_BUTTON);
 
 	button->InitIdleTexture("idle_button.png");
 	button->InitHoverTexture("hover_button.png");
@@ -305,7 +286,24 @@ void ModuleUIManager::CreateButton(const math::float3 &pos, const math::float2 &
 void ModuleUIManager::CreateCanvas()
 {
 	canvas = App->gameobject_manager->CreateGameObject("Canvas", nullptr);
-	canvas->AddComponent(COMPONENT_TYPE::TRANSFORM_2D);
+	canvas->AddComponent(COMPONENT_TYPE::COMP_TRANSFORM_2D);
+}
+
+GameObject *ModuleUIManager::CreateBaseElement(const char *name_ui, const math::float3 &pos, const math::float2 &size)
+{
+	if (canvas == nullptr)
+		CreateCanvas();
+
+	GameObject *ui = App->gameobject_manager->CreateGameObject(name_ui, canvas);
+
+	ui->AddComponent(COMPONENT_TYPE::COMP_TRANSFORM_2D);
+	ui->transform_2d->SetLocalPos(pos);
+	ui->transform_2d->SetSize(size);
+
+	ui->AddComponent(COMPONENT_TYPE::COMP_UI_PROPERTIES);
+	ui->ui_properties->AddListener(this);
+
+	return ui;
 }
 
 //UIinputBox *Gui::createInputBox(iPoint pos, iPoint text_offset, SDL_Texture *frame_tex, SDL_Rect &frame_section, const char *initial_text,

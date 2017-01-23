@@ -26,8 +26,8 @@ ComponentTransform::ComponentTransform() : Component()
 	local_rotation_euler_deg.Set(0.0f, 0.0f, 0.0f);
 	local_rotation_quat.Set(0.0f, 0.0f, 0.0f, 1.0f);
 
-	type = COMPONENT_TYPE::TRANSFORM;
-	name = GetNameByType(type);
+	type = COMPONENT_TYPE::COMP_TRANSFORM;
+	name = "Transform";
 }
 
 bool ComponentTransform::Update()
@@ -138,8 +138,8 @@ void ComponentTransform::CalcWorldTransformMatrix()
 	up = (world_transform.RotatePart() * up_dir).Normalized();
 
 	// Updating frustum and AABB
-	ComponentMesh *comp = (ComponentMesh*)game_object->GetComponentByType(COMPONENT_TYPE::MESH);
-	ComponentCamera *camera = (ComponentCamera*)game_object->GetComponentByType(COMPONENT_TYPE::CAMERA);
+	ComponentMesh *comp = (ComponentMesh*)game_object->GetComponentByType(COMPONENT_TYPE::COMP_MESH);
+	ComponentCamera *camera = (ComponentCamera*)game_object->GetComponentByType(COMPONENT_TYPE::COMP_CAMERA);
 
 	if (comp != nullptr) comp->ApplyTransformToAABB();
 	if (camera != nullptr) camera->ApplyTransformToFrustum();

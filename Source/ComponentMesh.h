@@ -3,8 +3,9 @@
 
 #include "Component.h"
 
-#include "ResourceMesh.h"
 #include "MathGeoLib\MathGeoLib.h"
+
+class ResourceMesh;
 
 class ComponentMesh : public Component
 {

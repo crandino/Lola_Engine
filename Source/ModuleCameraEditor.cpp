@@ -27,8 +27,8 @@ ModuleCameraEditor::~ModuleCameraEditor()
 bool ModuleCameraEditor::Awake(JSONParser &config)
 {
 	camera = App->gameobject_manager->CreateGameObject("Main_camera", nullptr);
-	camera->AddComponent(COMPONENT_TYPE::TRANSFORM);
-	ComponentCamera *c = (ComponentCamera*)camera->AddComponent(COMPONENT_TYPE::CAMERA);
+	camera->AddComponent(COMPONENT_TYPE::COMP_TRANSFORM);
+	ComponentCamera *c = (ComponentCamera*)camera->AddComponent(COMPONENT_TYPE::COMP_CAMERA);
 	c->editor_camera = true;
 	c->SetComponent();
 

@@ -13,6 +13,8 @@ enum COMPONENT_TYPE;
 class Component;
 class ComponentTransform;
 class ComponentTransform2D;
+class ComponentPropertiesUI;
+
 struct Mesh;
 
 class GameObject
@@ -27,8 +29,7 @@ public:
 	// Unique components
 	ComponentTransform				*transform = nullptr;
 	ComponentTransform2D			*transform_2d = nullptr;
-	//bool							 transform_applied = false;
-	//bool						     transform_2d_applied = false;
+	ComponentPropertiesUI			*ui_properties = nullptr;
 
 	std::vector<Component*>			 components;
 	std::vector<GameObject*>         children;

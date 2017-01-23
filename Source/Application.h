@@ -1,15 +1,16 @@
 #ifndef __APPLICATION_H__
 #define __APPLICATION_H__
 
-#include "Globals.h"
+//#include "Globals.h"
 #include "Module.h"
 
 #include "Performance.h"
-#include "Console.h"
 
 #include "DebugMode.h"
 
 #include <list>
+
+struct Console;
 
 enum ENGINE_MODE
 {

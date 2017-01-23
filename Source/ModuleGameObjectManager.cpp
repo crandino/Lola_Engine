@@ -12,6 +12,8 @@
 #include "ComponentTransform.h"
 #include "ComponentCamera.h"
 
+#include "Mesh.h"
+
 #include <stack>
 #include <algorithm> 
 
@@ -90,7 +92,7 @@ UPDATE_STATUS ModuleGameObjectManager::Update(float dt)
 
 	// Frustum culling
 	const GameObject *camera = App->camera->GetEditorCamera();
-	math::Frustum frustum = ((ComponentCamera*)camera->GetComponentByType(COMPONENT_TYPE::CAMERA))->cam_frustum;
+	math::Frustum frustum = ((ComponentCamera*)camera->GetComponentByType(COMPONENT_TYPE::COMP_CAMERA))->cam_frustum;
 	FrustumCulling(frustum);
 
 	for (uint i = 0; i < list_of_gos_to_draw.size(); ++i)
@@ -136,10 +138,10 @@ void ModuleGameObjectManager::DrawDebug()
 		{
 			switch (curr_go->components[j]->GetType())
 			{
-			case(COMPONENT_TYPE::MESH):
+			case(COMPONENT_TYPE::COMP_MESH):
 				App->debug_mode.DrawAABB(((ComponentMesh*)curr_go->components[j])->bounding_box);
 				break;
-			case(COMPONENT_TYPE::CAMERA):
+			case(COMPONENT_TYPE::COMP_CAMERA):
 				App->debug_mode.DrawFrustum(((ComponentCamera*)curr_go->components[j])->cam_frustum);
 
 				if (curr_go == App->camera->GetEditorCamera())
@@ -274,7 +276,7 @@ void ModuleGameObjectManager::SetEditorCamera(const ComponentCamera *comp_cam)
 
 	for (uint i = 0; i < list_of_gos.size(); ++i)
 	{				
-		cam = (ComponentCamera*)list_of_gos[i]->GetComponentByType(COMPONENT_TYPE::CAMERA);
+		cam = (ComponentCamera*)list_of_gos[i]->GetComponentByType(COMPONENT_TYPE::COMP_CAMERA);
 		
 		if (cam && cam != comp_cam)
 			cam->editor_camera = false;
@@ -286,8 +288,8 @@ void ModuleGameObjectManager::SetEditorCamera(const ComponentCamera *comp_cam)
 void ModuleGameObjectManager::CreateCamera()
 {
 	GameObject *go = CreateGameObject("Camera", nullptr);
-	go->AddComponent(COMPONENT_TYPE::TRANSFORM);
-	go->AddComponent(COMPONENT_TYPE::CAMERA);
+	go->AddComponent(COMPONENT_TYPE::COMP_TRANSFORM);
+	go->AddComponent(COMPONENT_TYPE::COMP_CAMERA);
 }
 
 int ModuleGameObjectManager::FrustumCulling(const math::Frustum &frustum)

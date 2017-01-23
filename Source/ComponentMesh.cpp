@@ -4,6 +4,9 @@
 #include "GameObject.h"
 #include "ComponentTransform.h"
 
+#include "ResourceMesh.h"
+#include "Mesh.h"
+
 #include "Assimp\include\mesh.h"
 #include "imgui\imgui.h"
 
@@ -14,8 +17,8 @@ ComponentMesh::ComponentMesh() : Component()
 	bounding_box.SetNegativeInfinity();
 	initial_bounding_box.SetNegativeInfinity();
 
-	type = COMPONENT_TYPE::MESH;
-	name = GetNameByType(type);
+	type = COMPONENT_TYPE::COMP_MESH;
+	name = "Mesh";
 
 	resource = nullptr;
 }

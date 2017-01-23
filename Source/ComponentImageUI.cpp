@@ -1,14 +1,14 @@
 #include "ComponentImageUI.h"
 
 #include "ResourceTexture.h"
-#include "MaterialImporter.h"
+#include "TextureImporter.h"
 
 #include "imgui\imgui.h"
 
 ComponentImageUI::ComponentImageUI() : Component()
 {
-	type = COMPONENT_TYPE::UI_IMAGE;
-	name = GetNameByType(type);
+	type = COMPONENT_TYPE::COMP_UI_IMAGE;
+	name = "UI Image";
 
 	resource = nullptr;
 }
@@ -31,7 +31,7 @@ ComponentImageUI::~ComponentImageUI()
 void ComponentImageUI::InitTexture(const char *tex_name)
 {
 	if (!resource->LoadedInMemory())
-		MaterialImporter::Load(resource->imported_file, resource);
+		TextureImporter::Load(resource->imported_file, resource);
 
 	resource->LoadToMemory();
 }

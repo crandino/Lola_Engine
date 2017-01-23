@@ -1,102 +1,88 @@
 #include "MaterialImporter.h"
 
-bool MaterialImporter::Import(std::string &asset_to_import, std::string &imported_file, ID &res_id, const aiMaterial *ai_material)
+#include "Application.h"
+#include "ModuleFileSystem.h"
+#include "ModuleResourceManager.h"
+
+#include "ResourceMaterial.h"
+
+#include "Assimp\include\material.h"
+
+Resource *MaterialImporter::Import(const aiMaterial *ai_material, const long unsigned int &res_id)
 {
-	ilInit();
+	std::string lib_folder = LIBRARY_MATERIAL;
+	std::string imported_file;
 
-	bool success = false;
+	Resource *res = nullptr;
 
-	std::string asset_folder = "Textures/";
-	std::string lib_folder = LIBRARY_TEXTURE;
+	// Allocate data buffer for color image information and opacity
+	uint color_size = sizeof(math::float3) * 5 + sizeof(float);  // 5 colors and opacity
+	char *color_data = new char[color_size];					 // allocate data buffer
+	char *cursor = color_data;
 
-	char *data;
-	uint size = App->file_system->Load((asset_folder + asset_to_import).c_str(), &data);
+	aiColor3D ai_color;
+	math::float3 color;
+	float opacity;
 
-	if (size > 0)
+	// We append color and opacity information				
+	ai_material->Get(AI_MATKEY_COLOR_DIFFUSE, ai_color);
+	color.Set(ai_color.r, ai_color.g, ai_color.b);
+	memcpy(cursor, &color, sizeof(math::float3));
+	cursor += sizeof(math::float3);
+
+	ai_material->Get(AI_MATKEY_COLOR_SPECULAR, ai_color);
+	color.Set(ai_color.r, ai_color.g, ai_color.b);
+	memcpy(cursor, &color, sizeof(math::float3));
+	cursor += sizeof(math::float3);
+
+	ai_material->Get(AI_MATKEY_COLOR_AMBIENT, ai_color);
+	color.Set(ai_color.r, ai_color.g, ai_color.b);
+	memcpy(cursor, &color, sizeof(math::float3));
+	cursor += sizeof(math::float3);
+
+	ai_material->Get(AI_MATKEY_COLOR_TRANSPARENT, ai_color);
+	color.Set(ai_color.r, ai_color.g, ai_color.b);
+	memcpy(cursor, &color, sizeof(math::float3));
+	cursor += sizeof(math::float3);
+
+	ai_material->Get(AI_MATKEY_COLOR_EMISSIVE, ai_color);
+	color.Set(ai_color.r, ai_color.g, ai_color.b);
+	memcpy(cursor, &color, sizeof(math::float3));
+	cursor += sizeof(math::float3);
+
+	ai_material->Get(AI_MATKEY_OPACITY, opacity);
+	memcpy(cursor, &opacity, sizeof(float));
+
+	char imported_filename[100];
+	sprintf_s(imported_filename, sizeof(imported_filename), "%lu%s", res_id, ".mtl");
+	imported_file = imported_filename;
+	if (App->file_system->Save((lib_folder + imported_file).c_str(), color_data, color_size) != 0)
 	{
-		if (ilLoadL(IL_TYPE_UNKNOWN, data, size));
-		ilSetInteger(IL_DXTC_FORMAT, IL_DXT5); // To pick a specific DXT compression use
-		uint dds_size = ilSaveL(IL_DDS, NULL, 0);
+		res = App->resource_manager->CreateNewResource(RESOURCE_TYPE::RES_MATERIAL, res_id, -1);
+		res->file = "Material";
+		res->imported_file = imported_file;
+	}
 
-		// Allocate data buffer for DDS image information, colors and opacity
-		uint color_size = sizeof(math::float3) * 5 + sizeof(float);
-		char *dds_data = new char[dds_size + color_size]; // allocate data buffer for DDS and colors
+	RELEASE_ARRAY(color_data);
 
-		// Save to buffer with the ilSaveIL function
-		if (ilSaveL(IL_DDS, dds_data, dds_size) > 0)
-		{
-			char *cursor = dds_data; cursor += dds_size;
-
-			if (ai_material != nullptr)
-			{
-				aiColor3D ai_color;
-				math::float3 color;
-				float opacity;
-
-				// We append color and opacity information				
-				ai_material->Get(AI_MATKEY_COLOR_DIFFUSE, ai_color);
-				color.Set(ai_color.r, ai_color.g, ai_color.b);
-				memcpy(cursor, &color, sizeof(math::float3));
-				cursor += sizeof(math::float3);
-
-				ai_material->Get(AI_MATKEY_COLOR_SPECULAR, ai_color);
-				color.Set(ai_color.r, ai_color.g, ai_color.b);
-				memcpy(cursor, &color, sizeof(math::float3));
-				cursor += sizeof(math::float3);
-
-				ai_material->Get(AI_MATKEY_COLOR_AMBIENT, ai_color);
-				color.Set(ai_color.r, ai_color.g, ai_color.b);
-				memcpy(cursor, &color, sizeof(math::float3));
-				cursor += sizeof(math::float3);
-
-				ai_material->Get(AI_MATKEY_COLOR_TRANSPARENT, ai_color);
-				color.Set(ai_color.r, ai_color.g, ai_color.b);
-				memcpy(cursor, &color, sizeof(math::float3));
-				cursor += sizeof(math::float3);
-
-				ai_material->Get(AI_MATKEY_COLOR_EMISSIVE, ai_color);
-				color.Set(ai_color.r, ai_color.g, ai_color.b);
-				memcpy(cursor, &color, sizeof(math::float3));
-				cursor += sizeof(math::float3);
-
-				ai_material->Get(AI_MATKEY_OPACITY, opacity);
-				memcpy(cursor, &opacity, sizeof(float));
-			}
-			else
-			{
-				memset(cursor, 0, sizeof(math::float3) * 5 + sizeof(float));
-			}
-
-			char imported_filename[100];
-			sprintf_s(imported_filename, sizeof(imported_filename), "%lu%s", res_id, ".dds");
-			imported_file = imported_filename;
-			if (App->file_system->Save((lib_folder + imported_file).c_str(), dds_data, dds_size + color_size) != 0) success = true;
-		}
-		RELEASE_ARRAY(dds_data);
-		RELEASE(data);	
-	}	
-
-	ilShutDown();
-	return success;
+	return res;
 }
 
-uint MaterialImporter::Load(const std::string &imported_file, ResourceTexture *res_mat)
+unsigned int MaterialImporter::Load(const std::string &imported_file, ResourceMaterial *res_mat)
 {
 	char *data;
-	std::string lib_folder = LIBRARY_TEXTURE;
+	std::string lib_folder = LIBRARY_MATERIAL;
 	uint data_size = App->file_system->Load((lib_folder + imported_file).c_str(), &data);
 
 	if (data_size > 0)
 	{
-		sprintf_s(res_mat->tex_path, SHORT_STRING, "%s%s", "Textures/", res_mat->file.c_str());
-
-		uint color_size = sizeof(math::float3) * 5 + sizeof(float); // Size for colors and opacity
+		uint color_size = sizeof(math::float3) * 5 + sizeof(float);  // Size for colors and opacity
 		char *cursor = data;
 
-		res_mat->texture_size = data_size - color_size;
-		res_mat->texture_data = new char[res_mat->texture_size];
-		memcpy(res_mat->texture_data, cursor, res_mat->texture_size);
-		cursor += res_mat->texture_size;
+		//res_mat->texture_size = data_size; // -color_size;
+		//res_mat->texture_data = new char[res_mat->texture_size];
+		//memcpy(res_mat->texture_data, cursor, res_mat->texture_size);
+		//cursor += res_mat->texture_size;
 
 		memcpy(&res_mat->color_diffuse, cursor, sizeof(math::float3));
 		cursor += sizeof(math::float3);
@@ -120,30 +106,3 @@ uint MaterialImporter::Load(const std::string &imported_file, ResourceTexture *r
 
 	return data_size;
 }
-
-uint MaterialImporter::Save(unsigned char **data, uint size)
-{
-	ilInit();
-
-	uint dds_size = 0;
-
-	if (ilLoadL(IL_TYPE_UNKNOWN, *data, size))
-	{
-		ilSetInteger(IL_DXTC_FORMAT, IL_DXT5); // To pick a specific DXT compression use
-		dds_size = ilSaveL(IL_DDS, NULL, 0);
-
-		char *dds_data = new char[dds_size]; // allocate data buffer for DDS and colors
-
-		// Save to buffer with the ilSaveIL function												  
-		if (ilSaveL(IL_DDS, dds_data, dds_size) > 0)
-			App->file_system->Save("font.dds", dds_data, dds_size);
-
-		RELEASE_ARRAY(dds_data);
-	}
-	/*ILenum error = ilGetError();
-	DEBUG("%s",iluErrorString(error));*/
-
-	ilShutDown();
-	return dds_size;
-}
-
